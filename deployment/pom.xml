@@ -8,6 +8,9 @@
   </parent>
   <artifactId>quarkus-asyncapi-deployment</artifactId>
   <name>Quarkus - AsyncAPI - Deployment</name>
+  <properties>
+    <version.io.quarkiverse.specs>1.0.0-SNAPSHOT</version.io.quarkiverse.specs>
+  </properties>
   <dependencies>
   <dependency>
       <groupId>io.quarkiverse.asyncapi</groupId>
