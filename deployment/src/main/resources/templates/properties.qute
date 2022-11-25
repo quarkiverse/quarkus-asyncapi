@@ -1,0 +1,17 @@
+package {packageName};
+
+import io.quarkiverse.asyncapi.config.AsyncConfigSource;
+import io.quarkiverse.asyncapi.generator.ObjectMapperFactory;
+import io.quarkiverse.asyncapi.generator.Extension;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.asyncapi.v2.model.AsyncAPI;
+import java.io.IOException;
+
+public class {className} extends AsyncConfigSource {
+
+    private static ObjectMapper objectMapper = ObjectMapperFactory.get(Extension.json);
+
+    public {className} () throws IOException {
+       super ("{id}", objectMapper.readValue("{asyncAPI}", AsyncAPI.class));
+    }
+}

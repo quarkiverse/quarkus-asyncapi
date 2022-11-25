@@ -1,4 +1,4 @@
-package io.quarkiverse.ayncapi.generator.input;
+package io.quarkiverse.asyncapi.generator.input;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,19 +10,21 @@ import java.util.stream.Stream;
 
 import org.eclipse.microprofile.config.Config;
 
-import io.quarkiverse.ayncapi.generator.AsyncApiCodeGenerator;
-import io.quarkiverse.ayncapi.generator.AsyncApiConfigGroup;
+import io.quarkiverse.asyncapi.generator.AsyncApiCodeGenerator;
+import io.quarkiverse.asyncapi.generator.AsyncApiConfigGroup;
+import io.quarkiverse.asyncapi.generator.Extension;
+import io.quarkiverse.asyncapi.generator.ObjectMapperFactory;
 import io.quarkus.bootstrap.prebuild.CodeGenException;
 import io.quarkus.deployment.CodeGenContext;
 
 public class AsyncApiPathGeneratorCodeGen extends AsyncApiGeneratorCodeGenBase {
 
-    protected AsyncApiPathGeneratorCodeGen(String extension) {
+    protected AsyncApiPathGeneratorCodeGen(Extension extension) {
         super(extension);
     }
 
     protected Collection<String> excludedFiles(final Config config) {
-        return config.getOptionalValues(AsyncApiConfigGroup.EXCLUDED_FILES_PROP_FORMAT, String.class)
+        return config.getOptionalValues(AsyncApiConfigGroup.EXCLUDED_FILES_PROP, String.class)
                 .orElse(Collections.emptyList());
     }
 
@@ -36,7 +38,7 @@ public class AsyncApiPathGeneratorCodeGen extends AsyncApiGeneratorCodeGenBase {
                         .filter(path -> isCandidateFile(path, ignoredFiles))
                         .collect(Collectors.toList());
                 for (Path file : files) {
-                    generator.generate(file);
+                    generator.generate(file, ObjectMapperFactory.get(extension));
                 }
             } catch (IOException e) {
                 throw new CodeGenException(e);

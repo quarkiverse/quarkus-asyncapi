@@ -1,4 +1,4 @@
-package io.quarkiverse.asyncapi.meta;
+package io.quarkiverse.asyncapi.config;
 
 import com.asyncapi.v2.model.AsyncAPI;
 

@@ -1,20 +1,16 @@
-package io.quarkiverse.ayncapi.generator.input;
+package io.quarkiverse.asyncapi.generator.input;
 
-import io.quarkiverse.ayncapi.generator.AsyncApiCodeGenerator;
+import io.quarkiverse.asyncapi.generator.AsyncApiCodeGenerator;
+import io.quarkiverse.asyncapi.generator.Extension;
 import io.quarkus.bootstrap.prebuild.CodeGenException;
 import io.quarkus.deployment.CodeGenContext;
 import io.quarkus.deployment.CodeGenProvider;
 
 public abstract class AsyncApiGeneratorCodeGenBase implements CodeGenProvider {
 
-    public static final String YAML = "yaml";
-    public static final String YML = "yml";
-    public static final String JSON = "json";
-    public static final String STREAM = "stream";
+    protected final Extension extension;
 
-    private final String extension;
-
-    protected AsyncApiGeneratorCodeGenBase(String extension) {
+    protected AsyncApiGeneratorCodeGenBase(Extension extension) {
         this.extension = extension;
     }
 
@@ -22,7 +18,7 @@ public abstract class AsyncApiGeneratorCodeGenBase implements CodeGenProvider {
 
     @Override
     public String providerId() {
-        return ASYNC_API;
+        return ASYNC_API + "-" + inputExtension();
     }
 
     @Override
@@ -32,14 +28,14 @@ public abstract class AsyncApiGeneratorCodeGenBase implements CodeGenProvider {
 
     @Override
     public String inputExtension() {
-        return extension;
+        return extension.toString();
     }
 
     @Override
     public boolean trigger(CodeGenContext context) throws CodeGenException {
         AsyncApiCodeGenerator generator = new AsyncApiCodeGenerator(context.outDir(), context.config());
         trigger(context, generator);
-        return generator.hasGenerated();
+        return generator.done();
     }
 
     protected abstract void trigger(CodeGenContext context, AsyncApiCodeGenerator generator) throws CodeGenException;

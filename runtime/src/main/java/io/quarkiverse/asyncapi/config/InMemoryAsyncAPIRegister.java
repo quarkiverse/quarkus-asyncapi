@@ -1,4 +1,4 @@
-package io.quarkiverse.asyncapi.meta;
+package io.quarkiverse.asyncapi.config;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,7 +7,10 @@ import javax.enterprise.context.ApplicationScoped;
 
 import com.asyncapi.v2.model.AsyncAPI;
 
+import io.quarkus.runtime.annotations.Recorder;
+
 @ApplicationScoped
+@Recorder
 public class InMemoryAsyncAPIRegister implements AsyncAPIRegistry, AsyncAPIRecorder {
 
     private final Map<String, AsyncAPI> asyncAPIs = new HashMap<>();

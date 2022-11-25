@@ -1,7 +1,7 @@
-package io.quarkiverse.asyncapi.meta;
+package io.quarkiverse.asyncapi.config;
 
 import com.asyncapi.v2.model.AsyncAPI;
 
-interface AsyncAPIRecorder {
+public interface AsyncAPIRecorder {
     void addAsyncAPI(String id, AsyncAPI asyncAPI);
 }

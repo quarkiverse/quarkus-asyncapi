@@ -1,8 +1,10 @@
-package io.quarkiverse.ayncapi.generator.input;
+package io.quarkiverse.asyncapi.generator.input;
+
+import io.quarkiverse.asyncapi.generator.Extension;
 
 public class AsyncApiGeneratorJsonCodeGen extends AsyncApiPathGeneratorCodeGen {
 
     public AsyncApiGeneratorJsonCodeGen() {
-        super(AsyncApiGeneratorCodeGenBase.JSON);
+        super(Extension.json);
     }
 }

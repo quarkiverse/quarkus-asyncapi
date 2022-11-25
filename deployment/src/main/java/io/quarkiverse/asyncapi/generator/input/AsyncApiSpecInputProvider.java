@@ -1,4 +1,4 @@
-package io.quarkiverse.ayncapi.generator.input;
+package io.quarkiverse.asyncapi.generator.input;
 
 import java.util.Map;
 
