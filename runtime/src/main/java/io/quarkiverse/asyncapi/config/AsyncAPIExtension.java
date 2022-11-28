@@ -1,4 +1,4 @@
-package io.quarkiverse.asyncapi.generator;
+package io.quarkiverse.asyncapi.config;
 
 public enum AsyncAPIExtension {
     yaml,

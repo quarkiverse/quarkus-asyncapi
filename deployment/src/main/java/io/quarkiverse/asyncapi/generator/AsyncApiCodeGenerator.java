@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -13,6 +12,8 @@ import org.eclipse.microprofile.config.Config;
 import com.asyncapi.v2.model.AsyncAPI;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.quarkiverse.asyncapi.config.AsyncAPIExtension;
+import io.quarkiverse.asyncapi.config.ObjectMapperFactory;
 import io.smallrye.config.common.utils.StringUtil;
 
 public class AsyncApiCodeGenerator {
@@ -20,13 +21,12 @@ public class AsyncApiCodeGenerator {
     private final Path outPath;
     private final Config config;
     private final String basePackage;
-    private Map<String, String> asyncAPIs = new HashMap<>();
+    private boolean generated;
 
     private final static String DEFAULT_PACKAGE = "io.quarkiverse.asyncapi";
 
     private final static String CONFIG_SOURCE = "ConfigSource";
-    private final static String PRODUCER_NAME = "AsyncAPIRegistryProducer";
-    private final static String FACTORY_NAME = "AsyncAPIRegistryFactory";
+    private final static String PRODUCER_NAME = "AsyncAPILoader";
     private final static String JAVA_SUFFIX = ".java";
 
     public AsyncApiCodeGenerator(Path outPath, Config config, Optional<String> packageName) {
@@ -45,8 +45,11 @@ public class AsyncApiCodeGenerator {
     public void generate(String id, InputStream stream, ObjectMapper objectMapper)
             throws IOException {
         AsyncAPI asyncAPI = objectMapper.readValue(stream, AsyncAPI.class);
-        writeTemplate(id + CONFIG_SOURCE, CONFIG_SOURCE, Map.of("id", id, "packageName", basePackage));
-        asyncAPIs.put(id, escape(ObjectMapperFactory.get(AsyncAPIExtension.json).writeValueAsString(asyncAPI)));
+        Map<String, Object> data = Map.of("id", id, "packageName", basePackage, "asyncAPI",
+                escape(ObjectMapperFactory.get(AsyncAPIExtension.json).writeValueAsString(asyncAPI)));
+        writeTemplate(id + CONFIG_SOURCE, CONFIG_SOURCE, data);
+        writeTemplate(id + PRODUCER_NAME, PRODUCER_NAME, data);
+        generated = true;
     }
 
     private String getJavaClassName(String name) {
@@ -76,13 +79,6 @@ public class AsyncApiCodeGenerator {
     }
 
     public boolean done() throws IOException {
-
-        boolean result = !asyncAPIs.isEmpty();
-        if (result) {
-            writeTemplate(PRODUCER_NAME, PRODUCER_NAME, Map.of("packageName", basePackage));
-            writeTemplate(FACTORY_NAME, FACTORY_NAME, Map.of("packageName", basePackage, "asyncAPIs", asyncAPIs));
-        }
-        asyncAPIs.clear();
-        return result;
+        return generated;
     }
 }

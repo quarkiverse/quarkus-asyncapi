@@ -1,6 +1,6 @@
 package io.quarkiverse.asyncapi.generator.input;
 
-import io.quarkiverse.asyncapi.generator.AsyncAPIExtension;
+import io.quarkiverse.asyncapi.config.AsyncAPIExtension;
 
 public class AsyncApiGeneratorYamlCodeGen extends AsyncApiPathGeneratorCodeGen {
 

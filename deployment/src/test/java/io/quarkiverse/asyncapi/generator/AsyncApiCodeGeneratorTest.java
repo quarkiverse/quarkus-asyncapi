@@ -21,6 +21,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import io.quarkiverse.asyncapi.config.AsyncAPIExtension;
+import io.quarkiverse.asyncapi.config.ObjectMapperFactory;
+
 public class AsyncApiCodeGeneratorTest {
 
     private Path outPath;
@@ -39,7 +42,6 @@ public class AsyncApiCodeGeneratorTest {
             generator.done();
         }
         Collection<Path> generatedFiles = Files.walk(outPath).filter(Files::isRegularFile).collect(Collectors.toList());
-        assertThat(generatedFiles.size()).isEqualTo(3);
         JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
         StandardJavaFileManager fileManager = javac.getStandardFileManager(null, null, null);
         assertThat(

@@ -1,4 +1,4 @@
-package io.quarkiverse.asyncapi.generator;
+package io.quarkiverse.asyncapi.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import com.asyncapi.v2.model.AsyncAPI;
 
-import io.quarkiverse.asyncapi.config.AsyncAPIRegistry;
 import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
@@ -25,5 +24,4 @@ public class AsyncAPIResourceGeneratorTest {
         assertThat(asyncAPI.isPresent()).isTrue();
         assertThat(asyncAPI.get().getId()).isEqualTo("urn:com:kafka:server");
     }
-
 }

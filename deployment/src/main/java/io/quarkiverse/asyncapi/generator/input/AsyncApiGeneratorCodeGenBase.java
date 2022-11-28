@@ -3,8 +3,8 @@ package io.quarkiverse.asyncapi.generator.input;
 import java.io.IOException;
 import java.util.Collection;
 
+import io.quarkiverse.asyncapi.config.AsyncAPIExtension;
 import io.quarkiverse.asyncapi.generator.AsyncApiCodeGenerator;
-import io.quarkiverse.asyncapi.generator.AsyncAPIExtension;
 import io.quarkus.bootstrap.prebuild.CodeGenException;
 import io.quarkus.deployment.CodeGenContext;
 import io.quarkus.deployment.CodeGenProvider;
