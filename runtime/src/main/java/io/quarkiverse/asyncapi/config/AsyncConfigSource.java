@@ -8,6 +8,8 @@ import com.asyncapi.v2.model.AsyncAPI;
 import com.asyncapi.v2.model.channel.ChannelItem;
 import com.asyncapi.v2.model.server.Server;
 
+import io.quarkiverse.asyncapi.config.channels.ChannelConfigurer;
+import io.quarkiverse.asyncapi.config.channels.ChannelConfigurerFactory;
 import io.smallrye.config.common.MapBackedConfigSource;
 
 public abstract class AsyncConfigSource extends MapBackedConfigSource {

@@ -32,5 +32,5 @@ public class AsyncApiConfigGroup {
      * Package name for generated classes
      */
     @ConfigItem(name = PACKAGE)
-    public String basePackage;
+    public Optional<String> basePackage;
 }

@@ -1,4 +1,4 @@
-package io.quarkiverse.asyncapi.config;
+package io.quarkiverse.asyncapi.config.channels;
 
 import java.util.Map;
 

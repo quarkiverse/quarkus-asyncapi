@@ -1,6 +1,7 @@
 package io.quarkiverse.asyncapi.generator.input;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import io.quarkiverse.asyncapi.generator.AsyncApiCodeGenerator;
 import io.quarkiverse.asyncapi.generator.Extension;
@@ -35,14 +36,18 @@ public abstract class AsyncApiGeneratorCodeGenBase implements CodeGenProvider {
 
     @Override
     public boolean trigger(CodeGenContext context) throws CodeGenException {
-        try {
-            AsyncApiCodeGenerator generator = new AsyncApiCodeGenerator(context.outDir(), context.config());
-            trigger(context, generator);
-            return generator.done();
-        } catch (IOException io) {
-            throw new CodeGenException(io);
-        }
+        boolean result = false;
+        for (AsyncApiCodeGenerator generator : buildCodeGenerators(context))
+            try {
+                trigger(context, generator);
+                result |= generator.done();
+            } catch (IOException io) {
+                throw new CodeGenException(io);
+            }
+        return result;
     }
+
+    protected abstract Collection<AsyncApiCodeGenerator> buildCodeGenerators(CodeGenContext context);
 
     protected abstract void trigger(CodeGenContext context, AsyncApiCodeGenerator generator) throws IOException;
 }

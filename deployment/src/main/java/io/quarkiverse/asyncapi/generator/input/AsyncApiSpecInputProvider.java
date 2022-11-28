@@ -1,7 +1,5 @@
 package io.quarkiverse.asyncapi.generator.input;
 
-import java.util.Map;
-
 import io.quarkus.deployment.CodeGenContext;
 
 /**
@@ -9,5 +7,5 @@ import io.quarkus.deployment.CodeGenContext;
  */
 public interface AsyncApiSpecInputProvider {
 
-    Map<String, InputStreamSupplier> read(CodeGenContext context);
+    AsyncAPISpecInput read(CodeGenContext context);
 }

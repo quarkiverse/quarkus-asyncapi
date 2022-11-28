@@ -4,5 +4,5 @@ public enum Extension {
     yaml,
     yml,
     json,
-    unknown;
+    stream;
 }

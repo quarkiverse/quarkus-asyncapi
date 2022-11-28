@@ -5,6 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -46,5 +48,10 @@ public class AsyncApiPathGeneratorCodeGen extends AsyncApiGeneratorCodeGenBase {
     protected boolean isCandidateFile(Path path, Collection<String> ignoredFiles) {
         String fileName = path.getFileName().toString();
         return Files.isRegularFile(path) && fileName.endsWith(inputExtension()) && !ignoredFiles.contains(fileName);
+    }
+
+    @Override
+    protected Collection<AsyncApiCodeGenerator> buildCodeGenerators(CodeGenContext context) {
+        return List.of(new AsyncApiCodeGenerator(context.outDir(), context.config(), Optional.empty()));
     }
 }

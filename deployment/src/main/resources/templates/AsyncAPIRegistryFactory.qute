@@ -20,10 +20,9 @@ public class AsyncAPIRegistryFactory extends MapAsyncAPIRegistry {
     
     private static Logger logger = LoggerFactory.getLogger(AsyncAPIRegistryFactory.class);
     private static AsyncAPIRegistry instance = new AsyncAPIRegistryFactory();
-
-    private static ObjectMapper objectMapper = ObjectMapperFactory.get(Extension.json);
-    
+   
     private static Map<String, AsyncAPI> buildMap() {
+      ObjectMapper objectMapper = ObjectMapperFactory.get(Extension.json);
       Map<String,AsyncAPI> result = new HashMap<>();
       {#each asyncAPIs}
         try {

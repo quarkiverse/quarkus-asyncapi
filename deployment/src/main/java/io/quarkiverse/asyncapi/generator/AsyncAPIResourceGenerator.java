@@ -11,14 +11,11 @@ import org.jboss.jandex.IndexView;
 import io.quarkus.arc.deployment.BeanArchiveIndexBuildItem;
 import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
-import io.quarkus.deployment.annotations.ExecutionTime;
-import io.quarkus.deployment.annotations.Record;
 import io.quarkus.deployment.builditem.GeneratedResourceBuildItem;
 
 public class AsyncAPIResourceGenerator {
 
     @BuildStep
-    @Record(ExecutionTime.RUNTIME_INIT)
     void scanForBeans(BeanArchiveIndexBuildItem beanArchiveIndex, BuildProducer<GeneratedResourceBuildItem> resourceProducer)
             throws IOException {
         IndexView indexView = beanArchiveIndex.getIndex();
@@ -35,6 +32,5 @@ public class AsyncAPIResourceGenerator {
                                 os.toByteArray()));
             }
         }
-
     }
 }

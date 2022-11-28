@@ -13,12 +13,14 @@ import org.eclipse.microprofile.config.Config;
 import com.asyncapi.v2.model.AsyncAPI;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.smallrye.config.common.utils.StringUtil;
+
 public class AsyncApiCodeGenerator {
 
     private final Path outPath;
     private final Config config;
-    private final String defaultPackage;
-    private Map<String, String> asyncAPIs;
+    private final String basePackage;
+    private Map<String, String> asyncAPIs = new HashMap<>();
 
     private final static String DEFAULT_PACKAGE = "io.quarkiverse.asyncapi";
 
@@ -27,25 +29,33 @@ public class AsyncApiCodeGenerator {
     private final static String FACTORY_NAME = "AsyncAPIRegistryFactory";
     private final static String JAVA_SUFFIX = ".java";
 
-    public AsyncApiCodeGenerator(Path outPath, Config config) {
+    public AsyncApiCodeGenerator(Path outPath, Config config, Optional<String> packageName) {
         this.outPath = outPath;
         this.config = config;
-        this.defaultPackage = config.getOptionalValue(AsyncApiConfigGroup.PACKAGE_PROP, String.class).orElse(DEFAULT_PACKAGE);
+        this.basePackage = packageName
+                .orElse(config.getOptionalValue(AsyncApiConfigGroup.PACKAGE_PROP, String.class).orElse(DEFAULT_PACKAGE));
     }
 
     public void generate(Path path, ObjectMapper objectMapper) throws IOException {
         try (InputStream is = Files.newInputStream(path)) {
-            generate(path.getFileName().toString(), is, objectMapper, Optional.empty());
+            generate(getJavaClassName(path.getFileName().toString()), is, objectMapper);
         }
     }
 
-    public void generate(String id, InputStream stream, ObjectMapper objectMapper, Optional<String> basePackage)
+    public void generate(String id, InputStream stream, ObjectMapper objectMapper)
             throws IOException {
-        asyncAPIs = new HashMap<>();
-        String packageName = basePackage.orElse(defaultPackage);
         AsyncAPI asyncAPI = objectMapper.readValue(stream, AsyncAPI.class);
-        writeTemplate(id + CONFIG_SOURCE, CONFIG_SOURCE, Map.of("id", id, "packageName", packageName));
+        writeTemplate(id + CONFIG_SOURCE, CONFIG_SOURCE, Map.of("id", id, "packageName", basePackage));
         asyncAPIs.put(id, escape(ObjectMapperFactory.get(Extension.json).writeValueAsString(asyncAPI)));
+    }
+
+    private String getJavaClassName(String name) {
+        return capitalizeFirst(StringUtil.replaceNonAlphanumericByUnderscores(name));
+    }
+
+    private String capitalizeFirst(String name) {
+        char ch = name.charAt(0);
+        return Character.isUpperCase(ch) ? name : Character.toUpperCase(ch) + name.substring(1);
     }
 
     private String escape(String raw) {
@@ -66,8 +76,13 @@ public class AsyncApiCodeGenerator {
     }
 
     public boolean done() throws IOException {
-        writeTemplate(PRODUCER_NAME, PRODUCER_NAME, Map.of("packageName", defaultPackage));
-        writeTemplate(FACTORY_NAME, FACTORY_NAME, Map.of("packageName", defaultPackage, "asyncAPIs", asyncAPIs));
-        return !asyncAPIs.isEmpty();
+
+        boolean result = !asyncAPIs.isEmpty();
+        if (result) {
+            writeTemplate(PRODUCER_NAME, PRODUCER_NAME, Map.of("packageName", basePackage));
+            writeTemplate(FACTORY_NAME, FACTORY_NAME, Map.of("packageName", basePackage, "asyncAPIs", asyncAPIs));
+        }
+        asyncAPIs.clear();
+        return result;
     }
 }
