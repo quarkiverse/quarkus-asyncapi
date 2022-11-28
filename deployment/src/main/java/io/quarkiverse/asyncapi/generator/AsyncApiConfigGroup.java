@@ -33,5 +33,4 @@ public class AsyncApiConfigGroup {
      */
     @ConfigItem(name = PACKAGE)
     public String basePackage;
-
 }

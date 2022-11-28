@@ -14,7 +14,6 @@ import io.quarkiverse.asyncapi.generator.AsyncApiCodeGenerator;
 import io.quarkiverse.asyncapi.generator.AsyncApiConfigGroup;
 import io.quarkiverse.asyncapi.generator.Extension;
 import io.quarkiverse.asyncapi.generator.ObjectMapperFactory;
-import io.quarkus.bootstrap.prebuild.CodeGenException;
 import io.quarkus.deployment.CodeGenContext;
 
 public class AsyncApiPathGeneratorCodeGen extends AsyncApiGeneratorCodeGenBase {
@@ -29,7 +28,7 @@ public class AsyncApiPathGeneratorCodeGen extends AsyncApiGeneratorCodeGenBase {
     }
 
     @Override
-    protected void trigger(CodeGenContext context, AsyncApiCodeGenerator generator) throws CodeGenException {
+    protected void trigger(CodeGenContext context, AsyncApiCodeGenerator generator) throws IOException {
         final Path specDir = context.inputDir();
         final Collection<String> ignoredFiles = excludedFiles(context.config());
         if (Files.isDirectory(specDir)) {
@@ -40,8 +39,6 @@ public class AsyncApiPathGeneratorCodeGen extends AsyncApiGeneratorCodeGenBase {
                 for (Path file : files) {
                     generator.generate(file, ObjectMapperFactory.get(extension));
                 }
-            } catch (IOException e) {
-                throw new CodeGenException(e);
             }
         }
     }

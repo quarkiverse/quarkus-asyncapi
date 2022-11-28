@@ -8,7 +8,6 @@ import org.eclipse.microprofile.config.spi.ConfigSource;
 import org.jboss.jandex.ClassInfo;
 import org.jboss.jandex.IndexView;
 
-import io.quarkiverse.asyncapi.config.AsyncAPIRecorder;
 import io.quarkus.arc.deployment.BeanArchiveIndexBuildItem;
 import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
@@ -20,8 +19,8 @@ public class AsyncAPIResourceGenerator {
 
     @BuildStep
     @Record(ExecutionTime.RUNTIME_INIT)
-    void scanForBeans(BeanArchiveIndexBuildItem beanArchiveIndex, BuildProducer<GeneratedResourceBuildItem> resourceProducer,
-            AsyncAPIRecorder recorder) throws IOException {
+    void scanForBeans(BeanArchiveIndexBuildItem beanArchiveIndex, BuildProducer<GeneratedResourceBuildItem> resourceProducer)
+            throws IOException {
         IndexView indexView = beanArchiveIndex.getIndex();
         try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
             try (OutputStreamWriter w = new OutputStreamWriter(os)) {

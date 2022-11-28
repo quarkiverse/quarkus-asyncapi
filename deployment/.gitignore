@@ -1,4 +1,5 @@
-/target/**
+/target/
+/target/asciidoc
 /.classpath
 /.project
 /panache-archive.marker

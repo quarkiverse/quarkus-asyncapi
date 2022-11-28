@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.tools.JavaCompiler;
 import javax.tools.StandardJavaFileManager;
@@ -34,14 +36,14 @@ public class AsyncApiCodeGeneratorTest {
         AsyncApiCodeGenerator generator = new AsyncApiCodeGenerator(outPath, Mockito.mock(Config.class));
         try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("asyncapi.yml")) {
             generator.generate("Test", is, ObjectMapperFactory.get(Extension.yml), Optional.empty());
+            generator.done();
         }
-        Optional<Path> generatedFile = Files.walk(outPath)
-                .filter(path -> path.getFileName().toString().equals("TestConfigSource.java")).findAny();
-        assertThat(generatedFile.isPresent()).isTrue();
+        Collection<Path> generatedFiles = Files.walk(outPath).filter(Files::isRegularFile).collect(Collectors.toList());
+        assertThat(generatedFiles.size()).isEqualTo(3);
         JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
         StandardJavaFileManager fileManager = javac.getStandardFileManager(null, null, null);
         assertThat(
-                javac.getTask(null, fileManager, null, null, null, fileManager.getJavaFileObjects(generatedFile.orElseThrow()))
+                javac.getTask(null, fileManager, null, null, null, fileManager.getJavaFileObjectsFromPaths(generatedFiles))
                         .call())
                 .isTrue();
     }

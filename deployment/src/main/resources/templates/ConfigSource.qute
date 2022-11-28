@@ -1,0 +1,10 @@
+package {packageName};
+
+import io.quarkiverse.asyncapi.config.AsyncConfigSource;
+import java.io.IOException;
+
+public class {id}ConfigSource extends AsyncConfigSource {
+    public {id}ConfigSource () throws IOException {
+       super ("{id}", AsyncAPIRegistryFactory.get().getAsyncAPI("{id}").orElseThrow(()-> new IllegalStateException("Cannot find async API definition for {id}")));
+    }
+}

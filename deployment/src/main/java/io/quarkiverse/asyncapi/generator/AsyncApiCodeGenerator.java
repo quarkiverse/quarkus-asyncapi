@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -17,12 +18,13 @@ public class AsyncApiCodeGenerator {
     private final Path outPath;
     private final Config config;
     private final String defaultPackage;
-    private boolean generated;
+    private Map<String, String> asyncAPIs;
 
-    private final static String PROPS_TEMPLATE = "properties";
     private final static String DEFAULT_PACKAGE = "io.quarkiverse.asyncapi";
 
-    private final static String CONFIG_SUFFIX = "ConfigSource";
+    private final static String CONFIG_SOURCE = "ConfigSource";
+    private final static String PRODUCER_NAME = "AsyncAPIRegistryProducer";
+    private final static String FACTORY_NAME = "AsyncAPIRegistryFactory";
     private final static String JAVA_SUFFIX = ".java";
 
     public AsyncApiCodeGenerator(Path outPath, Config config) {
@@ -39,21 +41,11 @@ public class AsyncApiCodeGenerator {
 
     public void generate(String id, InputStream stream, ObjectMapper objectMapper, Optional<String> basePackage)
             throws IOException {
+        asyncAPIs = new HashMap<>();
         String packageName = basePackage.orElse(defaultPackage);
         AsyncAPI asyncAPI = objectMapper.readValue(stream, AsyncAPI.class);
-        generateConfigFile(id, asyncAPI, packageName);
-
-    }
-
-    private void generateConfigFile(String id, AsyncAPI asyncAPI, String packageName) throws IOException {
-        packageName += ".config";
-        String simpleClassName = id + CONFIG_SUFFIX;
-        Path configFile = outPath.resolve(Path.of(simpleClassName + JAVA_SUFFIX));
-        Files.writeString(configFile, QuteTemplateHelper.getTemplate(config, PROPS_TEMPLATE)
-                .data(Map.of("id", id, "packageName", packageName, "className", simpleClassName, "asyncAPI",
-                        escape(ObjectMapperFactory.get(Extension.json).writeValueAsString(asyncAPI))))
-                .render());
-        generated = true;
+        writeTemplate(id + CONFIG_SOURCE, CONFIG_SOURCE, Map.of("id", id, "packageName", packageName));
+        asyncAPIs.put(id, escape(ObjectMapperFactory.get(Extension.json).writeValueAsString(asyncAPI)));
     }
 
     private String escape(String raw) {
@@ -68,7 +60,14 @@ public class AsyncApiCodeGenerator {
         return escaped;
     }
 
-    public boolean done() {
-        return generated;
+    private void writeTemplate(String className, String templateName, Map<String, Object> map) throws IOException {
+        Files.writeString(outPath.resolve(Path.of(className + JAVA_SUFFIX)),
+                QuteTemplateHelper.getTemplate(config, templateName).data(map).render());
+    }
+
+    public boolean done() throws IOException {
+        writeTemplate(PRODUCER_NAME, PRODUCER_NAME, Map.of("packageName", defaultPackage));
+        writeTemplate(FACTORY_NAME, FACTORY_NAME, Map.of("packageName", defaultPackage, "asyncAPIs", asyncAPIs));
+        return !asyncAPIs.isEmpty();
     }
 }

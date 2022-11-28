@@ -1,0 +1,41 @@
+package {packageName};
+
+import io.quarkiverse.asyncapi.config.MapAsyncAPIRegistry;
+import io.quarkiverse.asyncapi.config.AsyncAPIRegistry;
+import io.quarkiverse.asyncapi.generator.ObjectMapperFactory;
+import io.quarkiverse.asyncapi.generator.Extension;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.asyncapi.v2.model.AsyncAPI;
+import java.io.IOException;
+import java.util.Map;
+import java.util.HashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class AsyncAPIRegistryFactory extends MapAsyncAPIRegistry {
+
+    public static AsyncAPIRegistry get () {
+        return instance;
+    }
+    
+    private static Logger logger = LoggerFactory.getLogger(AsyncAPIRegistryFactory.class);
+    private static AsyncAPIRegistry instance = new AsyncAPIRegistryFactory();
+
+    private static ObjectMapper objectMapper = ObjectMapperFactory.get(Extension.json);
+    
+    private static Map<String, AsyncAPI> buildMap() {
+      Map<String,AsyncAPI> result = new HashMap<>();
+      {#each asyncAPIs}
+        try {
+            result.put("{it.key}",objectMapper.readValue("{it.value}",AsyncAPI.class));
+        } catch (IOException io) {
+            logger.warn ("Error loading {it.key}", io); 
+        }
+      {/each}
+      return result;
+    }
+
+    private AsyncAPIRegistryFactory () {
+       super (buildMap());
+    }
+}
