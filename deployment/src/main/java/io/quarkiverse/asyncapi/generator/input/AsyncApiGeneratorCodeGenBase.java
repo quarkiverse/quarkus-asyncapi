@@ -4,16 +4,16 @@ import java.io.IOException;
 import java.util.Collection;
 
 import io.quarkiverse.asyncapi.generator.AsyncApiCodeGenerator;
-import io.quarkiverse.asyncapi.generator.Extension;
+import io.quarkiverse.asyncapi.generator.AsyncAPIExtension;
 import io.quarkus.bootstrap.prebuild.CodeGenException;
 import io.quarkus.deployment.CodeGenContext;
 import io.quarkus.deployment.CodeGenProvider;
 
 public abstract class AsyncApiGeneratorCodeGenBase implements CodeGenProvider {
 
-    protected final Extension extension;
+    protected final AsyncAPIExtension extension;
 
-    protected AsyncApiGeneratorCodeGenBase(Extension extension) {
+    protected AsyncApiGeneratorCodeGenBase(AsyncAPIExtension extension) {
         this.extension = extension;
     }
 

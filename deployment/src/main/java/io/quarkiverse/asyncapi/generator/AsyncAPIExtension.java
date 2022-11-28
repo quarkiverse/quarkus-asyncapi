@@ -1,6 +1,6 @@
 package io.quarkiverse.asyncapi.generator;
 
-public enum Extension {
+public enum AsyncAPIExtension {
     yaml,
     yml,
     json,

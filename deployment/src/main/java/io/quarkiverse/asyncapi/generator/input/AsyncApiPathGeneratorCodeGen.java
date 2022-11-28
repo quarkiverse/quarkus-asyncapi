@@ -14,13 +14,13 @@ import org.eclipse.microprofile.config.Config;
 
 import io.quarkiverse.asyncapi.generator.AsyncApiCodeGenerator;
 import io.quarkiverse.asyncapi.generator.AsyncApiConfigGroup;
-import io.quarkiverse.asyncapi.generator.Extension;
+import io.quarkiverse.asyncapi.generator.AsyncAPIExtension;
 import io.quarkiverse.asyncapi.generator.ObjectMapperFactory;
 import io.quarkus.deployment.CodeGenContext;
 
 public class AsyncApiPathGeneratorCodeGen extends AsyncApiGeneratorCodeGenBase {
 
-    protected AsyncApiPathGeneratorCodeGen(Extension extension) {
+    protected AsyncApiPathGeneratorCodeGen(AsyncAPIExtension extension) {
         super(extension);
     }
 

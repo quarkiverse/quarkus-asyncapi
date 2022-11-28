@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 
-import io.quarkiverse.asyncapi.generator.Extension;
+import io.quarkiverse.asyncapi.generator.AsyncAPIExtension;
 
 public interface InputStreamSupplier {
     InputStream get() throws IOException;
 
-    Extension getExtension();
+    AsyncAPIExtension getExtension();
 
     default Optional<String> getPackage() {
         return Optional.empty();

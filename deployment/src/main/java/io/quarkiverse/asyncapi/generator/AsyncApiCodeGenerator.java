@@ -46,7 +46,7 @@ public class AsyncApiCodeGenerator {
             throws IOException {
         AsyncAPI asyncAPI = objectMapper.readValue(stream, AsyncAPI.class);
         writeTemplate(id + CONFIG_SOURCE, CONFIG_SOURCE, Map.of("id", id, "packageName", basePackage));
-        asyncAPIs.put(id, escape(ObjectMapperFactory.get(Extension.json).writeValueAsString(asyncAPI)));
+        asyncAPIs.put(id, escape(ObjectMapperFactory.get(AsyncAPIExtension.json).writeValueAsString(asyncAPI)));
     }
 
     private String getJavaClassName(String name) {

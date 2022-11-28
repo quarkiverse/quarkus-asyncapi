@@ -16,7 +16,7 @@ public class ObjectMapperFactory {
         return mapper.findAndRegisterModules().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
-    public static ObjectMapper get(Extension extension) {
+    public static ObjectMapper get(AsyncAPIExtension extension) {
         switch (extension) {
             case yml:
             case yaml:

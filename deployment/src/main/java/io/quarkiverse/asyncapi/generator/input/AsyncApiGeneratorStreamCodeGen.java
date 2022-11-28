@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.ServiceLoader;
 
 import io.quarkiverse.asyncapi.generator.AsyncApiCodeGenerator;
-import io.quarkiverse.asyncapi.generator.Extension;
+import io.quarkiverse.asyncapi.generator.AsyncAPIExtension;
 import io.quarkiverse.asyncapi.generator.ObjectMapperFactory;
 import io.quarkus.deployment.CodeGenContext;
 
@@ -19,7 +19,7 @@ public class AsyncApiGeneratorStreamCodeGen extends AsyncApiGeneratorCodeGenBase
     private Map<AsyncApiCodeGenerator, Map<String, InputStreamSupplier>> generators;
 
     public AsyncApiGeneratorStreamCodeGen() {
-        super(Extension.stream);
+        super(AsyncAPIExtension.stream);
     }
 
     @Override

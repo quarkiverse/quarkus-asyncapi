@@ -35,7 +35,7 @@ public class AsyncApiCodeGeneratorTest {
     void testGenerator() throws IOException {
         AsyncApiCodeGenerator generator = new AsyncApiCodeGenerator(outPath, Mockito.mock(Config.class), Optional.empty());
         try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("asyncapi.yml")) {
-            generator.generate("Test", is, ObjectMapperFactory.get(Extension.yml));
+            generator.generate("Test", is, ObjectMapperFactory.get(AsyncAPIExtension.yml));
             generator.done();
         }
         Collection<Path> generatedFiles = Files.walk(outPath).filter(Files::isRegularFile).collect(Collectors.toList());
