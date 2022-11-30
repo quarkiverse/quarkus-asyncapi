@@ -26,7 +26,7 @@ public class AsyncApiCodeGenerator {
     private final static String DEFAULT_PACKAGE = "io.quarkiverse.asyncapi";
 
     private final static String CONFIG_SOURCE = "ConfigSource";
-    private final static String PRODUCER_NAME = "AsyncAPILoader";
+    private final static String PRODUCER_NAME = "AsyncAPISupplier";
     private final static String JAVA_SUFFIX = ".java";
 
     public AsyncApiCodeGenerator(Path outPath, Config config, Optional<String> packageName) {

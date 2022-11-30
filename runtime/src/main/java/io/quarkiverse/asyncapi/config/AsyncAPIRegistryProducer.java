@@ -16,15 +16,15 @@ import io.quarkus.runtime.Startup;
 public class AsyncAPIRegistryProducer {
 
     @Inject
-    Instance<AsyncAPILoader> asyncAPISuppliers;
+    Instance<AsyncAPISupplier> asyncAPISuppliers;
 
     private Map<String, AsyncAPI> asyncAPIs;
 
     @PostConstruct
     void init() {
         asyncAPIs = new HashMap<>();
-        for (AsyncAPILoader asyncAPISupplier : asyncAPISuppliers) {
-            asyncAPISupplier.load(asyncAPIs);
+        for (AsyncAPISupplier asyncAPISupplier : asyncAPISuppliers) {
+            asyncAPIs.put(asyncAPISupplier.id(), asyncAPISupplier.asyncAPI());
         }
     }
 

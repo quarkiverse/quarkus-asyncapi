@@ -16,8 +16,8 @@ public abstract class AsyncConfigSource extends MapBackedConfigSource {
 
     private static final long serialVersionUID = 1L;
 
-    protected AsyncConfigSource(String id, AsyncAPI asyncAPI) {
-        super(id, getMapFromAsyncApi(asyncAPI));
+    protected AsyncConfigSource(AsyncAPISupplier asyncAPISupplier) {
+        super(asyncAPISupplier.id(), getMapFromAsyncApi(asyncAPISupplier.asyncAPI()));
     }
 
     private static Map<String, String> getMapFromAsyncApi(AsyncAPI asyncAPI) {

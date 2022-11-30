@@ -7,7 +7,7 @@ import io.quarkiverse.asyncapi.config.AsyncAPIExtension;
 import com.asyncapi.v2.model.AsyncAPI;
 
 public class {id}ConfigSource extends AsyncConfigSource {
-    public {id}ConfigSource () throws IOException {
-       super ("{id}", ObjectMapperFactory.get(AsyncAPIExtension.json).readValue("{asyncAPI}",AsyncAPI.class));
+    public {id}ConfigSource () {
+       super (new {id}AsyncAPISupplier());
     }
 }

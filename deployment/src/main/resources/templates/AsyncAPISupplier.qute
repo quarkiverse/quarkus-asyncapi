@@ -1,0 +1,32 @@
+package {packageName};
+
+import io.quarkiverse.asyncapi.config.ObjectMapperFactory;
+import io.quarkiverse.asyncapi.config.AsyncAPIExtension;
+import io.quarkiverse.asyncapi.config.AsyncAPISupplier;
+import com.asyncapi.v2.model.AsyncAPI;
+import java.io.IOException;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import javax.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
+public class {id}AsyncAPISupplier implements AsyncAPISupplier {
+    private volatile AsyncAPI asyncAPI;
+    
+    public String id() {
+        return "{id}";
+    }
+    
+    public AsyncAPI asyncAPI() {
+       if (asyncAPI == null) {
+         try {
+      	    asyncAPI = ObjectMapperFactory.get(AsyncAPIExtension.json).readValue("{asyncAPI}",AsyncAPI.class);
+         }
+         catch (IOException io) {
+           LoggerFactory.getLogger(getClass()).warn ("Error loading {id}", io);
+         }
+      }
+      return asyncAPI;
+    }
+}
