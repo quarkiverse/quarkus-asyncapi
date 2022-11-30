@@ -21,10 +21,16 @@ public abstract class AbstractChannelConfigurer implements ChannelConfigurer {
 
     public static final String CONNECTOR = "connector";
 
+    private final String protocol;
     private final String connectorId;
 
-    protected AbstractChannelConfigurer(String connectorId) {
+    protected AbstractChannelConfigurer(String protocol, String connectorId) {
+        this.protocol = protocol;
         this.connectorId = connectorId;
+    }
+
+    public String protocol() {
+        return protocol;
     }
 
     @Override

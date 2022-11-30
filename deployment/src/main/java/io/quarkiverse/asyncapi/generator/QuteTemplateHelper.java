@@ -3,6 +3,7 @@ package io.quarkiverse.asyncapi.generator;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Objects;
 
 import org.eclipse.microprofile.config.Config;
 
@@ -27,7 +28,8 @@ public class QuteTemplateHelper {
 
         if (template == null) {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    Thread.currentThread().getContextClassLoader().getResourceAsStream(getTemplateCP(config, templateName))))) {
+                    Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResourceAsStream(
+                            getTemplateCP(config, templateName)), templateName + " not found in classpath")))) {
                 StringBuilder sb = new StringBuilder();
                 String line;
                 while ((line = reader.readLine()) != null) {
