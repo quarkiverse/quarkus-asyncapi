@@ -7,7 +7,7 @@ import com.asyncapi.v2.model.server.Server;
 
 public class HttpChannelConfigurer extends AbstractChannelConfigurer {
 
-    protected HttpChannelConfigurer() {
+    public HttpChannelConfigurer() {
         super("http", "quarkus-http");
     }
 

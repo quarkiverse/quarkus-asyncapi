@@ -10,7 +10,7 @@ public class KafkaChannelConfigurer extends AbstractChannelConfigurer {
     private static final String KAFKA_SERIALIZER = "value.serializer";
     private static final String KAFKA_DESERIALIZER = "value.deserializer";
 
-    protected KafkaChannelConfigurer() {
+    public KafkaChannelConfigurer() {
         super("kafka", "smallrye-kafka");
     }
 
