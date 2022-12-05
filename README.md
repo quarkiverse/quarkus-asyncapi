@@ -1,2 +1,5 @@
 # quakus-async-api
-quarkiverse async api repository
+
+Quarkus asyncapi extension. 
+
+Alpha version that generates AyncAPIRegistry and configuration classes

@@ -1,4 +1,6 @@
-package io.quarkiverse.asyncapi.meta;
+package io.quarkiverse.asyncapi.config;
+
+import java.util.Optional;
 
 import com.asyncapi.v2.model.AsyncAPI;
 
@@ -11,5 +13,5 @@ public interface AsyncAPIRegistry {
      * @param id
      * @return
      */
-    AsyncAPI getAsyncAPI(String id);
+    Optional<AsyncAPI> getAsyncAPI(String id);
 }

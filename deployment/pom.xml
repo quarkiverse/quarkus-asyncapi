@@ -9,11 +9,15 @@
   <artifactId>quarkus-asyncapi-deployment</artifactId>
   <name>Quarkus - AsyncAPI - Deployment</name>
   <dependencies>
-  <dependency>
+    <dependency>
       <groupId>io.quarkiverse.asyncapi</groupId>
       <artifactId>quarkus-asyncapi</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+    </dependency> 
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-core-deployment</artifactId>
@@ -22,7 +26,7 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-qute-deployment</artifactId>
     </dependency>
-      <dependency>
+    <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit5</artifactId>
       <scope>test</scope>
@@ -30,6 +34,11 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+     <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
