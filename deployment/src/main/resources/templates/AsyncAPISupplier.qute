@@ -21,7 +21,7 @@ public class {id}AsyncAPISupplier implements AsyncAPISupplier {
     public AsyncAPI asyncAPI() {
        if (asyncAPI == null) {
          try {
-      	    asyncAPI = ObjectMapperFactory.get(AsyncAPIExtension.json).readValue("{asyncAPI}",AsyncAPI.class);
+      	    asyncAPI = ObjectMapperFactory.reader().readValue("{asyncAPI}",AsyncAPI.class);
          }
          catch (IOException io) {
            LoggerFactory.getLogger(getClass()).warn ("Error loading {id}", io);

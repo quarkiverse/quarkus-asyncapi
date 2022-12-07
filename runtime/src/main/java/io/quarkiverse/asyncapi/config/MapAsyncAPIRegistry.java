@@ -20,6 +20,6 @@ public class MapAsyncAPIRegistry implements AsyncAPIRegistry {
 
     @Override
     public Optional<AsyncAPI> getAsyncAPI(String id) {
-        return Optional.ofNullable(map.get(id));
+        return Optional.ofNullable(map.get(AsyncAPIUtils.getJavaClassName(id)));
     }
 }

@@ -1,7 +1,6 @@
 package io.quarkiverse.asyncapi.generator;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.OptionalInt;
 
 import org.jboss.jandex.ClassInfo;
@@ -31,13 +30,15 @@ public class AsyncAPIResourceGenerator {
             throws IOException {
         IndexView indexView = index.getIndex();
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        for (ClassInfo supplier : indexView.getAllKnownSubclasses(AsyncAPISupplier.class)) {
+        for (ClassInfo supplier : indexView.getAllKnownImplementors(AsyncAPISupplier.class)) {
             try {
-				resourceProducer
-				        .produce(new AsyncAPIBuildItem((AsyncAPISupplier)cl.loadClass(supplier.name().toString()).getConstructor().newInstance()));
-			} catch (ReflectiveOperationException ex) {
-				throw new IllegalStateException(ex);
-			}
+                resourceProducer
+                        .produce(new AsyncAPIBuildItem(
+                                (AsyncAPISupplier) cl.loadClass(supplier.name().toString()).getDeclaredConstructor()
+                                        .newInstance()));
+            } catch (ReflectiveOperationException ex) {
+                throw new IllegalStateException(ex);
+            }
         }
     }
 }

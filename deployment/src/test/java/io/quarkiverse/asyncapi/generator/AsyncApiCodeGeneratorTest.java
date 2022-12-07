@@ -21,9 +21,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import io.quarkiverse.asyncapi.config.AsyncAPIExtension;
-import io.quarkiverse.asyncapi.config.ObjectMapperFactory;
-
 public class AsyncApiCodeGeneratorTest {
 
     private Path outPath;
@@ -38,7 +35,7 @@ public class AsyncApiCodeGeneratorTest {
     void testGenerator() throws IOException {
         AsyncApiCodeGenerator generator = new AsyncApiCodeGenerator(outPath, Mockito.mock(Config.class), Optional.empty());
         try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("asyncapi.yml")) {
-            generator.generate("Test", is, ObjectMapperFactory.get(AsyncAPIExtension.yml));
+            generator.generate("Test", is);
             generator.done();
         }
         Collection<Path> generatedFiles = Files.walk(outPath).filter(Files::isRegularFile).collect(Collectors.toList());

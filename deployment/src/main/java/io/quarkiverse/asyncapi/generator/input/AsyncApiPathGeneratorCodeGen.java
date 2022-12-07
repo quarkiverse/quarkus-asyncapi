@@ -13,7 +13,6 @@ import java.util.stream.Stream;
 import org.eclipse.microprofile.config.Config;
 
 import io.quarkiverse.asyncapi.config.AsyncAPIExtension;
-import io.quarkiverse.asyncapi.config.ObjectMapperFactory;
 import io.quarkiverse.asyncapi.generator.AsyncApiCodeGenerator;
 import io.quarkiverse.asyncapi.generator.AsyncApiConfigGroup;
 import io.quarkus.deployment.CodeGenContext;
@@ -39,7 +38,7 @@ public class AsyncApiPathGeneratorCodeGen extends AsyncApiGeneratorCodeGenBase {
                         .filter(path -> isCandidateFile(path, ignoredFiles))
                         .collect(Collectors.toList());
                 for (Path file : files) {
-                    generator.generate(file, ObjectMapperFactory.get(extension));
+                    generator.generate(file);
                 }
             }
         }

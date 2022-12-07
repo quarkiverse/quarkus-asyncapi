@@ -10,11 +10,9 @@ import java.util.Optional;
 import org.eclipse.microprofile.config.Config;
 
 import com.asyncapi.v2.model.AsyncAPI;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.quarkiverse.asyncapi.config.AsyncAPIExtension;
+import io.quarkiverse.asyncapi.config.AsyncAPIUtils;
 import io.quarkiverse.asyncapi.config.ObjectMapperFactory;
-import io.smallrye.config.common.utils.StringUtil;
 
 public class AsyncApiCodeGenerator {
 
@@ -36,29 +34,21 @@ public class AsyncApiCodeGenerator {
                 .orElse(config.getOptionalValue(AsyncApiConfigGroup.PACKAGE_PROP, String.class).orElse(DEFAULT_PACKAGE));
     }
 
-    public void generate(Path path, ObjectMapper objectMapper) throws IOException {
+    public void generate(Path path) throws IOException {
         try (InputStream is = Files.newInputStream(path)) {
-            generate(getJavaClassName(path.getFileName().toString()), is, objectMapper);
+            generate(path.getFileName().toString(), is);
         }
     }
 
-    public void generate(String id, InputStream stream, ObjectMapper objectMapper)
+    public void generate(String id, InputStream stream)
             throws IOException {
-        AsyncAPI asyncAPI = objectMapper.readValue(stream, AsyncAPI.class);
+        id = AsyncAPIUtils.getJavaClassName(id);
+        AsyncAPI asyncAPI = ObjectMapperFactory.reader().readValue(stream, AsyncAPI.class);
         Map<String, Object> data = Map.of("id", id, "packageName", basePackage, "asyncAPI",
-                escape(ObjectMapperFactory.get(AsyncAPIExtension.json).writeValueAsString(asyncAPI)));
+                escape(ObjectMapperFactory.writer().writeValueAsString(asyncAPI)));
         writeTemplate(id + CONFIG_SOURCE, CONFIG_SOURCE, data);
         writeTemplate(id + PRODUCER_NAME, PRODUCER_NAME, data);
         generated = true;
-    }
-
-    private String getJavaClassName(String name) {
-        return capitalizeFirst(StringUtil.replaceNonAlphanumericByUnderscores(name));
-    }
-
-    private String capitalizeFirst(String name) {
-        char ch = name.charAt(0);
-        return Character.isUpperCase(ch) ? name : Character.toUpperCase(ch) + name.substring(1);
     }
 
     private String escape(String raw) {
@@ -74,7 +64,8 @@ public class AsyncApiCodeGenerator {
     }
 
     private void writeTemplate(String className, String templateName, Map<String, Object> map) throws IOException {
-        Files.writeString(outPath.resolve(Path.of(className + JAVA_SUFFIX)),
+        Files.writeString(
+                Files.createDirectories(outPath.resolve(basePackage.replace('.', '/'))).resolve(className + JAVA_SUFFIX),
                 QuteTemplateHelper.getTemplate(config, templateName).data(map).render());
     }
 
