@@ -26,7 +26,7 @@
     <version.org.slf4j>2.0.3</version.org.slf4j>
     <version.asyncapi.core>1.0.0-EAP</version.asyncapi.core>
     <version.org.mockito>4.8.1</version.org.mockito>
-    <version.com.fasterxml.jackson>2.13.4</version.com.fasterxml.jackson>
+    <version.com.fasterxml.jackson>2.14.1</version.com.fasterxml.jackson>
     <version.org.projectlombok>1.18.22</version.org.projectlombok>
   </properties>
   <dependencyManagement>
