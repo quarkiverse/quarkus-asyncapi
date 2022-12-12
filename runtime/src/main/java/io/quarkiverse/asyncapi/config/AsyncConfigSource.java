@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.asyncapi.v2.model.AsyncAPI;
 import com.asyncapi.v2.model.channel.ChannelItem;
 import com.asyncapi.v2.model.server.Server;
@@ -15,6 +18,8 @@ import io.smallrye.config.common.MapBackedConfigSource;
 public class AsyncConfigSource extends MapBackedConfigSource {
 
     private static final long serialVersionUID = 1L;
+
+    private static final Logger logger = LoggerFactory.getLogger(AsyncConfigSource.class);
 
     public AsyncConfigSource(AsyncAPISupplier asyncAPISupplier) {
         super(asyncAPISupplier.id(), getMapFromAsyncApi(asyncAPISupplier.asyncAPI()));
@@ -29,6 +34,7 @@ public class AsyncConfigSource extends MapBackedConfigSource {
                 configurer.channelConfig(entry.getKey(), entry.getValue(), server, result);
             }
         }
+        logger.debug("Produced config source {}", result);
         return result;
     }
 }

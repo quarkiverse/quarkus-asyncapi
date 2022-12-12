@@ -6,9 +6,7 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.config.spi.ConfigSource;
 import org.junit.jupiter.api.Test;
 
 import com.asyncapi.v2.model.AsyncAPI;
@@ -29,7 +27,6 @@ public class AsyncAPIResourceGeneratorTest {
 
     @Test
     void testGenerator() {
-        Iterable<ConfigSource> sources = ConfigProvider.getConfig().getConfigSources();
         Optional<AsyncAPI> asyncAPI = registry.getAsyncAPI("Asyncapi_yml");
         assertThat(asyncAPI.isPresent()).isTrue();
         assertThat(asyncAPI.get().getId()).isEqualTo("urn:com:kafka:server");

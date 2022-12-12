@@ -21,9 +21,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import io.quarkiverse.asyncapi.config.AsyncAPIExtension;
-import io.quarkiverse.asyncapi.config.ObjectMapperFactory;
-
 public class AsyncApiCodeGeneratorTest {
 
     private Path outPath;
@@ -36,18 +33,22 @@ public class AsyncApiCodeGeneratorTest {
 
     @Test
     void testGenerator() throws IOException {
-        AsyncApiCodeGenerator generator = new AsyncApiCodeGenerator(outPath, Mockito.mock(Config.class), Optional.empty());
+        Path genPath = outPath.resolve("src").resolve("yml");
+        AsyncApiCodeGenerator generator = new AsyncApiCodeGenerator(genPath, Mockito.mock(Config.class), Optional.empty());
         try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("asyncapi.yml")) {
-            generator.generate("Test", is, ObjectMapperFactory.get(AsyncAPIExtension.yml));
-            generator.done();
+            generator.generate("Test", is);
+            generator.done(false);
         }
-        Collection<Path> generatedFiles = Files.walk(outPath).filter(Files::isRegularFile).collect(Collectors.toList());
+        Collection<Path> generatedFiles = Files.walk(genPath).filter(Files::isRegularFile).collect(Collectors.toList());
         JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
         StandardJavaFileManager fileManager = javac.getStandardFileManager(null, null, null);
         assertThat(
                 javac.getTask(null, fileManager, null, null, null, fileManager.getJavaFileObjectsFromPaths(generatedFiles))
                         .call())
                 .isTrue();
+
+        assertThat(Files.walk(outPath.resolve("classes")).filter(Files::isRegularFile)
+                .anyMatch(p -> p.getFileName().toString().equals(AsyncApiCodeGenerator.SERVICE_LOADER))).isTrue();
     }
 
     @AfterEach

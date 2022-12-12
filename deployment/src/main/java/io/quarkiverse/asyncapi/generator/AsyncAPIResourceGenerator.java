@@ -1,27 +1,29 @@
 package io.quarkiverse.asyncapi.generator;
 
-import java.io.IOException;
-import java.util.OptionalInt;
-
 import org.jboss.jandex.ClassInfo;
 import org.jboss.jandex.IndexView;
 
-import io.quarkiverse.asyncapi.config.AsyncConfigSource;
+import io.quarkiverse.asyncapi.config.AsyncAPISupplier;
+import io.quarkiverse.asyncapi.config.JacksonAsyncAPISupplier;
 import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.builditem.CombinedIndexBuildItem;
-import io.quarkus.deployment.builditem.RunTimeConfigurationSourceBuildItem;
 
 public class AsyncAPIResourceGenerator {
 
     @BuildStep
-    void serviceLoader(CombinedIndexBuildItem index, BuildProducer<RunTimeConfigurationSourceBuildItem> resourceProducer)
-            throws IOException {
+    void asyncAPIs(CombinedIndexBuildItem index, BuildProducer<AsyncAPIBuildItem> resourceProducer) {
         IndexView indexView = index.getIndex();
-        for (ClassInfo configSource : indexView.getAllKnownSubclasses(AsyncConfigSource.class)) {
-            resourceProducer
-                    .produce(new RunTimeConfigurationSourceBuildItem(configSource.name().toString(), OptionalInt.empty()));
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        for (ClassInfo supplier : indexView.getAllKnownSubclasses(JacksonAsyncAPISupplier.class)) {
+            try {
+                resourceProducer
+                        .produce(new AsyncAPIBuildItem(
+                                (AsyncAPISupplier) cl.loadClass(supplier.name().toString()).getDeclaredConstructor()
+                                        .newInstance()));
+            } catch (ReflectiveOperationException ex) {
+                throw new IllegalStateException(ex);
+            }
         }
-
     }
 }
