@@ -2,7 +2,7 @@ name: AsyncAPI
 metadata:
   keywords:
     - asyncapi
-  guide: https://quarkiverse.github.io/quarkiverse-docs/asyncapi/dev/
+  guide: https://quarkiverse.github.io/quarkiverse-docs/quarkus-asyncapi/dev/
   categories:
     - "miscellaneous"
   status: "preview"
