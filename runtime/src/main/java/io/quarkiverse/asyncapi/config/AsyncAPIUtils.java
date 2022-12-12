@@ -2,7 +2,7 @@ package io.quarkiverse.asyncapi.config;
 
 import io.smallrye.config.common.utils.StringUtil;
 
-public class AsyncAPIUtils {
+public final class AsyncAPIUtils {
 
     public static String getJavaClassName(String name) {
         return capitalizeFirst(StringUtil.replaceNonAlphanumericByUnderscores(name));

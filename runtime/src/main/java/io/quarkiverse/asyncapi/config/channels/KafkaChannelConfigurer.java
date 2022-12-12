@@ -28,6 +28,7 @@ public class KafkaChannelConfigurer extends AbstractChannelConfigurer {
                 "org.apache.kafka.common.serialization.ByteArrayDeserializer");
     }
 
+    @Override
     public void commonConfig(Server server, Map<String, String> result) {
         String serverUri = server.getUrl();
         result.compute("kafka.bootstrap.servers", (k, v) -> v == null ? serverUri : v + "," + serverUri);

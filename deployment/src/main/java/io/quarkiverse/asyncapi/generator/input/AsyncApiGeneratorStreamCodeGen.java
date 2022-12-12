@@ -46,6 +46,7 @@ public class AsyncApiGeneratorStreamCodeGen extends AsyncApiGeneratorCodeGenBase
         }
     }
 
+    @Override
     public boolean shouldRun(Path sourceDir, Config config) {
         return providers.findFirst().isPresent();
     }

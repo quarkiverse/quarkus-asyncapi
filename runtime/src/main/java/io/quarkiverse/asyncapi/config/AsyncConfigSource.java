@@ -19,7 +19,7 @@ public class AsyncConfigSource extends MapBackedConfigSource {
 
     private static final long serialVersionUID = 1L;
 
-    private static Logger logger = LoggerFactory.getLogger(AsyncConfigSource.class);
+    private static final Logger logger = LoggerFactory.getLogger(AsyncConfigSource.class);
 
     public AsyncConfigSource(AsyncAPISupplier asyncAPISupplier) {
         super(asyncAPISupplier.id(), getMapFromAsyncApi(asyncAPISupplier.asyncAPI()));

@@ -23,14 +23,14 @@ public class AsyncApiCodeGenerator {
     private final Config config;
     private final String basePackage;
 
-    private final static String DEFAULT_PACKAGE = "io.quarkiverse.asyncapi";
-    final static String SERVICE_LOADER = "org.eclipse.microprofile.config.spi.ConfigSource";
+    private static final String DEFAULT_PACKAGE = "io.quarkiverse.asyncapi";
+    static final String SERVICE_LOADER = "org.eclipse.microprofile.config.spi.ConfigSource";
 
-    private final static String CONFIG_SOURCE = "ConfigSource";
-    private final static String PRODUCER_NAME = "AsyncAPISupplier";
-    private final static String JAVA_SUFFIX = ".java";
+    private static final String CONFIG_SOURCE = "ConfigSource";
+    private static final String PRODUCER_NAME = "AsyncAPISupplier";
+    private static final String JAVA_SUFFIX = ".java";
 
-    private Collection<String> configClassNames = new HashSet<>();
+    private final Collection<String> configClassNames = new HashSet<>();
 
     public AsyncApiCodeGenerator(Path outPath, Config config, Optional<String> packageName) {
         this.outPath = outPath;

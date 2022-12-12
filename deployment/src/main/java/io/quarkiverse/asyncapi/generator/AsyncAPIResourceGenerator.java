@@ -1,7 +1,5 @@
 package io.quarkiverse.asyncapi.generator;
 
-import java.io.IOException;
-
 import org.jboss.jandex.ClassInfo;
 import org.jboss.jandex.IndexView;
 
@@ -14,8 +12,7 @@ import io.quarkus.deployment.builditem.CombinedIndexBuildItem;
 public class AsyncAPIResourceGenerator {
 
     @BuildStep
-    void asyncAPIs(CombinedIndexBuildItem index, BuildProducer<AsyncAPIBuildItem> resourceProducer)
-            throws IOException {
+    void asyncAPIs(CombinedIndexBuildItem index, BuildProducer<AsyncAPIBuildItem> resourceProducer) {
         IndexView indexView = index.getIndex();
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         for (ClassInfo supplier : indexView.getAllKnownSubclasses(JacksonAsyncAPISupplier.class)) {
