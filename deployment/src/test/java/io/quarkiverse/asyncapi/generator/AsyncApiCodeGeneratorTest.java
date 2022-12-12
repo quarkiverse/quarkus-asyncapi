@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -53,6 +54,6 @@ public class AsyncApiCodeGeneratorTest {
 
     @AfterEach
     void cleanUp() throws IOException {
-        Files.walk(outPath).map(Path::toFile).forEach(File::delete);
+        Files.walk(outPath).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
     }
 }
