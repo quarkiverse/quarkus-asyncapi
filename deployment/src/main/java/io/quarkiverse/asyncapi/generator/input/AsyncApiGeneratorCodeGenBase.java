@@ -40,7 +40,7 @@ public abstract class AsyncApiGeneratorCodeGenBase implements CodeGenProvider {
         for (AsyncApiCodeGenerator generator : buildCodeGenerators(context))
             try {
                 trigger(context, generator);
-                result |= generator.done();
+                result |= generator.done(context.test());
             } catch (IOException io) {
                 throw new CodeGenException(io);
             }

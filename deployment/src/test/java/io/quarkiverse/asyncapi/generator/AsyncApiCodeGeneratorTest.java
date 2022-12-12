@@ -37,7 +37,7 @@ public class AsyncApiCodeGeneratorTest {
         AsyncApiCodeGenerator generator = new AsyncApiCodeGenerator(genPath, Mockito.mock(Config.class), Optional.empty());
         try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("asyncapi.yml")) {
             generator.generate("Test", is);
-            generator.done();
+            generator.done(false);
         }
         Collection<Path> generatedFiles = Files.walk(genPath).filter(Files::isRegularFile).collect(Collectors.toList());
         JavaCompiler javac = ToolProvider.getSystemJavaCompiler();

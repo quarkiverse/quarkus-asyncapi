@@ -76,17 +76,18 @@ public class AsyncApiCodeGenerator {
         return simpleClassName;
     }
 
-    public boolean done() throws IOException {
+    public boolean done(boolean test) throws IOException {
         if (!configClassNames.isEmpty()) {
-            writeServiceLoader();
+            writeServiceLoader(test);
             return true;
         }
         return false;
     }
 
-    private void writeServiceLoader() throws IOException {
+    private void writeServiceLoader(boolean test) throws IOException {
         Path serviceLoader = Files
-                .createDirectories(outPath.getParent().getParent().resolve("classes").resolve("META-INF").resolve("services"))
+                .createDirectories(outPath.getParent().getParent().resolve(test ? "test-classes" : "classes")
+                        .resolve("META-INF").resolve("services"))
                 .resolve(SERVICE_LOADER);
         try (BufferedWriter w = Files.newBufferedWriter(serviceLoader)) {
             for (String implName : configClassNames) {
