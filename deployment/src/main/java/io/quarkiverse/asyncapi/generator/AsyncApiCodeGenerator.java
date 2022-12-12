@@ -1,9 +1,12 @@
 package io.quarkiverse.asyncapi.generator;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 
@@ -19,13 +22,15 @@ public class AsyncApiCodeGenerator {
     private final Path outPath;
     private final Config config;
     private final String basePackage;
-    private boolean generated;
 
     private final static String DEFAULT_PACKAGE = "io.quarkiverse.asyncapi";
+    final static String SERVICE_LOADER = "org.eclipse.microprofile.config.spi.ConfigSource";
 
     private final static String CONFIG_SOURCE = "ConfigSource";
     private final static String PRODUCER_NAME = "AsyncAPISupplier";
     private final static String JAVA_SUFFIX = ".java";
+
+    private Collection<String> configClassNames = new HashSet<>();
 
     public AsyncApiCodeGenerator(Path outPath, Config config, Optional<String> packageName) {
         this.outPath = outPath;
@@ -43,12 +48,11 @@ public class AsyncApiCodeGenerator {
     public void generate(String id, InputStream stream)
             throws IOException {
         id = AsyncAPIUtils.getJavaClassName(id);
-        AsyncAPI asyncAPI = ObjectMapperFactory.reader().readValue(stream, AsyncAPI.class);
+        AsyncAPI asyncAPI = ObjectMapperFactory.yaml().readValue(stream, AsyncAPI.class);
         Map<String, Object> data = Map.of("id", id, "packageName", basePackage, "asyncAPI",
-                escape(ObjectMapperFactory.writer().writeValueAsString(asyncAPI)));
-        writeTemplate(id + CONFIG_SOURCE, CONFIG_SOURCE, data);
-        writeTemplate(id + PRODUCER_NAME, PRODUCER_NAME, data);
-        generated = true;
+                escape(ObjectMapperFactory.json().writeValueAsString(asyncAPI)));
+        configClassNames.add(writeTemplate(id, CONFIG_SOURCE, data));
+        writeTemplate(id, PRODUCER_NAME, data);
     }
 
     private String escape(String raw) {
@@ -63,13 +67,33 @@ public class AsyncApiCodeGenerator {
         return escaped;
     }
 
-    private void writeTemplate(String className, String templateName, Map<String, Object> map) throws IOException {
+    private String writeTemplate(String id, String templateName, Map<String, Object> map) throws IOException {
+        String simpleClassName = id + templateName;
         Files.writeString(
-                Files.createDirectories(outPath.resolve(basePackage.replace('.', '/'))).resolve(className + JAVA_SUFFIX),
+                Files.createDirectories(outPath.resolve(basePackage.replace('.', '/')))
+                        .resolve(simpleClassName + JAVA_SUFFIX),
                 QuteTemplateHelper.getTemplate(config, templateName).data(map).render());
+        return simpleClassName;
     }
 
     public boolean done() throws IOException {
-        return generated;
+        if (!configClassNames.isEmpty()) {
+            writeServiceLoader();
+            return true;
+        }
+        return false;
     }
+
+    private void writeServiceLoader() throws IOException {
+        Path serviceLoader = Files
+                .createDirectories(outPath.getParent().getParent().resolve("classes").resolve("META-INF").resolve("services"))
+                .resolve(SERVICE_LOADER);
+        try (BufferedWriter w = Files.newBufferedWriter(serviceLoader)) {
+            for (String implName : configClassNames) {
+                w.write(basePackage + "." + implName);
+                w.write(System.lineSeparator());
+            }
+        }
+    }
+
 }

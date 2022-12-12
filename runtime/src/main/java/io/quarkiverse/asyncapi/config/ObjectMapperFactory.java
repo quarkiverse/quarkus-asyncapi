@@ -16,11 +16,11 @@ public class ObjectMapperFactory {
         return mapper.findAndRegisterModules().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
-    public static ObjectMapper reader() {
+    public static ObjectMapper yaml() {
         return ymlObjectMapper;
     }
 
-    public static ObjectMapper writer() {
+    public static ObjectMapper json() {
         return jsonObjectMapper;
     }
 }

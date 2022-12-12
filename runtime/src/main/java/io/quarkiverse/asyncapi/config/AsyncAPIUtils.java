@@ -13,4 +13,6 @@ public class AsyncAPIUtils {
         return Character.isUpperCase(ch) ? name : Character.toUpperCase(ch) + name.substring(1);
     }
 
+    private AsyncAPIUtils() {
+    }
 }

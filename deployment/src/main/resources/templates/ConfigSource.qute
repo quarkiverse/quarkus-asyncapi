@@ -5,7 +5,9 @@ import java.io.IOException;
 import io.quarkiverse.asyncapi.config.ObjectMapperFactory;
 import io.quarkiverse.asyncapi.config.AsyncAPIExtension;
 import com.asyncapi.v2.model.AsyncAPI;
+import io.quarkus.runtime.annotations.StaticInitSafe;
 
+@StaticInitSafe
 public class {id}ConfigSource extends AsyncConfigSource {
     public {id}ConfigSource () {
        super (new {id}AsyncAPISupplier());
