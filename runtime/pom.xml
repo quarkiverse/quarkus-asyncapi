@@ -8,6 +8,7 @@
   </parent>
   <artifactId>quarkus-asyncapi</artifactId>
   <name>Quarkus - AsyncAPI - Runtime</name>
+  <description>AsyncAPI configuration and metadata generator</description>
   <dependencies>
     <!-- Quarkus -->
     <dependency>
@@ -55,7 +56,7 @@
     <plugins>
       <plugin>
         <groupId>io.quarkus</groupId>
-        <artifactId>quarkus-bootstrap-maven-plugin</artifactId>
+        <artifactId>quarkus-extension-maven-plugin</artifactId>
         <version>${quarkus.version}</version>
         <executions>
           <execution>
