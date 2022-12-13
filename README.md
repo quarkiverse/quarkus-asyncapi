@@ -1,5 +1,5 @@
-# quakus-async-api
+# Quarkus Async API extension
 
-Quarkus asyncapi extension. 
+[![Version](https://img.shields.io/maven-central/v/io.quarkiverse.asyncapi/quarkus-asyncapi?logo=apache-maven&style=for-the-badge)](https://search.maven.org/artifact/io.quarkiverse.asyncapi/quarkus-asyncapi)
 
-Alpha version that generates AyncAPIRegistry and configuration classes
+Generates `AsyncAPIRegistry` and configuration classes
