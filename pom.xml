@@ -8,7 +8,7 @@
   </parent>
   <groupId>io.quarkiverse.asyncapi</groupId>
   <artifactId>quarkus-asyncapi-parent</artifactId>
-  <version>0.0.1.jandex2</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Quarkus - AsyncAPI - Parent</name>
   <modules>
@@ -106,8 +106,4 @@
       </modules>
     </profile>
   </profiles>
-
-  <scm>
-    <tag>0.0.1.jandex2</tag>
-  </scm>
 </project>
