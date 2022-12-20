@@ -1,6 +1,7 @@
 package io.quarkiverse.asyncapi.generator;
 
 import org.jboss.jandex.ClassInfo;
+import org.jboss.jandex.DotName;
 import org.jboss.jandex.IndexView;
 
 import io.quarkiverse.asyncapi.config.AsyncAPISupplier;
@@ -15,7 +16,7 @@ public class AsyncAPIResourceGenerator {
     void asyncAPIs(CombinedIndexBuildItem index, BuildProducer<AsyncAPIBuildItem> resourceProducer) {
         IndexView indexView = index.getIndex();
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        for (ClassInfo supplier : indexView.getAllKnownSubclasses(JacksonAsyncAPISupplier.class)) {
+        for (ClassInfo supplier : indexView.getAllKnownSubclasses(DotName.createSimple(JacksonAsyncAPISupplier.class))) {
             try {
                 resourceProducer
                         .produce(new AsyncAPIBuildItem(
