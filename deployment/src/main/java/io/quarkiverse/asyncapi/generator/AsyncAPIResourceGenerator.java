@@ -16,7 +16,8 @@ public class AsyncAPIResourceGenerator {
     void asyncAPIs(CombinedIndexBuildItem index, BuildProducer<AsyncAPIBuildItem> resourceProducer) {
         IndexView indexView = index.getIndex();
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        for (ClassInfo supplier : indexView.getAllKnownSubclasses(DotName.createSimple(JacksonAsyncAPISupplier.class))) {
+        for (ClassInfo supplier : indexView
+                .getAllKnownSubclasses(DotName.createSimple(JacksonAsyncAPISupplier.class.getName()))) {
             try {
                 resourceProducer
                         .produce(new AsyncAPIBuildItem(
