@@ -36,21 +36,10 @@ channels:
             flogo-kafka:
               partitions: "0"
               offset: 0
-  /dup:
-    description: A duplicate message channel
-    subscribe:
-      summary: Get messages
-      message:
-        $ref: '#/components/messages/message'
-    publish:
-      summary: Send messages
-      message:
-        $ref: '#/components/messages/message'
 components:
   messages:
     message:
       name: message
-      title: A message
       summary: A message
       contentType: application/json
       payload:
@@ -58,3 +47,8 @@ components:
   schemas:
     message:
       type: object
+      properties:
+        name: 
+          type: string
+        age:
+          type: integer

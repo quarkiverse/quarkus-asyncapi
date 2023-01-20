@@ -33,26 +33,34 @@ public abstract class AbstractChannelConfigurer implements ChannelConfigurer {
         return protocol;
     }
 
+    protected final String getDuplicatedChannelName(String channelName) {
+        return channelName + "_encore";
+    }
+
     @Override
     public void channelConfig(String channelName, ChannelItem item, Server server, Map<String, String> result) {
-        if (item.getPublish() != null) {
-            result.put(outgoingProperty(channelName, CONNECTOR), connectorId);
-            addOutgoingChannel(channelName, item.getPublish(), server, result);
-        }
+
         if (item.getSubscribe() != null) {
-            result.put(incomingProperty(channelName, CONNECTOR), connectorId);
-            addIncomingChannel(channelName, item.getPublish(), server, result);
+            String incomingChannel = channelName + "_in";
+            result.put(incomingProperty(incomingChannel, CONNECTOR), connectorId);
+            addIncomingChannel(incomingChannel, channelName, item.getPublish(), server, result);
         }
+        if (item.getPublish() != null) {
+            String outgoingChannel = channelName + "_out";
+            result.put(outgoingProperty(outgoingChannel, CONNECTOR), connectorId);
+            addOutgoingChannel(outgoingChannel, channelName, item.getPublish(), server, result);
+        }
+
     }
 
     public void commonConfig(Server server, Map<String, String> result) {
 
     }
 
-    protected abstract void addOutgoingChannel(String channelName, Operation operation, Server server,
+    protected abstract void addOutgoingChannel(String smallryeChannel, String channelName, Operation operation, Server server,
             Map<String, String> result);
 
-    protected abstract void addIncomingChannel(String channelName, Operation operation, Server server,
+    protected abstract void addIncomingChannel(String smallryeChannel, String channelName, Operation operation, Server server,
             Map<String, String> result);
 
 }

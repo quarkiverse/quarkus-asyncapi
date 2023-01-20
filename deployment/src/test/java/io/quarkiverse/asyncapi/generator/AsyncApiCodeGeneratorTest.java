@@ -21,8 +21,6 @@ import org.mockito.Mockito;
 
 public class AsyncApiCodeGeneratorTest {
 
-    private Path outPath;
-
     @Test
     void testGenerator(@TempDir Path outPath) throws IOException {
         Path genPath = outPath.resolve("src").resolve("yml");
