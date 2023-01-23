@@ -1,12 +1,12 @@
-package {packageName};
+package {packageName}.{id};
 
 import io.quarkiverse.asyncapi.config.JacksonAsyncAPISupplier;
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class {id}AsyncAPISupplier extends JacksonAsyncAPISupplier {
+public class AsyncAPISupplier extends JacksonAsyncAPISupplier {
 
-    public {id}AsyncAPISupplier () {
+    public AsyncAPISupplier () {
        super ("{id}", "{asyncAPI}");
     }
 }

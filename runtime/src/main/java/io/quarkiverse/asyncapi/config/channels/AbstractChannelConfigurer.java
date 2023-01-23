@@ -33,15 +33,11 @@ public abstract class AbstractChannelConfigurer implements ChannelConfigurer {
         return protocol;
     }
 
-    protected final String getDuplicatedChannelName(String channelName) {
-        return channelName + "_encore";
-    }
-
     @Override
     public void channelConfig(String channelName, ChannelItem item, Server server, Map<String, String> result) {
 
         if (item.getSubscribe() != null) {
-            String incomingChannel = channelName + "_in";
+            String incomingChannel = channelName;
             result.put(incomingProperty(incomingChannel, CONNECTOR), connectorId);
             addIncomingChannel(incomingChannel, channelName, item.getPublish(), server, result);
         }

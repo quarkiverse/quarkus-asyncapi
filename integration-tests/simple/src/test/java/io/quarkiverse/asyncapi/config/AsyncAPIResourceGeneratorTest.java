@@ -19,25 +19,25 @@ public class AsyncAPIResourceGeneratorTest {
     @Inject
     AsyncAPIRegistry registry;
 
-    @ConfigProperty(name = "mp.messaging.incoming./message_in.connector")
+    @ConfigProperty(name = "mp.messaging.incoming./message.connector")
     Optional<String> kafkaIncomingConnector;
 
     @ConfigProperty(name = "mp.messaging.outgoing./message_out.connector")
     Optional<String> kafkaOutgoingConnector;
 
-    @ConfigProperty(name = "mp.messaging.incoming.first_in.connector")
+    @ConfigProperty(name = "mp.messaging.incoming.first.connector")
     Optional<String> httpIncomingConnector;
 
     @ConfigProperty(name = "mp.messaging.outgoing.first_out.connector")
     Optional<String> httpOutgoingConnector;
 
-    @ConfigProperty(name = "mp.messaging.incoming./message_in.topic")
+    @ConfigProperty(name = "mp.messaging.incoming./message.topic")
     Optional<String> incomingTopic;
 
     @ConfigProperty(name = "mp.messaging.outgoing./message_out.topic")
     Optional<String> outgoingTopic;
 
-    @ConfigProperty(name = "mp.messaging.incoming.first_in.path")
+    @ConfigProperty(name = "mp.messaging.incoming.first.path")
     Optional<String> incomingPath;
 
     @ConfigProperty(name = "mp.messaging.outgoing.first_out.path")

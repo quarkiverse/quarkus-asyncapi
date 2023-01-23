@@ -1,13 +1,13 @@
-package {packageName};
+package {packageName}.{id};
 
 import io.quarkiverse.asyncapi.config.AsyncConfigSource;
 import io.quarkus.runtime.annotations.StaticInitSafe;
 
 @StaticInitSafe
-public class {id}ConfigSource extends AsyncConfigSource {
+public class ConfigSource extends AsyncConfigSource {
 	private static final long serialVersionUID = 1L;
 	
-    public {id}ConfigSource () {
-       super (new {id}AsyncAPISupplier());
+    public ConfigSource () {
+       super (new AsyncAPISupplier());
     }
 }
