@@ -68,12 +68,11 @@ public class AsyncApiCodeGenerator {
     }
 
     private String writeTemplate(String id, String templateName, Map<String, Object> map) throws IOException {
-        String simpleClassName = id + templateName;
         Files.writeString(
-                Files.createDirectories(outPath.resolve(basePackage.replace('.', '/')))
-                        .resolve(simpleClassName + JAVA_SUFFIX),
+                Files.createDirectories(outPath.resolve(basePackage.replace('.', '/')).resolve(id))
+                        .resolve(templateName + JAVA_SUFFIX),
                 QuteTemplateHelper.getTemplate(config, templateName).data(map).render());
-        return simpleClassName;
+        return basePackage + "." + id + "." + templateName;
     }
 
     public boolean done(boolean test) throws IOException {
@@ -91,7 +90,7 @@ public class AsyncApiCodeGenerator {
                 .resolve(SERVICE_LOADER);
         try (BufferedWriter w = Files.newBufferedWriter(serviceLoader)) {
             for (String implName : configClassNames) {
-                w.write(basePackage + "." + implName);
+                w.write(implName);
                 w.write(System.lineSeparator());
             }
         }
