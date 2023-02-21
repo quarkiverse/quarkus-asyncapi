@@ -25,7 +25,7 @@
     <quarkus.version>2.15.0.Final</quarkus.version>
     <version.org.assertj>3.23.1</version.org.assertj>
     <version.asyncapi.core>1.0.0-EAP-1</version.asyncapi.core>
-    <version.com.fasterxml.jackson>2.14.1</version.com.fasterxml.jackson>
+    <version.com.fasterxml.jackson>2.14.2</version.com.fasterxml.jackson>
     <version.org.projectlombok>1.18.24</version.org.projectlombok>
   </properties>
   <dependencyManagement>
