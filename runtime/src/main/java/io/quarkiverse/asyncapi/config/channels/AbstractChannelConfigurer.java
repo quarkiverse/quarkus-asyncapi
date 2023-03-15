@@ -2,9 +2,9 @@ package io.quarkiverse.asyncapi.config.channels;
 
 import java.util.Map;
 
-import com.asyncapi.v2.model.channel.ChannelItem;
-import com.asyncapi.v2.model.channel.operation.Operation;
-import com.asyncapi.v2.model.server.Server;
+import com.asyncapi.v2._6_0.model.channel.ChannelItem;
+import com.asyncapi.v2._6_0.model.channel.operation.Operation;
+import com.asyncapi.v2._6_0.model.server.Server;
 
 public abstract class AbstractChannelConfigurer implements ChannelConfigurer {
 

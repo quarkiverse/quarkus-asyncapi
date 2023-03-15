@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Test;
 
-import com.asyncapi.v2.model.AsyncAPI;
+import com.asyncapi.v2._6_0.model.AsyncAPI;
 
 import io.quarkus.test.junit.QuarkusTest;
 

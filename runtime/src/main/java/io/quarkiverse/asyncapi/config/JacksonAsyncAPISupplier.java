@@ -3,7 +3,7 @@ package io.quarkiverse.asyncapi.config;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
-import com.asyncapi.v2.model.AsyncAPI;
+import com.asyncapi.v2._6_0.model.AsyncAPI;
 
 public abstract class JacksonAsyncAPISupplier implements AsyncAPISupplier {
 

@@ -6,7 +6,7 @@ import java.util.ServiceLoader;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.asyncapi.v2.model.server.Server;
+import com.asyncapi.v2._6_0.model.server.Server;
 
 public class ChannelConfigurerFactory {
 
