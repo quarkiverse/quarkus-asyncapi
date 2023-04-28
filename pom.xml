@@ -21,10 +21,10 @@
     <maven.compiler.release>11</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <quarkus.version>2.15.0.Final</quarkus.version>
+    <quarkus.version>3.0.0.Final</quarkus.version>
     <version.org.assertj>3.23.1</version.org.assertj>
     <version.asyncapi.core>1.0.0-EAP-2</version.asyncapi.core>
-    <version.com.fasterxml.jackson>2.14.1</version.com.fasterxml.jackson>
+    <version.com.fasterxml.jackson>2.14.2</version.com.fasterxml.jackson>
     <version.org.projectlombok>1.18.24</version.org.projectlombok>
   </properties>
   <dependencyManagement>
