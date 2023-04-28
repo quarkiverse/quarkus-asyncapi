@@ -7,9 +7,9 @@ import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.asyncapi.v2.model.AsyncAPI;
-import com.asyncapi.v2.model.channel.ChannelItem;
-import com.asyncapi.v2.model.server.Server;
+import com.asyncapi.v2._6_0.model.AsyncAPI;
+import com.asyncapi.v2._6_0.model.channel.ChannelItem;
+import com.asyncapi.v2._6_0.model.server.Server;
 
 import io.quarkiverse.asyncapi.config.channels.ChannelConfigurer;
 import io.quarkiverse.asyncapi.config.channels.ChannelConfigurerFactory;

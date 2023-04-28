@@ -2,7 +2,7 @@ package io.quarkiverse.asyncapi.config;
 
 import java.util.Optional;
 
-import com.asyncapi.v2.model.AsyncAPI;
+import com.asyncapi.v2._6_0.model.AsyncAPI;
 
 /** Holder of Async API instances */
 public interface AsyncAPIRegistry {
