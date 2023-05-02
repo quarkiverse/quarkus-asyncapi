@@ -14,6 +14,7 @@
     <modules>
         <module>deployment</module>
         <module>runtime</module>
+        <module>quarkus-asyncapi-scanner-tests</module>
     </modules>
     <dependencyManagement>
         <dependencies>
@@ -70,7 +71,7 @@
                 </property>
             </activation>
             <modules>
-                <module>integration-tests</module>
+                <module>quarkus-asyncapi-scanner-tests</module>
             </modules>
         </profile>
     </profiles>
