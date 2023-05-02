@@ -1,0 +1,5 @@
+name: quarkus-asyncapi
+title: Quarkus Asyncapi
+version: dev
+nav:
+  - modules/ROOT/nav.adoc

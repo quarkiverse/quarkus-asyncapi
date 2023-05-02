@@ -2,19 +2,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>io.quarkiverse</groupId>
-        <artifactId>quarkiverse-parent</artifactId>
-        <version>12</version>
+        <groupId>io.quarkiverse.asyncapi</groupId>
+        <artifactId>quarkus-asyncapi-root</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
     <groupId>io.quarkiverse.asyncapi</groupId>
-    <artifactId>quarkus-asyncapi-root</artifactId>
+    <artifactId>quarkus-asyncapi-scanner-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Quarkus - AsyncAPI Root</name>
+    <name>Quarkus - AsyncAPI Scanner - Parent</name>
     <modules>
-        <module>quarkus-asyncapi-parent</module>
-        <module>quarkus-asyncapi-scanner-parent</module>
-        <!--<module>docs</module> TODO docs -->
+        <module>deployment</module>
+        <module>runtime</module>
+        <module>docs</module>
+        <!--TODO integration-tests-->
     </modules>
     <properties>
         <maven.compiler.parameters>true</maven.compiler.parameters>
@@ -24,10 +25,10 @@
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <quarkus.version>3.0.0.Final</quarkus.version>
+        <quarkus.version>2.16.3.Final</quarkus.version>
         <version.org.assertj>3.24.2</version.org.assertj>
         <version.org.slf4j>2.0.6</version.org.slf4j>
-        <version.asyncapi.core>1.0.0-EAP-2</version.asyncapi.core>
+        <version.asyncapi.core>1.0.0-EAP-1</version.asyncapi.core>
         <version.org.mockito>4.11.0</version.org.mockito>
         <version.com.fasterxml.jackson>2.14.2</version.com.fasterxml.jackson>
         <version.org.projectlombok>1.18.26</version.org.projectlombok>
@@ -121,4 +122,18 @@
             </plugins>
         </pluginManagement>
     </build>
+    <profiles>
+        <profile>
+            <id>it</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>!true</value>
+                </property>
+            </activation>
+            <modules>
+                <module>integration-tests</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>
