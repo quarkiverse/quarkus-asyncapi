@@ -14,8 +14,7 @@
     <modules>
         <module>deployment</module>
         <module>runtime</module>
-        <module>docs</module>
-        <!--TODO integration-tests-->
+        <module>integration-tests</module>
     </modules>
     <dependencyManagement>
         <dependencies>
