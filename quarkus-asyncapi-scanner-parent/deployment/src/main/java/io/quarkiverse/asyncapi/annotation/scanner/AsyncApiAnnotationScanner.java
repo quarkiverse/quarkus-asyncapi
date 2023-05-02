@@ -156,14 +156,17 @@ public class AsyncApiAnnotationScanner {
                     isEmitter = annotationTargetType.name().toString().contains("Emitter");
                     if (annotationTargetType.kind().equals(PARAMETERIZED_TYPE)) {
                         Type genericMessageType = annotationTargetType.asParameterizedType().arguments().get(0);
-                        messageType = switch (genericMessageType.kind()) {
-                            case CLASS ->
-                                genericMessageType.asClassType();
-                            case PARAMETERIZED_TYPE ->
-                                genericMessageType.asParameterizedType();
-                            default ->
+                        switch (genericMessageType.kind()) {
+                            case CLASS:
+                                messageType = genericMessageType.asClassType();
+                                break;
+                            case PARAMETERIZED_TYPE:
+                                messageType = genericMessageType.asParameterizedType();
+                                break;
+                            default:
                                 throw new IllegalArgumentException("unhandled messageType " + genericMessageType.kind());
-                        };
+                        }
+                        ;
                     } else {
                         throw new IllegalArgumentException(
                                 "Channel-field has to be parameterized " + aAnnotationInstance.target());
@@ -292,13 +295,17 @@ public class AsyncApiAnnotationScanner {
     Schema getSchema(Type aType, Map<String, Type> typeVariableMap) {
         Schema.SchemaBuilder schemaBuilder = Schema.builder();
         switch (aType.kind()) {
-            case PRIMITIVE ->
+            case PRIMITIVE:
                 getPrimitiveSchema(aType, schemaBuilder);
-            case ARRAY ->
+                break;
+            case ARRAY:
                 getArraySchema(aType, typeVariableMap, schemaBuilder);
-            case CLASS, PARAMETERIZED_TYPE ->
+                break;
+            case CLASS:
+            case PARAMETERIZED_TYPE:
                 getClassSchema(aType, schemaBuilder, typeVariableMap);
-            default -> //TODO other types
+                break;
+            default: //TODO other types
                 schemaBuilder.type(com.asyncapi.v2.schema.Type.OBJECT);
         }
         return schemaBuilder.build();
@@ -311,7 +318,8 @@ public class AsyncApiAnnotationScanner {
         } else if (isGlobalDefinedSchema(aType)) {
             aSchemaBuilder.ref("#/components/schemas/" + aType.name().withoutPackagePrefix());
         } else if (classInfo != null && classInfo.isEnum()) {
-            aSchemaBuilder.enumValue(classInfo.enumConstants().stream().map(FieldInfo::name).map(Object.class::cast).toList());
+            aSchemaBuilder.enumValue(classInfo.enumConstants().stream().map(FieldInfo::name).map(Object.class::cast)
+                    .collect(Collectors.toList()));
         } else if (VISITED_TYPES.contains(aType)) {
             LOGGER.fine("getClassSchema() Already visited type " + aType + ". Stopping recursion!");
         } else {
@@ -389,15 +397,23 @@ public class AsyncApiAnnotationScanner {
 
     void getJavaLangPackageSchema(Type aType, Schema.SchemaBuilder aSchemaBuilder) {
         switch (aType.name().withoutPackagePrefix()) {
-            case "Boolean" ->
+            case "Boolean":
                 aSchemaBuilder.type(com.asyncapi.v2.schema.Type.BOOLEAN);
-            case "Character", "String" ->
+                break;
+            case "Character":
+            case "String":
                 aSchemaBuilder.type(com.asyncapi.v2.schema.Type.STRING);
-            case "Integer", "Long", "Short" ->
+                break;
+            case "Integer":
+            case "Long":
+            case "Short":
                 aSchemaBuilder.type(com.asyncapi.v2.schema.Type.INTEGER);
-            case "Double", "Float" ->
+                break;
+            case "Double":
+            case "Float":
                 aSchemaBuilder.type(com.asyncapi.v2.schema.Type.NUMBER);
-            default ->
+                break;
+            default:
                 aSchemaBuilder.type(com.asyncapi.v2.schema.Type.OBJECT);
         }
     }
@@ -411,15 +427,21 @@ public class AsyncApiAnnotationScanner {
 
     void getPrimitiveSchema(Type aType, Schema.SchemaBuilder aSchemaBuilder) {
         switch (aType.asPrimitiveType().primitive()) {
-            case BOOLEAN ->
+            case BOOLEAN:
                 aSchemaBuilder.type(com.asyncapi.v2.schema.Type.BOOLEAN);
-            case CHAR ->
+                break;
+            case CHAR:
                 aSchemaBuilder.type(com.asyncapi.v2.schema.Type.STRING);
-            case INT, LONG, SHORT ->
+                break;
+            case INT:
+            case LONG:
+            case SHORT:
                 aSchemaBuilder.type(com.asyncapi.v2.schema.Type.INTEGER);
-            case DOUBLE, FLOAT ->
+                break;
+            case DOUBLE:
+            case FLOAT:
                 aSchemaBuilder.type(com.asyncapi.v2.schema.Type.NUMBER);
-            default ->
+            default:
                 aSchemaBuilder.type(com.asyncapi.v2.schema.Type.OBJECT);
         }
     }

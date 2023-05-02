@@ -94,13 +94,11 @@ public class AsyncApiRecorder {
 
     String toPlantUml(AsyncAPI aAsyncAPI) {
         String server = "[" + aAsyncAPI.getInfo().getTitle() + "\\n" + aAsyncAPI.getInfo().getVersion() + "]";
-        String start = """
-                @startuml
-                'needed on servers without graphviz...but then the 'left to right direction' does not work ;(
-                !pragma layout smetana
-                left to right direction
-                skinparam pathHoverColor Blue
-                """;
+        String start = "@startuml\n"
+                + "'needed on servers without graphviz...but then the 'left to right direction' does not work ;(\n"
+                + "!pragma layout smetana\n"
+                + "left to right direction\n"
+                + "skinparam pathHoverColor Blue\n";
         return aAsyncAPI.getChannels().values().stream()
                 .map(channelItem -> toPlantUmlArrow(server, channelItem))
                 .distinct()//ignore multiple publishers/subscribers

@@ -21,6 +21,23 @@ import io.vertx.ext.web.RoutingContext;
 public class AsyncApiHandler implements Handler<RoutingContext> {
 
     private static final Logger LOGGER = Logger.getLogger(AsyncApiHandler.class.getName());
+    static final String HTML_PATTERN = "<!DOCTYPE html>\n"
+            + "<html lang=\"en\">\n"
+            + "  <head>\n"
+            + "    <script src=\"https://unpkg.com/@webcomponents/webcomponentsjs@%s/webcomponents-bundle.js\"></script>\n"
+            + "    <script\n"
+            + "      src=\"https://unpkg.com/@asyncapi/web-component@%s/lib/asyncapi-web-component.js\"\n"
+            + "      defer\n"
+            + "    ></script>\n"
+            + "  </head>\n"
+            + "  <body>\n"
+            + "    <asyncapi-component\n"
+            + "      cssImportPath=\"https://unpkg.com/@asyncapi/react-component@%s/styles/default.css\"\n"
+            + "      schemaUrl=\"%s/asyncapi.yaml\"\n"
+            + "    >\n"
+            + "    </asyncapi-component>\n"
+            + "  </body>\n"
+            + "</html>\n";
 
     @Override
     public void handle(RoutingContext aRoutingContext) {
@@ -28,12 +45,14 @@ public class AsyncApiHandler implements Handler<RoutingContext> {
         if (ConfigProvider.getConfig().getValue("quarkus.asyncapi.annotation.scanner.enabled", Boolean.class)) {
             Format format = getFormat(aRoutingContext);
             resp.headers().set("Content-Type", format.getMimeType() + ";charset=UTF-8");
-            String output = switch (format) {
-                case HTML ->
-                    getHtml(aRoutingContext);
-                default ->
-                    readFile(format);
-            };
+            String output;
+            switch (format) {
+                case HTML:
+                    output = getHtml(aRoutingContext);
+                    break;
+                default:
+                    output = readFile(format);
+            }
             resp.end(Buffer.buffer(output)); // see http://localhost:8080/asyncapi
         } else {
             resp.headers().set("Content-Type", "text/plain;charset=UTF-8");
@@ -57,26 +76,7 @@ public class AsyncApiHandler implements Handler<RoutingContext> {
         String rootPath = ConfigProvider.getConfig()
                 .getValue("quarkus.http.root-path", String.class);
         //TODO logo
-        return """
-                <!DOCTYPE html>
-                <html lang="en">
-                  <head>
-                    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@%s/webcomponents-bundle.js"></script>
-                    <script
-                      src="https://unpkg.com/@asyncapi/web-component@%s/lib/asyncapi-web-component.js"
-                      defer
-                    ></script>
-                  </head>
-                  <body>
-                    <asyncapi-component
-                      cssImportPath="https://unpkg.com/@asyncapi/react-component@%s/styles/default.css"
-                      schemaUrl="%s/asyncapi.yaml"
-                    >
-                    </asyncapi-component>
-                  </body>
-                </html>
-                """
-                .formatted(version, version, version, rootPath, rootPath);
+        return String.format(HTML_PATTERN, version, version, version, rootPath, rootPath);
     }
 
     Format getFormat(RoutingContext aRoutingContext) {
