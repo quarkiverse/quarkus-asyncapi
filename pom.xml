@@ -14,7 +14,8 @@
     <modules>
         <module>quarkus-asyncapi-parent</module>
         <module>quarkus-asyncapi-scanner-parent</module>
-        <!--<module>docs</module> TODO docs -->
+        <module>quarkus-asyncapi-spi</module>
+        <!--<module>docs</module> TODO gobal docs -->
     </modules>
     <properties>
         <maven.compiler.parameters>true</maven.compiler.parameters>

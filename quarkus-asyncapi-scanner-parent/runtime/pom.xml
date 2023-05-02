@@ -10,6 +10,11 @@
     <name>Quarkus - AsyncAPI Scanner - Runtime</name>
     <description>AsyncAPI Annotation Scanner</description>
     <dependencies>
+        <dependency>
+            <groupId>io.quarkiverse.asyncapi</groupId>
+            <artifactId>quarkus-asyncapi-spi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- Quarkus -->
         <dependency>
             <groupId>io.quarkus</groupId>
