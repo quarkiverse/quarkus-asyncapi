@@ -2,7 +2,8 @@ package io.quarkiverse.asyncapi.annotation.scanner;
 
 import java.util.List;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
@@ -20,21 +21,23 @@ import io.smallrye.reactive.messaging.annotations.Broadcast;
 @ApplicationScoped
 public class DummyController {
 
-    //no inject, there is no implementation for Emitter in classpath -> Quarkus won't start
+    @Inject
     @Channel("channel-x")
     @Broadcast
     @org.eclipse.microprofile.openapi.annotations.media.Schema(description = "testMessage Emmiter description")
     Emitter<TestMessage<TestMessageData>> emitter;
-    //no inject, there is no implementation for Publisher in classpath -> Quarkus won't start
+
+    @Inject
     @Channel("channel-y")
     @org.eclipse.microprofile.openapi.annotations.media.Schema(description = "testMessage Publisher description")
     Publisher<TestMessage<TestMessageData>> publisher;
-    //no inject, there is no implementation for Publisher in classpath -> Quarkus won't start
 
+    @Inject
     @Channel("transfer-channel1")
     @org.eclipse.microprofile.openapi.annotations.media.Schema(description = "transferEmitter description1")
     Emitter<TransferMessage<TransferWorkorderMessage>> transferEmitter1;
 
+    @Inject
     @Channel("transfer-channel2")
     @Schema(description = "transferEmitter description2")
     Emitter<TransferMessage<String>> transferEmitter2;

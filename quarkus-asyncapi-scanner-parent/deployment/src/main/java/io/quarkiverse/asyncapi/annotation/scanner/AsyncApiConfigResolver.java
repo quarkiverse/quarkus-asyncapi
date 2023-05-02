@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.config.ConfigProvider;
 
-import com.asyncapi.v2.model.info.Contact;
-import com.asyncapi.v2.model.info.Info;
-import com.asyncapi.v2.model.info.License;
-import com.asyncapi.v2.model.server.Server;
+import com.asyncapi.v2._0_0.model.info.Contact;
+import com.asyncapi.v2._0_0.model.info.Info;
+import com.asyncapi.v2._0_0.model.info.License;
+import com.asyncapi.v2._0_0.model.server.Server;
 
 import io.quarkiverse.asyncapi.annotation.scanner.config.AsyncApiRuntimeConfig;
 import io.quarkiverse.asyncapi.annotation.scanner.config.Channel;

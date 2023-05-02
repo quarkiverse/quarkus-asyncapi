@@ -4,8 +4,8 @@ import java.util.Map;
 
 import org.jboss.jandex.IndexView;
 
-import com.asyncapi.v2.model.AsyncAPI;
-import com.asyncapi.v2.model.server.Server;
+import com.asyncapi.v2._0_0.model.AsyncAPI;
+import com.asyncapi.v2._0_0.model.server.Server;
 
 import io.quarkiverse.asyncapi.annotation.scanner.config.AsyncApiRuntimeConfig;
 

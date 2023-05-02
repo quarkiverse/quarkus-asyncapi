@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.microprofile.config.ConfigProvider;
 
-import com.asyncapi.v2.model.AsyncAPI;
+import com.asyncapi.v2._0_0.model.AsyncAPI;
 
 import io.quarkiverse.asyncapi.annotation.scanner.config.AsyncApiRuntimeConfig;
 import io.quarkus.deployment.annotations.BuildProducer;

@@ -1,7 +1,7 @@
 package io.quarkiverse.asyncapi.annotation.scanner;
 
-import com.asyncapi.v2.model.AsyncAPI;
-import com.asyncapi.v2.model.channel.ChannelItem;
+import com.asyncapi.v2._0_0.model.AsyncAPI;
+import com.asyncapi.v2._0_0.model.channel.ChannelItem;
 
 /**
  * AsyncpiFilter

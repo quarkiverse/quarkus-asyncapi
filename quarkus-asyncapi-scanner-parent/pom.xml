@@ -17,72 +17,12 @@
         <module>docs</module>
         <!--TODO integration-tests-->
     </modules>
-    <properties>
-        <maven.compiler.parameters>true</maven.compiler.parameters>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <compiler-plugin.version>3.8.1</compiler-plugin.version>
-        <maven.compiler.release>17</maven.compiler.release>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <quarkus.version>2.16.3.Final</quarkus.version>
-        <version.org.assertj>3.24.2</version.org.assertj>
-        <version.org.slf4j>2.0.6</version.org.slf4j>
-        <version.asyncapi.core>1.0.0-EAP-1</version.asyncapi.core>
-        <version.org.mockito>4.11.0</version.org.mockito>
-        <version.com.fasterxml.jackson>2.14.2</version.com.fasterxml.jackson>
-        <version.org.projectlombok>1.18.26</version.org.projectlombok>
-    </properties>
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>io.quarkus</groupId>
-                <artifactId>quarkus-bom</artifactId>
-                <version>${quarkus.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
             <dependency>
                 <groupId>io.vertx</groupId>
                 <artifactId>vertx-core</artifactId>
                 <version>4.3.8</version>
-            </dependency>
-            <dependency>
-                <groupId>io.quarkus</groupId>
-                <artifactId>quarkus-vertx-http</artifactId>
-                <version>${quarkus.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${version.org.slf4j}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${version.org.projectlombok}</version>
-            </dependency> 
-            <dependency>
-                <groupId>org.assertj</groupId>
-                <artifactId>assertj-core</artifactId>
-                <version>${version.org.assertj}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
-                <version>${version.org.mockito}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.asyncapi</groupId>
-                <artifactId>asyncapi-core</artifactId>
-                <version>${version.asyncapi.core}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.dataformat</groupId>
-                <artifactId>jackson-dataformat-yaml</artifactId>
-                <version>${version.com.fasterxml.jackson}</version>
             </dependency>
             <!--Just for Tests Simple Project-->
             <dependency>

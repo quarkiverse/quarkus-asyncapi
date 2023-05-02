@@ -7,11 +7,11 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.asyncapi.v2.model.channel.ChannelItem;
-import com.asyncapi.v2.model.channel.message.Message;
-import com.asyncapi.v2.model.channel.operation.Operation;
-import com.asyncapi.v2.model.schema.Schema;
-import com.asyncapi.v2.model.schema.Type;
+import com.asyncapi.v2._0_0.model.channel.ChannelItem;
+import com.asyncapi.v2._0_0.model.channel.message.Message;
+import com.asyncapi.v2._0_0.model.channel.operation.Operation;
+import com.asyncapi.v2.schema.Schema;
+import com.asyncapi.v2.schema.Type;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;

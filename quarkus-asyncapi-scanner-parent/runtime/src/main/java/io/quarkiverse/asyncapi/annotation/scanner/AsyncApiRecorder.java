@@ -14,14 +14,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
-import com.asyncapi.v2.model.AsyncAPI;
-import com.asyncapi.v2.model.channel.ChannelItem;
+import com.asyncapi.v2._0_0.model.AsyncAPI;
+import com.asyncapi.v2._0_0.model.channel.ChannelItem;
+import com.asyncapi.v2.binding.channel.kafka.KafkaChannelBinding;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.quarkiverse.asyncapi.annotation.scanner.config.AsyncApiRuntimeConfig;
-import io.quarkiverse.asyncapi.annotation.scanner.kafka.binding.KafkaChannelBinding;
 import io.quarkus.runtime.annotations.Recorder;
 import net.sourceforge.plantuml.FileFormat;
 import net.sourceforge.plantuml.FileFormatOption;

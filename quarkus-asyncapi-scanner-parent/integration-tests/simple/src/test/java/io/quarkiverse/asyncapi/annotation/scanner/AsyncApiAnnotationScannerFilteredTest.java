@@ -22,7 +22,7 @@ public class AsyncApiAnnotationScannerFilteredTest {
         String yaml = Files.readAllLines(Path.of(System.getProperty("java.io.tmpdir"), "asyncApi.yaml")).stream()
                 .collect(Collectors.joining("\n"));
         assertThat(yaml).isNotNull();
-        System.out.println(yaml);
+        //        System.out.println(yaml);
         JsonNode asyncAPI = ObjectMapperFactory.yaml().readTree(yaml);
         //when
 
@@ -162,7 +162,7 @@ public class AsyncApiAnnotationScannerFilteredTest {
         String yaml = Files.readAllLines(Path.of(System.getProperty("java.io.tmpdir"), "asyncApi.yaml")).stream()
                 .collect(Collectors.joining("\n"));
         assertThat(yaml).isNotNull();
-        System.out.println(yaml);
+        //        System.out.println(yaml);
         JsonNode asyncAPI = ObjectMapperFactory.yaml().readTree(yaml);
         //when
         assertThat(asyncAPI.at("/channels")).isInstanceOf(ObjectNode.class);
@@ -260,7 +260,7 @@ public class AsyncApiAnnotationScannerFilteredTest {
         String yaml = Files.readAllLines(Path.of(System.getProperty("java.io.tmpdir"), "asyncApi.yaml")).stream()
                 .collect(Collectors.joining("\n"));
         assertThat(yaml).isNotNull();
-        System.out.println(yaml);
+        //        System.out.println(yaml);
         JsonNode asyncAPI = ObjectMapperFactory.yaml().readTree(yaml);
         //when
         assertThat(asyncAPI.at("/channels")).isInstanceOf(ObjectNode.class);
@@ -359,7 +359,7 @@ public class AsyncApiAnnotationScannerFilteredTest {
         String yaml = Files.readAllLines(Path.of(System.getProperty("java.io.tmpdir"), "asyncApi.yaml")).stream()
                 .collect(Collectors.joining("\n"));
         assertThat(yaml).isNotNull();
-        System.out.println(yaml);
+        //        System.out.println(yaml);
         JsonNode asyncAPI = ObjectMapperFactory.yaml().readTree(yaml);
         //when
         assertThat(asyncAPI.at("/channels")).isInstanceOf(ObjectNode.class);

@@ -22,12 +22,21 @@ import org.apache.kafka.common.TopicPartitionInfo;
 import org.apache.kafka.common.config.ConfigResource;
 import org.eclipse.microprofile.config.ConfigProvider;
 
+import com.asyncapi.v2.binding.channel.kafka.KafkaChannelBinding;
+import com.asyncapi.v2.binding.channel.kafka.KafkaChannelBinding.TopicConfiguration;
+
 /**
  * @since 02.03.2023
  */
 public class KafkaResolver {
 
     private static final Logger LOGGER = Logger.getLogger(KafkaResolver.class.getName());
+
+    static final String CLEANUP_POLICY = "cleanup.policy";
+    static final String RETENTION_MS = "retention.ms";
+    static final String RETENTION_BYTES = "retention.bytes";
+    static final String DELETE_RETENTION_MS = "delete.retention.ms";
+    static final String MAX_MESSAGE_BYTES = "max.message.bytes";
 
     private AdminClient adminClient;
 
@@ -75,11 +84,11 @@ public class KafkaResolver {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toMap(ConfigEntry::name, Function.identity()));
         return TopicConfiguration.builder()
-                .cleanupPolicy(configMap.get(TopicConfiguration.CLEANUP_POLICY).value())
-                .retentionMs(Long.valueOf(configMap.get(TopicConfiguration.RETENTION_MS).value()))
-                .retentionBytes(Long.valueOf(configMap.get(TopicConfiguration.RETENTION_BYTES).value()))
-                .deleteRetentionMs(Long.valueOf(configMap.get(TopicConfiguration.DELETE_RETENTION_MS).value()))
-                .maxMessageBytes(Long.valueOf(configMap.get(TopicConfiguration.MAX_MESSAGE_BYTES).value()))
+                .cleanupPolicy(List.of(configMap.get(CLEANUP_POLICY).value()))
+                .retentionMs(Integer.valueOf(configMap.get(RETENTION_MS).value()))
+                .retentionBytes(Integer.valueOf(configMap.get(RETENTION_BYTES).value()))
+                .deleteRetentionMs(Integer.valueOf(configMap.get(DELETE_RETENTION_MS).value()))
+                .maxMessageBytes(Integer.valueOf(configMap.get(MAX_MESSAGE_BYTES).value()))
                 .build();
     }
 
