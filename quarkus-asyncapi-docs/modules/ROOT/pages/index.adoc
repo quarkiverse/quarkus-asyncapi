@@ -1,36 +1,13 @@
-= Quarkus Asyncapi
+= Quarkus AsyncAPI Extensions
 
-include::./includes/attributes.adoc[]
+There are two extensions:
 
-This extension creates an AsyncApi-document, describing data your server publishes/subscribes to/from Kafka-topics.
+The AsyncApi-Extension scans a given asyncapi-file 
+and provides the infos found there as Microprofile-configuration (Kafka-topics, server-url, etc.). 
+So it can be used by someone who has already an existing AsyncApi-Definition and wants to create a service according to it.
 
-It does this by
+The AsyncApi-Scanner-Extension follows a "code first" approach. 
+An annotation-scanner scans the existing code, combines it with the given mp-config and creates an AsyncApi-description with this infos.
 
-* scanning for annotations `@Channel, @Outgoing and @Incoming` in your project,
-* reading topics and descriptions from microprofile-configuration and
-* reading data from running kafka
+You can find documentation for each of them in the navigation on the left.
 
-The result can be viewed as html or svg or downloaded as yaml, json or plant-uml (localhost://[quarkus.http.root-path]/asyncapi.[html|svg|yaml|json|puml]).
-
-== Installation
-
-If you want to use this extension, you need to add the `io.quarkiverse.asyncapi:quarkus-asyncapi` extension first to your build file.
-
-For instance, with Maven, add the following dependency to your POM file:
-
-[source,xml,subs=attributes+]
-----
-<dependency>
-    <groupId>io.quarkiverse.asyncapi</groupId>
-    <artifactId>quarkus-asyncapi</artifactId>
-    <version>{project-version}</version>
-</dependency>
-----
-
-[[extension-configuration-reference]]
-== Extension Configuration Reference
-
-[TIP]
-For more information about the extension configuration please refer to the <<configuration-reference, Configuration Reference>>.
-
-include::includes/quarkus-asyncapi-annotation-scanner.adoc[leveloffset=+1, opts=optional]
