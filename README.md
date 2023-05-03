@@ -1,9 +1,3 @@
-# Quarkus Async API extensions
-
-## Quarkus Async API
-Generates `AsyncAPIRegistry` and configuration classes
-
-## Quarkus Async API Scanner
 Scan for Microprofile Channels and provide the findings as AsyncApi:<br>
 Acces scan-result under
 * http://localhost:8080/test-svc/asyncapi.yaml
@@ -13,12 +7,15 @@ Acces scan-result under
 ![grafik](https://user-images.githubusercontent.com/70508469/219752798-2c198de7-8a9a-471a-a86a-358cca0cd65f.png)
 
 
+
+# Quarkus Async API extension
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![Version](https://img.shields.io/maven-central/v/io.quarkiverse.asyncapi/quarkus-asyncapi?logo=apache-maven&style=for-the-badge)](https://search.maven.org/artifact/io.quarkiverse.asyncapi/quarkus-asyncapi)
 
+Generates `AsyncAPIRegistry` and configuration classes
 
 ## Contributors ✨
 
