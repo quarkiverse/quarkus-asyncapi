@@ -14,8 +14,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import jakarta.enterprise.context.ApplicationScoped;
-
 import com.asyncapi.v2._0_0.model.AsyncAPI;
 import com.asyncapi.v2._0_0.model.channel.ChannelItem;
 import com.asyncapi.v2.binding.channel.kafka.KafkaChannelBinding;
@@ -31,7 +29,6 @@ import net.sourceforge.plantuml.SourceStringReader;
  * @since 09.02.2023
  */
 @Recorder
-@ApplicationScoped
 public class AsyncApiRecorder {
 
     private static final Logger LOGGER = Logger.getLogger(AsyncApiRecorder.class.getName());
