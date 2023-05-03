@@ -12,7 +12,7 @@
     <dependencies>
         <dependency>
             <groupId>io.quarkiverse.asyncapi</groupId>
-            <artifactId>quarkus-asyncapi-spi</artifactId>
+            <artifactId>quarkus-asyncapi-common</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- Quarkus -->

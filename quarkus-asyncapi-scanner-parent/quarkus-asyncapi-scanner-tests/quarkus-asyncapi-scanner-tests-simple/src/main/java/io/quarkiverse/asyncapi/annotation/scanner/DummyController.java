@@ -11,7 +11,7 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.reactivestreams.Publisher;
 
-import io.quarkiverse.asyncapi.spi.Schema;
+import io.quarkiverse.asyncapi.annotation.Schema;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.reactive.messaging.annotations.Broadcast;
 

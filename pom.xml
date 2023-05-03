@@ -14,7 +14,7 @@
     <modules>
         <module>quarkus-asyncapi-parent</module>
         <module>quarkus-asyncapi-scanner-parent</module>
-        <module>quarkus-asyncapi-spi</module>
+        <module>quarkus-asyncapi-common</module>
         <module>quarkus-asyncapi-docs</module>
     </modules>
     <properties>

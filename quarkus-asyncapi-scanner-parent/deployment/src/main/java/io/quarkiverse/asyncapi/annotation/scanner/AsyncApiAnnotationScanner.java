@@ -188,7 +188,7 @@ public class AsyncApiAnnotationScanner {
                     throw new AssertionError();
             }
             AnnotationInstance asyncApiSchema = aAnnotationInstance.target()
-                    .annotation(io.quarkiverse.asyncapi.spi.Schema.class);
+                    .annotation(io.quarkiverse.asyncapi.annotation.Schema.class);
             if (asyncApiSchema != null
                     && asyncApiSchema.value("implementation") != null
                     && asyncApiSchema.value("implementation").asClassArray().length > 0) {
@@ -379,7 +379,7 @@ public class AsyncApiAnnotationScanner {
     void addSchemaAnnotationStringData(AnnotationTarget aAnnotationTarget, String aAnnotationFieldName,
             Consumer<String> aSetter) {
         AnnotationInstance asyncApiSchemaAnnotation = aAnnotationTarget
-                .declaredAnnotation(io.quarkiverse.asyncapi.spi.Schema.class);
+                .declaredAnnotation(io.quarkiverse.asyncapi.annotation.Schema.class);
         AnnotationInstance openApiAnnotation = aAnnotationTarget.declaredAnnotation(
                 DotName.createSimple("org.eclipse.microprofile.openapi.annotations.media.Schema"));
         AnnotationValue annotationValue;

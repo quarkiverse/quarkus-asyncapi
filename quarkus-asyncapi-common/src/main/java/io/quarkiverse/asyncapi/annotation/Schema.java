@@ -1,4 +1,4 @@
-package io.quarkiverse.asyncapi.spi;
+package io.quarkiverse.asyncapi.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
