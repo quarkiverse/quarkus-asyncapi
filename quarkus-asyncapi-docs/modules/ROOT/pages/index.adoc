@@ -1,0 +1,13 @@
+= Quarkus AsyncAPI Extensions
+
+There are two extensions:
+
+The AsyncApi-Extension scans a given asyncapi-file 
+and provides the infos found there as Microprofile-configuration (Kafka-topics, server-url, etc.). 
+So it can be used by someone who has already an existing AsyncApi-Definition and wants to create a service according to it.
+
+The AsyncApi-Scanner-Extension follows a "code first" approach. 
+An annotation-scanner scans the existing code, combines it with the given mp-config and creates an AsyncApi-description with this infos.
+
+You can find documentation for each of them in the navigation on the left.
+

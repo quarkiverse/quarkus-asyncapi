@@ -1,17 +1,11 @@
-# Quarkus Async API extensions
-
-## Quarkus Async API
-Generates `AsyncAPIRegistry` and configuration classes
-
-## Quarkus Async API Scanner
-Scans for Microprofile Annotations and provides the findings as AsyncApi-file (yaml, json or html)
-
+# Quarkus Async API extension
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![Version](https://img.shields.io/maven-central/v/io.quarkiverse.asyncapi/quarkus-asyncapi?logo=apache-maven&style=for-the-badge)](https://search.maven.org/artifact/io.quarkiverse.asyncapi/quarkus-asyncapi)
 
+Generates `AsyncAPIRegistry` and configuration classes
 
 ## Contributors ✨
 

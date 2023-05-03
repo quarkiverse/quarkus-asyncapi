@@ -1,0 +1,268 @@
+
+:summaryTableId: quarkus-asyncapi-annotation-scanner
+[.configuration-legend]
+icon:lock[title=Fixed at build time] Configuration property fixed at build time - All other configuration properties are overridable at runtime
+[.configuration-reference.searchable, cols="80,.^10,.^10"]
+|===
+
+h|[[quarkus-asyncapi-annotation-scanner_configuration]]link:#quarkus-asyncapi-annotation-scanner_configuration[Configuration property]
+
+h|Type
+h|Default
+
+a|icon:lock[title=Fixed at build time] [[quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.enabled]]`link:#quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.enabled[quarkus.asyncapi.annotation.scanner.enabled]`
+
+[.description]
+--
+Enable AysncApi-Scanning
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_ENABLED+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_ENABLED+++`
+endif::add-copy-button-to-env-var[]
+--|boolean 
+|`true`
+
+
+a|icon:lock[title=Fixed at build time] [[quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.webcomponentversion]]`link:#quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.webcomponentversion[quarkus.asyncapi.annotation.scanner.webcomponentversion]`
+
+[.description]
+--
+Version of the WebComponent to be used in html-view to be found at ++[++HOST++]++/asyncapi.html
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_WEBCOMPONENTVERSION+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_WEBCOMPONENTVERSION+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|`1.0.0-next.47`
+
+
+a|icon:lock[title=Fixed at build time] [[quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.filter]]`link:#quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.filter[quarkus.asyncapi.annotation.scanner.filter]`
+
+[.description]
+--
+Full qualified name of the implementing AsyncApiFilter
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_FILTER+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_FILTER+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.version]]`link:#quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.version[quarkus.asyncapi.annotation.scanner.version]`
+
+[.description]
+--
+AsyncApi specification version
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_VERSION+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_VERSION+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|`2.6.0`
+
+
+a|icon:lock[title=Fixed at build time] [[quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.default-content-type]]`link:#quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.default-content-type[quarkus.asyncapi.annotation.scanner.default-content-type]`
+
+[.description]
+--
+Default ContentType
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_DEFAULT_CONTENT_TYPE+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_DEFAULT_CONTENT_TYPE+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|`application/json`
+
+
+a|icon:lock[title=Fixed at build time] [[quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.info.title]]`link:#quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.info.title[quarkus.asyncapi.annotation.scanner.info.title]`
+
+[.description]
+--
+Title
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_INFO_TITLE+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_INFO_TITLE+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|`AsyncApi`
+
+
+a|icon:lock[title=Fixed at build time] [[quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.info.version]]`link:#quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.info.version[quarkus.asyncapi.annotation.scanner.info.version]`
+
+[.description]
+--
+Project-version
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_INFO_VERSION+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_INFO_VERSION+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|`1.0.0`
+
+
+a|icon:lock[title=Fixed at build time] [[quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.info.description]]`link:#quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.info.description[quarkus.asyncapi.annotation.scanner.info.description]`
+
+[.description]
+--
+Project-description
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_INFO_DESCRIPTION+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_INFO_DESCRIPTION+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.info.contact.name]]`link:#quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.info.contact.name[quarkus.asyncapi.annotation.scanner.info.contact.name]`
+
+[.description]
+--
+Contact-Name
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_INFO_CONTACT_NAME+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_INFO_CONTACT_NAME+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.info.contact.email]]`link:#quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.info.contact.email[quarkus.asyncapi.annotation.scanner.info.contact.email]`
+
+[.description]
+--
+Contact-Email
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_INFO_CONTACT_EMAIL+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_INFO_CONTACT_EMAIL+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|`you@mail.org`
+
+
+a|icon:lock[title=Fixed at build time] [[quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.info.contact.url]]`link:#quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.info.contact.url[quarkus.asyncapi.annotation.scanner.info.contact.url]`
+
+[.description]
+--
+Contact-URL
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_INFO_CONTACT_URL+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_INFO_CONTACT_URL+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.info.license.name]]`link:#quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.info.license.name[quarkus.asyncapi.annotation.scanner.info.license.name]`
+
+[.description]
+--
+License-Name
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_INFO_LICENSE_NAME+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_INFO_LICENSE_NAME+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|`Commercial`
+
+
+a|icon:lock[title=Fixed at build time] [[quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.info.license.url]]`link:#quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.info.license.url[quarkus.asyncapi.annotation.scanner.info.license.url]`
+
+[.description]
+--
+License-URL
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_INFO_LICENSE_URL+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_INFO_LICENSE_URL+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.server.-server-.url]]`link:#quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.server.-server-.url[quarkus.asyncapi.annotation.scanner.server."server".url]`
+
+[.description]
+--
+Url
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_SERVER__SERVER__URL+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_SERVER__SERVER__URL+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|required icon:exclamation-circle[title=Configuration property is required]
+
+
+a|icon:lock[title=Fixed at build time] [[quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.server.-server-.protocol]]`link:#quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.server.-server-.protocol[quarkus.asyncapi.annotation.scanner.server."server".protocol]`
+
+[.description]
+--
+Protocol
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_SERVER__SERVER__PROTOCOL+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_SERVER__SERVER__PROTOCOL+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|`kafka`
+
+
+a|icon:lock[title=Fixed at build time] [[quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.channel.-channel-.description]]`link:#quarkus-asyncapi-annotation-scanner_quarkus.asyncapi.annotation.scanner.channel.-channel-.description[quarkus.asyncapi.annotation.scanner.channel."channel".description]`
+
+[.description]
+--
+Description
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_CHANNEL__CHANNEL__DESCRIPTION+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_ASYNCAPI_ANNOTATION_SCANNER_CHANNEL__CHANNEL__DESCRIPTION+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+|===

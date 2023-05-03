@@ -1,0 +1,164 @@
+---
+asyncapi: "2.6.0"
+id: "urn:com:kafka:server"
+defaultContentType: "application/json"
+info:
+  title: "Title"
+  version: "1"
+  contact:
+    name: "Contact and Support"
+    url: "https://gec.io/kontakt/"
+    email: "support@gec.io"
+  license:
+    name: "Commercial"
+    url: "https://gec.io/"
+channels:
+  transfer-channel1:
+    publish:
+      operationId: "io.quarkiverse.asyncapi.annotation.scanner.DummyController.transferEmitter1"
+      description: "transferEmitter description1"
+      message:
+        payload:
+          description: "TransferMessage description"
+          type: "object"
+          properties:
+            action:
+              type: "string"
+            description:
+              type: "string"
+            kafkaKey:
+              type: "string"
+            maxBookDate:
+              $ref: "#/components/schemas/OffsetDateTime"
+            minBookDate:
+              $ref: "#/components/schemas/OffsetDateTime"
+            plantId:
+              $ref: "#/components/schemas/UUID"
+            trigger:
+              type: "string"
+            type:
+              type: "string"
+            user:
+              type: "string"
+            value:
+              type: "object"
+              properties:
+                bookDate:
+                  $ref: "#/components/schemas/OffsetDateTime"
+                company:
+                  description: "Company"
+                  type: "object"
+                  properties:
+                    description:
+                      type: "string"
+                    info1:
+                      type: "string"
+                    info2:
+                      type: "string"
+                    info3:
+                      type: "string"
+                    name:
+                      type: "string"
+                    payload:
+                      type: "string"
+                    tenantId:
+                      description: "Id references the Tenant"
+                      $ref: "#/components/schemas/UUID"
+                part:
+                  description: "Part definition. Part may be a product, a raw material,\
+                    \ an equipment or any other part"
+                  type: "object"
+                  properties:
+                    availabilityState:
+                      enum:
+                      - "AVAILABLE"
+                      - "BLOCKED"
+                      - "DISCHARGED"
+                      - "DELETED"
+                    dimension:
+                      description: "Dimension of the part"
+                      type: "object"
+                    externalId:
+                      type: "string"
+                    materialType:
+                      description: "Material Type of the part: MATERIAL, PRODUCT"
+                      enum:
+                      - "PRODUCT"
+                      - "MATERIAL"
+                      - "EQUIPMENT"
+                    partGroupId:
+                      description: "reference to partgroup of the part"
+                      $ref: "#/components/schemas/UUID"
+                    partTypeId:
+                      description: "reference to parttype of the part"
+                      $ref: "#/components/schemas/UUID"
+                    procurementType:
+                      description: "PROCUREMENT TYPE of the part: INHOUSE, EXTERNAL"
+                      enum:
+                      - "INHOUSE"
+                      - "EXTERNAL"
+                    workorderFinishMode:
+                      enum:
+                      - "NONE"
+                      - "FINISH_ON_QUANTITY_STARTED"
+                      - "FINISH_ON_QUANTITY_FINISHED"
+                    workorderQuantityAdjustmentMode:
+                      enum:
+                      - "NONE"
+                      - "ADJUST_SCRAP"
+                    workorderQuantityOverbookPercentage:
+                      description: "Percentage value that the workorder quantity could\
+                        \ be overbooked. In combination with finishMode the workorder\
+                        \ quantity could be overbooked up to this value before the\
+                        \ workorder state will be set automatically to finished"
+                      type: "integer"
+        contentType: "application/json"
+        name: "io.quarkiverse.asyncapi.annotation.scanner.TransferMessage"
+    bindings:
+      kafka:
+        topic: "transfer-topic"
+  transfer-channel2:
+    publish:
+      operationId: "io.quarkiverse.asyncapi.annotation.scanner.DummyController.transferEmitter2"
+      description: "transferEmitter description2"
+      message:
+        payload:
+          description: "TransferMessage description"
+          type: "object"
+          properties:
+            action:
+              type: "string"
+            description:
+              type: "string"
+            kafkaKey:
+              type: "string"
+            maxBookDate:
+              $ref: "#/components/schemas/OffsetDateTime"
+            minBookDate:
+              $ref: "#/components/schemas/OffsetDateTime"
+            plantId:
+              $ref: "#/components/schemas/UUID"
+            trigger:
+              type: "string"
+            type:
+              type: "string"
+            user:
+              type: "string"
+            value:
+              type: "string"
+        contentType: "application/json"
+        name: "io.quarkiverse.asyncapi.annotation.scanner.TransferMessage"
+    bindings:
+      kafka:
+        topic: "transfer-topic"
+components:
+  schemas:
+    OffsetDateTime:
+      examples:
+      - "2022-03-10T12:15:50-04:00"
+      type: "string"
+      format: "date-time"
+    UUID:
+      type: "string"
+      pattern: "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
+      format: "uuid"

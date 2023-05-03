@@ -1,0 +1,3 @@
+* xref:index.adoc[Quarkus Asyncapi Extensions]
+* xref:scanner.adoc[Quarkus Asyncapi Scanner]
+* xref:reader.adoc[Quarkus Asyncapi]
