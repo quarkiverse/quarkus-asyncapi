@@ -10,7 +10,7 @@
     <artifactId>quarkus-asyncapi-scanner-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Quarkus - AsyncAPI Scanner - Parent</name>
+    <name>Quarkus - AsyncAPI Scanner</name>
     <modules>
         <module>deployment</module>
         <module>runtime</module>
