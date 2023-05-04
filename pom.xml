@@ -12,8 +12,8 @@
     <packaging>pom</packaging>
     <name>Quarkus - AsyncAPI Root</name>
     <modules>
-        <module>quarkus-asyncapi-parent</module>
-        <module>quarkus-asyncapi-scanner-parent</module>
+        <module>quarkus-asyncapi</module>
+        <module>quarkus-asyncapi-scanner</module>
         <module>quarkus-asyncapi-common</module>
         <module>quarkus-asyncapi-docs</module>
     </modules>
