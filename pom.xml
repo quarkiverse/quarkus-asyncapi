@@ -15,7 +15,7 @@
         <module>quarkus-asyncapi</module>
         <module>quarkus-asyncapi-scanner</module>
         <module>quarkus-asyncapi-common</module>
-        <module>quarkus-asyncapi-docs</module>
+        <module>docs</module>
     </modules>
     <properties>
         <maven.compiler.parameters>true</maven.compiler.parameters>
