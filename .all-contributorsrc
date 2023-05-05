@@ -15,6 +15,16 @@
         "code",
         "maintenance"
       ]
+    },
+    {
+      "login": "ChMThiel",
+      "name": "Christian Thiel",
+      "avatar_url": "https://avatars.githubusercontent.com/u/70508469?v=4",
+      "profile": "https://github.com/ChMThiel",
+      "contributions": [
+        "code",
+        "maintenance"
+      ]
     }
   ],
   "contributorsPerLine": 7,
