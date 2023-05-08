@@ -42,11 +42,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-<!--            <dependency>
-                <groupId>io.vertx</groupId>
-                <artifactId>vertx-core</artifactId>
-                <version>4.3.8</version>
-            </dependency>-->
             <dependency>
                 <groupId>io.quarkus</groupId>
                 <artifactId>quarkus-vertx-http</artifactId>
@@ -94,11 +89,6 @@
                 <groupId>org.eclipse.microprofile.openapi</groupId>
                 <artifactId>microprofile-openapi-api</artifactId>
                 <version>3.1</version>
-            </dependency>
-            <dependency>
-                <groupId>net.sourceforge.plantuml</groupId>
-                <artifactId>plantuml</artifactId>
-                <version>1.2023.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
