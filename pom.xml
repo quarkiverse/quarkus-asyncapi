@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.quarkiverse</groupId>
         <artifactId>quarkiverse-parent</artifactId>
-        <version>12</version>
+        <version>13</version>
     </parent>
     <groupId>io.quarkiverse.asyncapi</groupId>
     <artifactId>quarkus-asyncapi-root</artifactId>
@@ -25,11 +25,11 @@
         <maven.compiler.release>11</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <quarkus.version>3.0.0.Final</quarkus.version>
+        <quarkus.version>3.0.2.Final</quarkus.version>
         <version.org.assertj>3.24.2</version.org.assertj>
         <version.org.slf4j>2.0.6</version.org.slf4j>
         <version.asyncapi.core>1.0.0-EAP-2</version.asyncapi.core>
-        <version.org.mockito>4.11.0</version.org.mockito>
+        <version.org.mockito>5.3.1</version.org.mockito>
         <version.com.fasterxml.jackson>2.14.2</version.com.fasterxml.jackson>
         <version.org.projectlombok>1.18.26</version.org.projectlombok>
     </properties>
@@ -88,7 +88,7 @@
             <dependency>
                 <groupId>io.smallrye.reactive</groupId>
                 <artifactId>smallrye-reactive-messaging-api</artifactId>
-                <version>4.3.0</version>
+                <version>4.5.0</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.microprofile.openapi</groupId>
