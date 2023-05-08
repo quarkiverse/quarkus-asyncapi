@@ -42,11 +42,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <dependency>
+<!--            <dependency>
                 <groupId>io.vertx</groupId>
                 <artifactId>vertx-core</artifactId>
                 <version>4.3.8</version>
-            </dependency>
+            </dependency>-->
             <dependency>
                 <groupId>io.quarkus</groupId>
                 <artifactId>quarkus-vertx-http</artifactId>

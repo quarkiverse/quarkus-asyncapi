@@ -16,31 +16,6 @@
         <module>runtime</module>
         <module>quarkus-asyncapi-scanner-tests</module>
     </modules>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>io.vertx</groupId>
-                <artifactId>vertx-core</artifactId>
-                <version>4.3.8</version>
-            </dependency>
-            <!--Just for Tests Simple Project-->
-            <dependency>
-                <groupId>io.smallrye.reactive</groupId>
-                <artifactId>smallrye-reactive-messaging-api</artifactId>
-                <version>4.3.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.microprofile.openapi</groupId>
-                <artifactId>microprofile-openapi-api</artifactId>
-                <version>3.1</version>
-            </dependency>
-            <dependency>
-                <groupId>net.sourceforge.plantuml</groupId>
-                <artifactId>plantuml</artifactId>
-                <version>1.2023.1</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
     <build>
         <pluginManagement>
             <plugins>
