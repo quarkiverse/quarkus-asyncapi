@@ -27,7 +27,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.version>3.0.2.Final</quarkus.version>
         <version.org.assertj>3.24.2</version.org.assertj>
-        <version.org.slf4j>2.0.6</version.org.slf4j>
+        <version.org.slf4j>2.0.7</version.org.slf4j>
         <version.asyncapi.core>1.0.0-EAP-2</version.asyncapi.core>
         <version.org.mockito>5.3.1</version.org.mockito>
         <version.com.fasterxml.jackson>2.14.2</version.com.fasterxml.jackson>
@@ -41,11 +41,6 @@
                 <version>${quarkus.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>io.vertx</groupId>
-                <artifactId>vertx-core</artifactId>
-                <version>4.3.8</version>
             </dependency>
             <dependency>
                 <groupId>io.quarkus</groupId>
@@ -94,11 +89,6 @@
                 <groupId>org.eclipse.microprofile.openapi</groupId>
                 <artifactId>microprofile-openapi-api</artifactId>
                 <version>3.1</version>
-            </dependency>
-            <dependency>
-                <groupId>net.sourceforge.plantuml</groupId>
-                <artifactId>plantuml</artifactId>
-                <version>1.2023.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

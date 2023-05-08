@@ -1,9 +1,7 @@
 package io.quarkiverse.asyncapi.annotation.scanner;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,9 +19,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.quarkiverse.asyncapi.annotation.scanner.config.AsyncApiRuntimeConfig;
 import io.quarkus.runtime.annotations.Recorder;
-import net.sourceforge.plantuml.FileFormat;
-import net.sourceforge.plantuml.FileFormatOption;
-import net.sourceforge.plantuml.SourceStringReader;
 
 /**
  * @since 09.02.2023
@@ -36,7 +31,6 @@ public class AsyncApiRecorder {
     public static final String ASYNC_API_JSON = "asyncApi.json";
     public static final String ASYNC_API_YAML = "asyncApi.yaml";
     public static final String ASYNC_API_PUML = "asyncApi.puml";
-    public static final String ASYNC_API_SVG = "asyncApi.svg";
 
     public void store(AsyncAPI aAsyncAPI, AsyncApiRuntimeConfig aConfig) {
         try {
@@ -45,7 +39,6 @@ public class AsyncApiRecorder {
             store(ObjectMapperFactory.json().writeValueAsString(filteredAPI), ASYNC_API_JSON);
             String plantUml = toPlantUml(filteredAPI);
             store(plantUml, ASYNC_API_PUML);
-            store(plantUmlToGrafik(plantUml, FileFormat.SVG), ASYNC_API_SVG);
         } catch (JsonProcessingException e) {
             LOGGER.throwing("io.quarkiverse.asyncapi.annotation.scanner.AsyncApiRecorder", "scanAsyncAPIs", e);
         }
@@ -109,18 +102,4 @@ public class AsyncApiRecorder {
         KafkaChannelBinding kafkaChannelBinding = (KafkaChannelBinding) aChannelItem.getBindings().get("kafka");
         return aServer + arrow + "(" + kafkaChannelBinding.getTopic() + ")";
     }
-
-    String plantUmlToGrafik(String aPlantUml, FileFormat aFormat) {
-        try {
-            SourceStringReader reader = new SourceStringReader(aPlantUml);
-            final ByteArrayOutputStream os = new ByteArrayOutputStream();
-            reader.outputImage(os, new FileFormatOption(aFormat));
-            os.close();
-            return new String(os.toByteArray(), Charset.forName("UTF-8"));
-        } catch (IOException e) {
-            LOGGER.throwing("io.quarkiverse.asyncapi.annotation.scanner.AsyncApiRecorder", "plantUmlToSvg", e);
-            return "unable to generated SVG";
-        }
-    }
-
 }

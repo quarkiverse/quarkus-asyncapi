@@ -39,6 +39,25 @@ public class AsyncApiHandler implements Handler<RoutingContext> {
             + "  </body>\n"
             + "</html>\n";
 
+    static final String PUML_PATTERN = "<!DOCTYPE html>\n" +
+            "<html lang=\"en\">\n" +
+            "<head>\n" +
+            "</head>\n" +
+            "<body>\n" +
+            "<uml>%s</uml>\n" +
+            "<br>\n" +
+            "<script src=\"//code.jquery.com/jquery.min.js\"></script>\n" +
+            "<script src=\"//cdn.rawgit.com/jmnote/plantuml-encoder/d133f316/dist/plantuml-encoder.min.js\"></script>\n" +
+            "<script>\n" +
+            "$(\"uml\").each(function() {\n" +
+            "  var src = \"//www.plantuml.com/plantuml/svg/\" + window.plantumlEncoder.encode( $(this).text() )\n" +
+            "  $(this).replaceWith($('<img>').attr('src', src));\n" +
+            "});\n" +
+            "</script>\n" +
+            "</body>\n" +
+            "\n" +
+            "</html>";
+
     @Override
     public void handle(RoutingContext aRoutingContext) {
         HttpServerResponse resp = aRoutingContext.response();
@@ -49,6 +68,9 @@ public class AsyncApiHandler implements Handler<RoutingContext> {
             switch (format) {
                 case HTML:
                     output = getHtml(aRoutingContext);
+                    break;
+                case SVG:
+                    output = String.format(PUML_PATTERN, readFile(Format.SVG));
                     break;
                 default:
                     output = readFile(format);
@@ -111,7 +133,7 @@ public class AsyncApiHandler implements Handler<RoutingContext> {
         YAML("application/yaml", AsyncApiRecorder.ASYNC_API_YAML),
         HTML("text/html", null),
         PUML("text/plain", AsyncApiRecorder.ASYNC_API_PUML),
-        SVG("image/svg+xml", AsyncApiRecorder.ASYNC_API_SVG);
+        SVG("text/html", AsyncApiRecorder.ASYNC_API_PUML);
 
         private final String mimeType;
         private final String fileName;
