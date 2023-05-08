@@ -1,4 +1,4 @@
-name: AsyncAPI
+name: AsyncAPI Scanner
 metadata:
   keywords:
     - asyncapi
@@ -6,3 +6,5 @@ metadata:
   categories:
     - "miscellaneous"
   status: "preview"
+  config:
+  - "quarkus.asyncapi.annotation.scanner."
