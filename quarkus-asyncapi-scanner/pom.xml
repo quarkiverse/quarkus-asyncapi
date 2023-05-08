@@ -21,7 +21,7 @@
             <dependency>
                 <groupId>io.vertx</groupId>
                 <artifactId>vertx-core</artifactId>
-                <version>4.3.8</version>
+                <version>4.4.1</version>
             </dependency>
             <!--Just for Tests Simple Project-->
             <dependency>
