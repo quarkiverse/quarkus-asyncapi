@@ -8,7 +8,7 @@
     </parent>
     <groupId>io.quarkiverse.asyncapi</groupId>
     <artifactId>quarkus-asyncapi-root</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.1.5</version>
     <packaging>pom</packaging>
     <name>Quarkus - AsyncAPI Root</name>
     <modules>
@@ -112,4 +112,8 @@
             </plugins>
         </pluginManagement>
     </build>
+
+  <scm>
+    <tag>0.1.5</tag>
+  </scm>
 </project>
