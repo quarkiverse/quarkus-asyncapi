@@ -2,7 +2,7 @@ name: AsyncAPI Scanner
 metadata:
   keywords:
     - asyncapi
-  guide: https://quarkiverse.github.io/quarkiverse-docs/quarkus-asyncapi-annotation-scanner/dev/
+  guide: https://quarkiverse.github.io/quarkiverse-docs/quarkus-asyncapi/dev/scanner.html
   categories:
     - "miscellaneous"
   status: "preview"
