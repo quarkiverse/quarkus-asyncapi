@@ -30,7 +30,7 @@
         <version.org.slf4j>2.0.7</version.org.slf4j>
         <version.asyncapi.core>1.0.0-EAP-2</version.asyncapi.core>
         <version.org.mockito>5.3.1</version.org.mockito>
-        <version.org.projectlombok>1.18.26</version.org.projectlombok>
+        <version.org.projectlombok>1.18.28</version.org.projectlombok>
     </properties>
     <dependencyManagement>
         <dependencies>
