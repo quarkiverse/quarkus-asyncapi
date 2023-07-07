@@ -1,5 +1,5 @@
 name: quarkus-asyncapi
-title: Quarkus AsyncApi Extension
+title: AsyncApi
 version: dev
 nav:
   - modules/ROOT/nav.adoc
