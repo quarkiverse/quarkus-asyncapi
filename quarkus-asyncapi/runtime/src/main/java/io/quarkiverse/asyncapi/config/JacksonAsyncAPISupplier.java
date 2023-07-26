@@ -1,12 +1,9 @@
-package io.quarkiverse.asyncapi.generator;
+package io.quarkiverse.asyncapi.config;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
 import com.asyncapi.v2._6_0.model.AsyncAPI;
-
-import io.quarkiverse.asyncapi.config.AsyncAPISupplier;
-import io.quarkiverse.asyncapi.config.ObjectMapperFactory;
 
 public class JacksonAsyncAPISupplier implements AsyncAPISupplier {
 

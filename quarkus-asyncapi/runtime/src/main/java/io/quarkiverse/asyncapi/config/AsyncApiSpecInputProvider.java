@@ -1,4 +1,4 @@
-package io.quarkiverse.asyncapi.generator.input;
+package io.quarkiverse.asyncapi.config;
 
 /**
  * Provider interface for clients to dynamically provide their own AsyncAPI specification files.

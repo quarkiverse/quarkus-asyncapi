@@ -1,4 +1,4 @@
-package io.quarkiverse.asyncapi.generator;
+package io.quarkiverse.asyncapi.config;
 
 import java.util.List;
 import java.util.Optional;

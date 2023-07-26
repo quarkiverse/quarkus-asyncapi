@@ -1,4 +1,4 @@
-package io.quarkiverse.asyncapi.generator;
+package io.quarkiverse.asyncapi.config;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
@@ -17,12 +18,7 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.quarkiverse.asyncapi.config.AsyncAPISupplier;
-import io.quarkiverse.asyncapi.config.AsyncAPIUtils;
-import io.quarkiverse.asyncapi.generator.input.AsyncAPISpecInput;
-import io.quarkiverse.asyncapi.generator.input.AsyncApiSpecInputProvider;
-import io.quarkiverse.asyncapi.generator.input.InputStreamSupplier;
-import io.smallrye.config.ConfigSourceContext;
+import io.smallrye.config.SmallRyeConfigBuilder;
 
 public class AsyncAPISupplierFactory {
 
@@ -32,20 +28,18 @@ public class AsyncAPISupplierFactory {
     private final Set<String> EXTENSIONS = Set.of(".yml", ".yaml", ".json");
     private Collection<AsyncAPISupplier> asyncAPISuppliers = new ArrayList<>();
 
-    public static AsyncAPISupplierFactory init(ConfigSourceContext context) {
+    public static AsyncAPISupplierFactory init(SmallRyeConfigBuilder context) {
         instance = new AsyncAPISupplierFactory(context);
         return instance;
-
     }
 
     public static AsyncAPISupplierFactory get() {
         return instance;
     }
 
-    private AsyncAPISupplierFactory(ConfigSourceContext context) {
-        String propValue = context.getValue(AsyncApiConfigGroup.SOURCES_PROP).getValue();
-        String[] specDirs = propValue == null ? new String[] { "src/main/asyncapi", "src/test/asyncapi" }
-                : propValue.split(",; ");
+    private AsyncAPISupplierFactory(SmallRyeConfigBuilder context) {
+        List<String> specDirs = getValues(context, AsyncApiConfigGroup.SOURCES_PROP,
+                Arrays.asList("src/main/asyncapi", "src/test/asyncapi"));
         final Collection<String> ignoredFiles = excludedFiles(context);
         for (String dir : specDirs) {
             Path specDir = Path.of(dir);
@@ -80,14 +74,18 @@ public class AsyncAPISupplierFactory {
         return asyncAPISuppliers;
     }
 
-    private Collection<String> excludedFiles(ConfigSourceContext context) {
-        String propValue = context.getValue(AsyncApiConfigGroup.EXCLUDED_FILES_PROP).getValue();
-        return propValue == null ? Collections.emptyList() : Arrays.asList(propValue.split(",; "));
+    private Collection<String> excludedFiles(SmallRyeConfigBuilder context) {
+        return getValues(context, AsyncApiConfigGroup.EXCLUDED_FILES_PROP, Collections.emptyList());
     }
 
     private boolean isCandidateFile(Path path, Collection<String> ignoredFiles) {
         String fileName = path.getFileName().toString();
         return Files.isRegularFile(path) && !ignoredFiles.contains(fileName) && isExtension(fileName);
+    }
+
+    List<String> getValues(SmallRyeConfigBuilder context, String propertyName, List<String> defaultValue) {
+        //TODO
+        return defaultValue;
     }
 
     private boolean isExtension(String fileName) {
