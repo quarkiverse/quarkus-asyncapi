@@ -12,11 +12,13 @@ public class AsyncApiConfigGroup {
 
     static final String CONFIG_PREFIX = "asyncapi-generator.codegen";
 
+    private static final String SOURCES = "sources";
     private static final String EXCLUDE = "exclude";
     private static final String PACKAGE = "package";
 
     public static final String EXCLUDED_FILES_PROP = getPropName(EXCLUDE);
     public static final String PACKAGE_PROP = getPropName(PACKAGE);
+    public static final String SOURCES_PROP = getPropName(SOURCES);
 
     private static final String getPropName(String suffix) {
         return "quarkus." + CONFIG_PREFIX + "." + suffix;
@@ -33,4 +35,10 @@ public class AsyncApiConfigGroup {
      */
     @ConfigItem(name = PACKAGE)
     public Optional<String> basePackage;
+
+    /**
+     * Source directories
+     */
+    @ConfigItem(name = SOURCES)
+    public Optional<List<String>> sourceDirs;
 }

@@ -16,10 +16,6 @@
       <artifactId>quarkus-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-qute</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.asyncapi</groupId>
       <artifactId>asyncapi-core</artifactId>
     </dependency> 
