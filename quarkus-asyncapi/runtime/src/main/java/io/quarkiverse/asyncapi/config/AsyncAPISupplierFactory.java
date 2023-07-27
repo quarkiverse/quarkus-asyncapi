@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.smallrye.config.SmallRyeConfigBuilder;
+import io.smallrye.config.ConfigSourceContext;
 
 public class AsyncAPISupplierFactory {
 
@@ -28,7 +28,7 @@ public class AsyncAPISupplierFactory {
     private final Set<String> EXTENSIONS = Set.of(".yml", ".yaml", ".json");
     private Collection<AsyncAPISupplier> asyncAPISuppliers = new ArrayList<>();
 
-    public static AsyncAPISupplierFactory init(SmallRyeConfigBuilder context) {
+    public static AsyncAPISupplierFactory init(ConfigSourceContext context) {
         instance = new AsyncAPISupplierFactory(context);
         return instance;
     }
@@ -37,7 +37,7 @@ public class AsyncAPISupplierFactory {
         return instance;
     }
 
-    private AsyncAPISupplierFactory(SmallRyeConfigBuilder context) {
+    private AsyncAPISupplierFactory(ConfigSourceContext context) {
         List<String> specDirs = getValues(context, AsyncApiConfigGroup.SOURCES_PROP,
                 Arrays.asList("src/main/asyncapi", "src/test/asyncapi"));
         final Collection<String> ignoredFiles = excludedFiles(context);
@@ -59,7 +59,7 @@ public class AsyncAPISupplierFactory {
         }
         ServiceLoader<AsyncApiSpecInputProvider> providers = ServiceLoader.load(AsyncApiSpecInputProvider.class);
         for (AsyncApiSpecInputProvider provider : providers) {
-            AsyncAPISpecInput specInput = provider.read();
+            AsyncAPISpecInput specInput = provider.read(context);
             for (Map.Entry<String, InputStreamSupplier> entry : specInput.getStreams().entrySet()) {
                 try (InputStream stream = entry.getValue().get()) {
                     asyncAPISuppliers.add(new JacksonAsyncAPISupplier(entry.getKey(), new String(stream.readAllBytes())));
@@ -74,7 +74,7 @@ public class AsyncAPISupplierFactory {
         return asyncAPISuppliers;
     }
 
-    private Collection<String> excludedFiles(SmallRyeConfigBuilder context) {
+    private Collection<String> excludedFiles(ConfigSourceContext context) {
         return getValues(context, AsyncApiConfigGroup.EXCLUDED_FILES_PROP, Collections.emptyList());
     }
 
@@ -83,9 +83,9 @@ public class AsyncAPISupplierFactory {
         return Files.isRegularFile(path) && !ignoredFiles.contains(fileName) && isExtension(fileName);
     }
 
-    List<String> getValues(SmallRyeConfigBuilder context, String propertyName, List<String> defaultValue) {
-        //TODO
-        return defaultValue;
+    List<String> getValues(ConfigSourceContext context, String propertyName, List<String> defaultValue) {
+        String propValue = context.getValue(propertyName).getValue();
+        return propValue == null ? defaultValue : Arrays.asList(propValue.split(",; "));
     }
 
     private boolean isExtension(String fileName) {
