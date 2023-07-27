@@ -7,8 +7,8 @@ import io.quarkus.runtime.annotations.ConfigItem;
 import io.quarkus.runtime.annotations.ConfigPhase;
 import io.quarkus.runtime.annotations.ConfigRoot;
 
-@ConfigRoot(name = AsyncApiConfigGroup.CONFIG_PREFIX, phase = ConfigPhase.BUILD_TIME)
-public class AsyncApiConfigGroup {
+@ConfigRoot(name = AsyncAPIConfigGroup.CONFIG_PREFIX, phase = ConfigPhase.BUILD_TIME)
+public class AsyncAPIConfigGroup {
 
     static final String CONFIG_PREFIX = "asyncapi-generator.codegen";
 

@@ -38,7 +38,7 @@ public class AsyncAPISupplierFactory {
     }
 
     private AsyncAPISupplierFactory(ConfigSourceContext context) {
-        List<String> specDirs = getValues(context, AsyncApiConfigGroup.SOURCES_PROP,
+        List<String> specDirs = getValues(context, AsyncAPIConfigGroup.SOURCES_PROP,
                 Arrays.asList("src/main/asyncapi", "src/test/asyncapi"));
         final Collection<String> ignoredFiles = excludedFiles(context);
         for (String dir : specDirs) {
@@ -57,8 +57,8 @@ public class AsyncAPISupplierFactory {
                 }
             }
         }
-        ServiceLoader<AsyncApiSpecInputProvider> providers = ServiceLoader.load(AsyncApiSpecInputProvider.class);
-        for (AsyncApiSpecInputProvider provider : providers) {
+        ServiceLoader<AsyncAPISpecInputProvider> providers = ServiceLoader.load(AsyncAPISpecInputProvider.class);
+        for (AsyncAPISpecInputProvider provider : providers) {
             AsyncAPISpecInput specInput = provider.read(context);
             for (Map.Entry<String, InputStreamSupplier> entry : specInput.getStreams().entrySet()) {
                 try (InputStream stream = entry.getValue().get()) {
@@ -75,7 +75,7 @@ public class AsyncAPISupplierFactory {
     }
 
     private Collection<String> excludedFiles(ConfigSourceContext context) {
-        return getValues(context, AsyncApiConfigGroup.EXCLUDED_FILES_PROP, Collections.emptyList());
+        return getValues(context, AsyncAPIConfigGroup.EXCLUDED_FILES_PROP, Collections.emptyList());
     }
 
     private boolean isCandidateFile(Path path, Collection<String> ignoredFiles) {

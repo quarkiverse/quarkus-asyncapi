@@ -11,7 +11,7 @@ public class AsyncAPIConfigSourceFactory implements ConfigSourceFactory {
 
     @Override
     public Iterable<ConfigSource> getConfigSources(ConfigSourceContext context) {
-        return AsyncAPISupplierFactory.init(context).getAsyncApiSuppliers().stream().map(AsyncConfigSource::new)
+        return AsyncAPISupplierFactory.init(context).getAsyncApiSuppliers().stream().map(AsyncAPIConfigSource::new)
                 .collect(Collectors.toList());
     }
 }
