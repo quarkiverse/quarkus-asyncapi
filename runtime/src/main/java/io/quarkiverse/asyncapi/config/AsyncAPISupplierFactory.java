@@ -1,6 +1,7 @@
 package io.quarkiverse.asyncapi.config;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -9,12 +10,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import com.asyncapi.v2.model.AsyncAPI;
 
 import io.smallrye.config.ConfigSourceContext;
 
@@ -28,7 +28,6 @@ public class AsyncAPISupplierFactory {
         List<String> specDirs = getValues(context, AsyncAPIConfigGroup.SOURCES_PROP,
                 Arrays.asList("src/main/asyncapi", "src/test/asyncapi"));
         final Collection<String> ignoredFiles = excludedFiles(context);
-        Collection<AsyncAPI> asyncAPIs = new ArrayList<>();
         for (String dir : specDirs) {
             Path specDir = Path.of(dir);
             if (Files.isDirectory(specDir)) {
@@ -37,18 +36,24 @@ public class AsyncAPISupplierFactory {
                             .filter(path -> isCandidateFile(path, ignoredFiles))
                             .collect(Collectors.toList());
                     for (Path file : files) {
-                        asyncAPIs.add(AsyncAPIUtils.fromString(Files.readString(file)));
+                        asyncAPISuppliers.add(new JacksonAsyncAPISupplier(
+                                AsyncAPIUtils.getJavaClassName(file.getFileName().toString()), Files.readString(file)));
                     }
-
                 } catch (IOException e) {
                     throw new UncheckedIOException(e);
                 }
             }
         }
-        asyncAPISuppliers.add(new RawAsyncAPISupplier(asyncAPIs));
         ServiceLoader<AsyncAPISpecInputProvider> providers = ServiceLoader.load(AsyncAPISpecInputProvider.class);
         for (AsyncAPISpecInputProvider provider : providers) {
-            asyncAPISuppliers.add(provider.read(context));
+            AsyncAPISpecInput specInput = provider.read(context);
+            for (Map.Entry<String, InputStreamSupplier> entry : specInput.getStreams().entrySet()) {
+                try (InputStream stream = entry.getValue().get()) {
+                    asyncAPISuppliers.add(new JacksonAsyncAPISupplier(entry.getKey(), new String(stream.readAllBytes())));
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            }
         }
         return asyncAPISuppliers;
     }

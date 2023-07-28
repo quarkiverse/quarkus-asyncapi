@@ -11,7 +11,7 @@ public class MapAsyncAPIRegistry implements AsyncAPIRegistry {
 
     public MapAsyncAPIRegistry(Iterable<AsyncAPISupplier> suppliers) {
         this.map = new HashMap<>();
-        suppliers.forEach(s -> s.asyncApis().forEach(a -> map.put(a.getId(), a)));
+        suppliers.forEach(supplier -> map.put(supplier.id(), supplier.asyncAPI()));
     }
 
     public MapAsyncAPIRegistry(Map<String, AsyncAPI> map) {
@@ -20,6 +20,6 @@ public class MapAsyncAPIRegistry implements AsyncAPIRegistry {
 
     @Override
     public Optional<AsyncAPI> getAsyncAPI(String id) {
-        return Optional.ofNullable(map.get(id));
+        return Optional.ofNullable(map.get(AsyncAPIUtils.getJavaClassName(id)));
     }
 }
