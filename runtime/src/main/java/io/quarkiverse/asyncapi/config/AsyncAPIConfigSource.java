@@ -15,13 +15,13 @@ import io.quarkiverse.asyncapi.config.channels.ChannelConfigurer;
 import io.quarkiverse.asyncapi.config.channels.ChannelConfigurerFactory;
 import io.smallrye.config.common.MapBackedConfigSource;
 
-public class AsyncConfigSource extends MapBackedConfigSource {
+public class AsyncAPIConfigSource extends MapBackedConfigSource {
 
     private static final long serialVersionUID = 1L;
 
-    private static final Logger logger = LoggerFactory.getLogger(AsyncConfigSource.class);
+    private static final Logger logger = LoggerFactory.getLogger(AsyncAPIConfigSource.class);
 
-    public AsyncConfigSource(AsyncAPISupplier asyncAPISupplier) {
+    public AsyncAPIConfigSource(AsyncAPISupplier asyncAPISupplier) {
         super(asyncAPISupplier.id(), getMapFromAsyncApi(asyncAPISupplier.asyncAPI()));
     }
 
