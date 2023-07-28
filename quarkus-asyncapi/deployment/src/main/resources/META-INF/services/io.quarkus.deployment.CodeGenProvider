@@ -1,4 +1,0 @@
-io.quarkiverse.asyncapi.generator.input.AsyncApiGeneratorJsonCodeGen
-io.quarkiverse.asyncapi.generator.input.AsyncApiGeneratorYamlCodeGen
-io.quarkiverse.asyncapi.generator.input.AsyncApiGeneratorYmlCodeGen
-io.quarkiverse.asyncapi.generator.input.AsyncApiGeneratorStreamCodeGen
