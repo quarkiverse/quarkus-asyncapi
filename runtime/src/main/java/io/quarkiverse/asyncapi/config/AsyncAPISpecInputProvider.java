@@ -7,5 +7,5 @@ import io.smallrye.config.ConfigSourceContext;
  */
 public interface AsyncAPISpecInputProvider {
 
-    AsyncAPISpecInput read(ConfigSourceContext context);
+    AsyncAPISupplier read(ConfigSourceContext context);
 }
