@@ -2,6 +2,7 @@ package io.quarkiverse.asyncapi.config;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -15,29 +16,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.smallrye.config.ConfigSourceContext;
 
 public class AsyncAPISupplierFactory {
 
-    private static final Logger logger = LoggerFactory.getLogger(AsyncAPISupplierFactory.class);
-    private static AsyncAPISupplierFactory instance;
+    private final static Set<String> EXTENSIONS = Set.of(".yml", ".yaml", ".json");
+    private static Collection<AsyncAPISupplier> asyncAPISuppliers = new ArrayList<>();
 
-    private final Set<String> EXTENSIONS = Set.of(".yml", ".yaml", ".json");
-    private Collection<AsyncAPISupplier> asyncAPISuppliers = new ArrayList<>();
-
-    public static AsyncAPISupplierFactory init(ConfigSourceContext context) {
-        instance = new AsyncAPISupplierFactory(context);
-        return instance;
-    }
-
-    public static AsyncAPISupplierFactory get() {
-        return instance;
-    }
-
-    private AsyncAPISupplierFactory(ConfigSourceContext context) {
+    public static Collection<AsyncAPISupplier> init(ConfigSourceContext context) {
         List<String> specDirs = getValues(context, AsyncAPIConfigGroup.SOURCES_PROP,
                 Arrays.asList("src/main/asyncapi", "src/test/asyncapi"));
         final Collection<String> ignoredFiles = excludedFiles(context);
@@ -53,7 +39,7 @@ public class AsyncAPISupplierFactory {
                                 AsyncAPIUtils.getJavaClassName(file.getFileName().toString()), Files.readString(file)));
                     }
                 } catch (IOException e) {
-                    logger.error("Error processing dir {}", specDir, e);
+                    throw new UncheckedIOException(e);
                 }
             }
         }
@@ -64,31 +50,35 @@ public class AsyncAPISupplierFactory {
                 try (InputStream stream = entry.getValue().get()) {
                     asyncAPISuppliers.add(new JacksonAsyncAPISupplier(entry.getKey(), new String(stream.readAllBytes())));
                 } catch (IOException e) {
-                    logger.error("Error processing stream id {}", entry.getKey(), e);
+                    throw new UncheckedIOException(e);
                 }
             }
         }
-    }
-
-    public Collection<AsyncAPISupplier> getAsyncApiSuppliers() {
         return asyncAPISuppliers;
     }
 
-    private Collection<String> excludedFiles(ConfigSourceContext context) {
+    public static Collection<AsyncAPISupplier> getAsyncApiSuppliers() {
+        return asyncAPISuppliers;
+    }
+
+    private static Collection<String> excludedFiles(ConfigSourceContext context) {
         return getValues(context, AsyncAPIConfigGroup.EXCLUDED_FILES_PROP, Collections.emptyList());
     }
 
-    private boolean isCandidateFile(Path path, Collection<String> ignoredFiles) {
+    private static boolean isCandidateFile(Path path, Collection<String> ignoredFiles) {
         String fileName = path.getFileName().toString();
         return Files.isRegularFile(path) && !ignoredFiles.contains(fileName) && isExtension(fileName);
     }
 
-    List<String> getValues(ConfigSourceContext context, String propertyName, List<String> defaultValue) {
+    private static List<String> getValues(ConfigSourceContext context, String propertyName, List<String> defaultValue) {
         String propValue = context.getValue(propertyName).getValue();
         return propValue == null ? defaultValue : Arrays.asList(propValue.split(",; "));
     }
 
-    private boolean isExtension(String fileName) {
-        return EXTENSIONS.stream().anyMatch(ext -> fileName.endsWith(ext));
+    private static boolean isExtension(String fileName) {
+        return EXTENSIONS.stream().anyMatch(fileName::endsWith);
+    }
+
+    private AsyncAPISupplierFactory() {
     }
 }

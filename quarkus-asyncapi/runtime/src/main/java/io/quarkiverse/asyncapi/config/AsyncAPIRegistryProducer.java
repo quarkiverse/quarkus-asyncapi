@@ -8,6 +8,6 @@ public class AsyncAPIRegistryProducer {
 
     @Produces
     AsyncAPIRegistry getAPIRegistry() {
-        return new MapAsyncAPIRegistry(AsyncAPISupplierFactory.get().getAsyncApiSuppliers());
+        return new MapAsyncAPIRegistry(AsyncAPISupplierFactory.getAsyncApiSuppliers());
     }
 }
