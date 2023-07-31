@@ -45,7 +45,7 @@ public class AsyncAPIResourceGeneratorTest {
 
     @Test
     void testKafkaGenerator() {
-        Optional<AsyncAPI> asyncAPI = registry.getAsyncAPI("Asyncapikafka_yml");
+        Optional<AsyncAPI> asyncAPI = registry.getAsyncAPI("asyncapikafka.yml");
         assertThat(asyncAPI.isPresent()).isTrue();
         assertThat(asyncAPI.get().getId()).isEqualTo("urn:com:kafka:server");
         assertThat(kafkaIncomingConnector.get()).isEqualTo("smallrye-kafka");
@@ -56,7 +56,7 @@ public class AsyncAPIResourceGeneratorTest {
 
     @Test
     void testHttpGenerator() {
-        Optional<AsyncAPI> asyncAPI = registry.getAsyncAPI("Asyncapihttp_yml");
+        Optional<AsyncAPI> asyncAPI = registry.getAsyncAPI("asyncapihttp.yml");
         assertThat(asyncAPI.isPresent()).isTrue();
         assertThat(asyncAPI.get().getId()).isEqualTo("urn:com:http:server");
         assertThat(httpIncomingConnector.get()).isEqualTo("quarkus-http");
