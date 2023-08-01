@@ -2,7 +2,6 @@ package io.quarkiverse.asyncapi.config;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -23,9 +22,9 @@ public class AsyncAPISupplierFactory {
     private final static Set<String> EXTENSIONS = Set.of(".yml", ".yaml", ".json");
     private static Collection<AsyncAPISupplier> asyncAPISuppliers = new ArrayList<>();
 
-    public static Collection<AsyncAPISupplier> init(ConfigSourceContext context) {
+    public static Collection<AsyncAPISupplier> init(ConfigSourceContext context) throws IOException {
         asyncAPISuppliers.clear();
-        List<String> specDirs = getValues(context, AsyncAPIConfigGroup.SOURCES_PROP,
+        List<String> specDirs = AsyncAPIUtils.getValues(context, AsyncAPIConfigGroup.SOURCES_PROP,
                 Arrays.asList("src/main/asyncapi", "src/test/asyncapi"));
         final Collection<String> ignoredFiles = excludedFiles(context);
         for (String dir : specDirs) {
@@ -37,10 +36,8 @@ public class AsyncAPISupplierFactory {
                             .collect(Collectors.toList());
                     for (Path file : files) {
                         asyncAPISuppliers.add(new JacksonAsyncAPISupplier(
-                                AsyncAPIUtils.getJavaClassName(file.getFileName().toString()), Files.readString(file)));
+                                file.getFileName().toString(), Files.readString(file)));
                     }
-                } catch (IOException e) {
-                    throw new UncheckedIOException(e);
                 }
             }
         }
@@ -49,9 +46,8 @@ public class AsyncAPISupplierFactory {
             AsyncAPISpecInput specInput = provider.read(context);
             for (Map.Entry<String, InputStreamSupplier> entry : specInput.getStreams().entrySet()) {
                 try (InputStream stream = entry.getValue().get()) {
-                    asyncAPISuppliers.add(new JacksonAsyncAPISupplier(entry.getKey(), new String(stream.readAllBytes())));
-                } catch (IOException e) {
-                    throw new UncheckedIOException(e);
+                    asyncAPISuppliers.add(new JacksonAsyncAPISupplier(entry.getKey(),
+                            new String(stream.readAllBytes())));
                 }
             }
         }
@@ -63,17 +59,12 @@ public class AsyncAPISupplierFactory {
     }
 
     private static Collection<String> excludedFiles(ConfigSourceContext context) {
-        return getValues(context, AsyncAPIConfigGroup.EXCLUDED_FILES_PROP, Collections.emptyList());
+        return AsyncAPIUtils.getValues(context, AsyncAPIConfigGroup.EXCLUDED_FILES_PROP, Collections.emptyList());
     }
 
     private static boolean isCandidateFile(Path path, Collection<String> ignoredFiles) {
         String fileName = path.getFileName().toString();
         return Files.isRegularFile(path) && !ignoredFiles.contains(fileName) && isExtension(fileName);
-    }
-
-    private static List<String> getValues(ConfigSourceContext context, String propertyName, List<String> defaultValue) {
-        String propValue = context.getValue(propertyName).getValue();
-        return propValue == null ? defaultValue : Arrays.asList(propValue.split(",; "));
     }
 
     private static boolean isExtension(String fileName) {
