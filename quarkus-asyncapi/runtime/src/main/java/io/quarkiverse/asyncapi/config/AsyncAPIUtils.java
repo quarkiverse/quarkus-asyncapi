@@ -1,16 +1,15 @@
 package io.quarkiverse.asyncapi.config;
 
-import io.smallrye.config.common.utils.StringUtil;
+import java.util.Arrays;
+import java.util.List;
+
+import io.smallrye.config.ConfigSourceContext;
 
 public final class AsyncAPIUtils {
 
-    public static String getJavaClassName(String name) {
-        return capitalizeFirst(StringUtil.replaceNonAlphanumericByUnderscores(name));
-    }
-
-    private static String capitalizeFirst(String name) {
-        char ch = name.charAt(0);
-        return Character.isUpperCase(ch) ? name : Character.toUpperCase(ch) + name.substring(1);
+    public static List<String> getValues(ConfigSourceContext context, String propertyName, List<String> defaultValue) {
+        String propValue = context.getValue(propertyName).getValue();
+        return propValue == null ? defaultValue : Arrays.asList(propValue.split(",; "));
     }
 
     private AsyncAPIUtils() {

@@ -1,5 +1,7 @@
 package io.quarkiverse.asyncapi.config;
 
+import java.io.IOException;
+
 import io.smallrye.config.ConfigSourceContext;
 
 /**
@@ -7,5 +9,5 @@ import io.smallrye.config.ConfigSourceContext;
  */
 public interface AsyncAPISpecInputProvider {
 
-    AsyncAPISpecInput read(ConfigSourceContext context);
+    AsyncAPISpecInput read(ConfigSourceContext context) throws IOException;
 }
