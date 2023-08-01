@@ -2,7 +2,6 @@ package io.quarkiverse.asyncapi.config;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ public class AsyncAPISupplierFactory {
     private final static Set<String> EXTENSIONS = Set.of(".yml", ".yaml", ".json");
     private static Collection<AsyncAPISupplier> asyncAPISuppliers = new ArrayList<>();
 
-    public static Collection<AsyncAPISupplier> init(ConfigSourceContext context) {
+    public static Collection<AsyncAPISupplier> init(ConfigSourceContext context) throws IOException {
         asyncAPISuppliers.clear();
         List<String> specDirs = AsyncAPIUtils.getValues(context, AsyncAPIConfigGroup.SOURCES_PROP,
                 Arrays.asList("src/main/asyncapi", "src/test/asyncapi"));
@@ -39,8 +38,6 @@ public class AsyncAPISupplierFactory {
                         asyncAPISuppliers.add(new JacksonAsyncAPISupplier(
                                 file.getFileName().toString(), Files.readString(file)));
                     }
-                } catch (IOException e) {
-                    throw new UncheckedIOException(e);
                 }
             }
         }
@@ -51,8 +48,6 @@ public class AsyncAPISupplierFactory {
                 try (InputStream stream = entry.getValue().get()) {
                     asyncAPISuppliers.add(new JacksonAsyncAPISupplier(entry.getKey(),
                             new String(stream.readAllBytes())));
-                } catch (IOException e) {
-                    throw new UncheckedIOException(e);
                 }
             }
         }
