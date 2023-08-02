@@ -35,5 +35,15 @@ public class AsyncApiAnnotationScannerUnFilteredTest {
         assertThat(asyncAPI
                 .at("/channels/transfer-channel1/publish/message/payload/properties/value/properties/company/properties"))
                 .hasSize(7);
+        JsonNode translationNodeOneOf = asyncAPI
+                .at("/channels/channel-x/publish/message/payload/properties/translation/oneOf");
+        assertThat(translationNodeOneOf).hasSize(2);
+        assertThat(translationNodeOneOf.get(0).get("type").asText()).isEqualTo("string");
+        assertThat(translationNodeOneOf.get(1).get("type").asText()).isEqualTo("object");
+        assertThat(translationNodeOneOf.get(1).get("description").asText()).isNotNull();
+        JsonNode oneOfOpenApiNodeOneOf = asyncAPI
+                .at("/channels/channel-x/publish/message/payload/properties/openApiOneOfObject/oneOf");
+        assertThat(oneOfOpenApiNodeOneOf.get(0).get("type").asText()).isEqualTo("string");
+        assertThat(oneOfOpenApiNodeOneOf.get(1).get("type").asText()).isEqualTo("integer");
     }
 }
