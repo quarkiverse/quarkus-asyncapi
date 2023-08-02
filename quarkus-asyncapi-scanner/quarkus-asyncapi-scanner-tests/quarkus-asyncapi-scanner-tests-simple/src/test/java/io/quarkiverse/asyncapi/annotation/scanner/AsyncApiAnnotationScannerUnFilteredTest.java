@@ -19,11 +19,12 @@ import io.quarkus.test.junit.TestProfile;
 public class AsyncApiAnnotationScannerUnFilteredTest {
 
     @Test
-    void shouldScanAndFilterEmitterAnnotations() throws Exception {
+    void shouldScanEmitterAnnotations() throws Exception {
         //given
         String yaml = Files.readAllLines(Path.of(System.getProperty("java.io.tmpdir"), "asyncApi.yaml")).stream()
                 .collect(Collectors.joining("\n"));
         assertThat(yaml).isNotNull();
+        System.out.println(yaml);
         JsonNode asyncAPI = ObjectMapperFactory.yaml().readTree(yaml);
         //when
         assertThat(asyncAPI.at("/channels")).isInstanceOf(ObjectNode.class);
@@ -35,6 +36,8 @@ public class AsyncApiAnnotationScannerUnFilteredTest {
         assertThat(asyncAPI
                 .at("/channels/transfer-channel1/publish/message/payload/properties/value/properties/company/properties"))
                 .hasSize(7);
+
+        //oneOf
         JsonNode translationNodeOneOf = asyncAPI
                 .at("/channels/channel-x/publish/message/payload/properties/translation/oneOf");
         assertThat(translationNodeOneOf).hasSize(2);
@@ -45,5 +48,11 @@ public class AsyncApiAnnotationScannerUnFilteredTest {
                 .at("/channels/channel-x/publish/message/payload/properties/openApiOneOfObject/oneOf");
         assertThat(oneOfOpenApiNodeOneOf.get(0).get("type").asText()).isEqualTo("string");
         assertThat(oneOfOpenApiNodeOneOf.get(1).get("type").asText()).isEqualTo("integer");
+
+        //JsonGetter
+        assertThat(asyncAPI.at("/channels/channel-x/publish/message/payload/properties/i18n/description").asText())
+                .isNotEmpty();
+        assertThat(asyncAPI.at("/channels/channel-x/publish/message/payload/properties/i18n/additionalProperties/properties"))
+                .hasSizeGreaterThan(10);
     }
 }

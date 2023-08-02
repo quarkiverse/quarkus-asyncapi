@@ -31,6 +31,7 @@ import org.jboss.jandex.AnnotationInstance;
 import org.jboss.jandex.AnnotationTarget;
 import org.jboss.jandex.AnnotationValue;
 import org.jboss.jandex.ClassInfo;
+import org.jboss.jandex.Declaration;
 import org.jboss.jandex.DotName;
 import org.jboss.jandex.FieldInfo;
 import org.jboss.jandex.IndexView;
@@ -58,6 +59,8 @@ public class AsyncApiAnnotationScanner {
 
     public static final String CONFIG_PREFIX = "io.quarkiverse.asyncapi";
     static final Logger LOGGER = Logger.getLogger(AsyncApiAnnotationScanner.class.getName());
+    static final DotName OPEN_API_SCHEMA_ANNOTATION = DotName
+            .createSimple("org.eclipse.microprofile.openapi.annotations.media.Schema");
 
     final IndexView index;
     final AsyncApiConfigResolver configResolver;
@@ -304,7 +307,7 @@ public class AsyncApiAnnotationScanner {
                 break;
             case CLASS:
             case PARAMETERIZED_TYPE:
-                getClassSchema(aType, schemaBuilder, typeVariableMap);
+                addClassSchema(aType, schemaBuilder, typeVariableMap);
                 break;
             default: //TODO other types
                 schemaBuilder.type(com.asyncapi.v2.schema.Type.OBJECT);
@@ -312,7 +315,7 @@ public class AsyncApiAnnotationScanner {
         return schemaBuilder.build();
     }
 
-    void getClassSchema(Type aType, Schema.SchemaBuilder aSchemaBuilder, Map<String, Type> aTypeVariableMap) {
+    void addClassSchema(Type aType, Schema.SchemaBuilder aSchemaBuilder, Map<String, Type> aTypeVariableMap) {
         ClassInfo classInfo = index.getClassByName(aType.name());
         if (aType.name().packagePrefix().startsWith("java.lang")) {
             getJavaLangPackageSchema(aType, aSchemaBuilder);
@@ -321,6 +324,13 @@ public class AsyncApiAnnotationScanner {
         } else if (classInfo != null && classInfo.isEnum()) {
             aSchemaBuilder.enumValue(classInfo.enumConstants().stream().map(FieldInfo::name).map(Object.class::cast)
                     .collect(Collectors.toList()));
+        } else if (aType.name().withoutPackagePrefix().endsWith("Map")
+                && aType.kind().equals(Type.Kind.PARAMETERIZED_TYPE)
+                && aType.asParameterizedType().arguments().size() == 2) {
+            //it's a Map, add it's value as additionalProperties
+            Type valueType = aType.asParameterizedType().arguments().get(1);
+            VISITED_TYPES.remove(valueType);//dirty: force re-scan
+            aSchemaBuilder.additionalProperties(getSchema(valueType, aTypeVariableMap));
         } else if (VISITED_TYPES.contains(aType)) {
             LOGGER.fine("getClassSchema() Already visited type " + aType + ". Stopping recursion!");
         } else {
@@ -338,11 +348,19 @@ public class AsyncApiAnnotationScanner {
                 if (hasOneOfSchema) {
                     aSchemaBuilder.type(null);
                 } else {
-                    //TODO consider getter-annotations, too
-                    List<FieldInfo> allFieldsRecursiv = getAllFieldsRecursiv(classInfo, aTypeVariableMap);
-                    Map<String, Schema> properties = allFieldsRecursiv.stream().collect(Collectors.toMap(
-                            FieldInfo::name,
-                            f -> getFieldSchema(f, aTypeVariableMap), (a, b) -> b, TreeMap::new));
+                    //annotated fields
+                    Map<String, Schema> properties = getAllFieldsRecursiv(classInfo).stream()
+                            .collect(Collectors.toMap(
+                                    FieldInfo::name,
+                                    f -> getFieldSchema(f, aTypeVariableMap), (a, b) -> b, TreeMap::new));
+                    //annotated getters
+                    getAllGetterWithSchemaAnnotationRecursiv(classInfo)
+                            .forEach(m -> {
+                                properties.put(
+                                        m.name().substring(3, 4).toLowerCase()
+                                                + (m.name().length() > 3 ? m.name().substring(4) : ""),
+                                        getGetterSchema(m, aTypeVariableMap));
+                            });
                     aSchemaBuilder.properties(properties);
                 }
             } else {
@@ -364,13 +382,30 @@ public class AsyncApiAnnotationScanner {
     }
 
     Schema getFieldSchema(FieldInfo aFieldInfo, Map<String, Type> aTypeVariableMap) {
-        Schema schema = getSchema(aTypeVariableMap.getOrDefault(aFieldInfo.type().toString(), aFieldInfo.type()),
-                aTypeVariableMap);
-        addSchemaAnnotationData(aFieldInfo, schema, aTypeVariableMap);
+        return getDeclarationSchema(aFieldInfo, aFieldInfo.type(), aTypeVariableMap);
+    }
+
+    Schema getGetterSchema(MethodInfo aMethodInfo, Map<String, Type> aTypeVariableMap) {
+        return getDeclarationSchema(aMethodInfo, aMethodInfo.returnType(), aTypeVariableMap);
+    }
+
+    Schema getDeclarationSchema(Declaration aDeclaration, Type aType, Map<String, Type> aTypeVariableMap) {
+        Schema schema = getSchema(aTypeVariableMap.getOrDefault(aType.toString(), aType), aTypeVariableMap);
+        addSchemaAnnotationData(aDeclaration, schema, aTypeVariableMap);
+        //        if (aType.name().withoutPackagePrefix().endsWith("Map")
+        //                && aType.kind().equals(Type.Kind.PARAMETERIZED_TYPE)
+        //                && aType.asParameterizedType().arguments().size() == 2) {
+        //            //it's a Map, add it's value as additionalProperties
+        //            Type valueType = aType.asParameterizedType().arguments().get(1);
+        //            Schema.SchemaBuilder builder = Schema.builder();
+        //            addClassSchema(valueType, builder, aTypeVariableMap);
+        //            schema.setAdditionalProperties(builder.build());
+        //        }
         return schema;
     }
 
     void addSchemaAnnotationData(AnnotationTarget aAnnotationTarget, Schema aSchema, Map<String, Type> aTypeVariableMap) {
+        //TODO readOnly
         Optional.ofNullable(getSchemaAnnotationValue(aAnnotationTarget, "description"))
                 .map(AnnotationValue::asString)
                 .ifPresent(aSchema::setDescription);
@@ -406,8 +441,7 @@ public class AsyncApiAnnotationScanner {
     AnnotationValue getSchemaAnnotationValue(AnnotationTarget aAnnotationTarget, String aAnnotationFieldName) {
         AnnotationInstance asyncApiSchemaAnnotation = aAnnotationTarget
                 .declaredAnnotation(io.quarkiverse.asyncapi.annotation.Schema.class);
-        AnnotationInstance openApiAnnotation = aAnnotationTarget.declaredAnnotation(
-                DotName.createSimple("org.eclipse.microprofile.openapi.annotations.media.Schema"));
+        AnnotationInstance openApiAnnotation = aAnnotationTarget.declaredAnnotation(OPEN_API_SCHEMA_ANNOTATION);
         AnnotationValue annotationValue;
         if (asyncApiSchemaAnnotation != null) {
             annotationValue = asyncApiSchemaAnnotation.value(aAnnotationFieldName);
@@ -444,7 +478,7 @@ public class AsyncApiAnnotationScanner {
 
     void getArraySchema(Type aType, Map<String, Type> aTypeVariableMap, Schema.SchemaBuilder aSchemaBuilder) {
         Type arrayType = aType.asArrayType().constituent().kind().equals(Type.Kind.TYPE_VARIABLE)
-                ? aTypeVariableMap.get(aType.asArrayType().component().toString())
+                ? aTypeVariableMap.get(aType.asArrayType().constituent().toString())
                 : aType.asArrayType().constituent();
         aSchemaBuilder.type(com.asyncapi.v2.schema.Type.ARRAY).items(getSchema(arrayType, aTypeVariableMap));
     }
@@ -470,7 +504,7 @@ public class AsyncApiAnnotationScanner {
         }
     }
 
-    List<FieldInfo> getAllFieldsRecursiv(ClassInfo aClassInfo, Map<String, Type> aTypeVariableMap) {
+    List<FieldInfo> getAllFieldsRecursiv(ClassInfo aClassInfo) {
         ArrayList<FieldInfo> fieldInfos = new ArrayList<>();
         if (aClassInfo.fields() != null) {
             aClassInfo.fields().stream()
@@ -480,8 +514,32 @@ public class AsyncApiAnnotationScanner {
         }
         ClassInfo superClass = index.getClassByName(aClassInfo.superName());
         if (superClass != null) {
-            fieldInfos.addAll(getAllFieldsRecursiv(superClass, aTypeVariableMap));
+            fieldInfos.addAll(getAllFieldsRecursiv(superClass));
         }
         return fieldInfos;
+    }
+
+    List<MethodInfo> getAllGetterWithSchemaAnnotationRecursiv(ClassInfo aClassInfo) {
+        ArrayList<MethodInfo> methodInfos = new ArrayList<>();
+        if (aClassInfo.methods() != null) {
+            aClassInfo.methods().stream()
+                    .filter(m -> m.name().startsWith("get"))
+                    .filter(m -> m.parametersCount() == 0)
+                    .filter(m -> !m.returnType().kind().equals(Type.Kind.VOID))
+                    .filter(m -> !Modifier.isStatic(m.flags()))
+                    .filter(m -> m.hasAnnotation(io.quarkiverse.asyncapi.annotation.Schema.class)
+                            || m.hasAnnotation(OPEN_API_SCHEMA_ANNOTATION))
+                    .forEach(methodInfos::add);
+        }
+        ClassInfo superClass = index.getClassByName(aClassInfo.superName());
+        if (superClass != null) {
+            methodInfos.addAll(getAllGetterWithSchemaAnnotationRecursiv(superClass));
+        }
+        aClassInfo.interfaceNames().stream()
+                .map(index::getClassByName)
+                .filter(Objects::nonNull)
+                .map(this::getAllGetterWithSchemaAnnotationRecursiv)
+                .forEach(methodInfos::addAll);
+        return methodInfos;
     }
 }

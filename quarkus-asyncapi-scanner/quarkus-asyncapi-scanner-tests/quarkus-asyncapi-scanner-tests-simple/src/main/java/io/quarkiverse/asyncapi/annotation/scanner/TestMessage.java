@@ -7,7 +7,7 @@ import javax.measure.Quantity;
 
 import io.quarkiverse.asyncapi.annotation.Schema;
 
-public class TestMessage<T> {
+public class TestMessage<T> implements HasTranslations {
 
     private String x;
     private String y;
