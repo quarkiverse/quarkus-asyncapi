@@ -11,16 +11,17 @@ import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -326,19 +327,24 @@ public class AsyncApiAnnotationScanner {
             VISITED_TYPES.add(aType);
             aSchemaBuilder.type(com.asyncapi.v2.schema.Type.OBJECT);
             if (classInfo != null) {
-                addSchemaAnnotationData(classInfo, aSchemaBuilder);
+                boolean hasOneOfSchema = addSchemaAnnotationData(classInfo, aSchemaBuilder, aTypeVariableMap);
                 if (aType.kind().equals(Type.Kind.PARAMETERIZED_TYPE)) {
                     for (int i = 0; i < aType.asParameterizedType().arguments().size(); i++) {
                         aTypeVariableMap.put(classInfo.typeParameters().get(i).identifier(),
                                 aType.asParameterizedType().arguments().get(i));
                     }
                 }
-                //TODO consider getter-annotations, too
-                List<FieldInfo> allFieldsRecursiv = getAllFieldsRecursiv(classInfo, aTypeVariableMap);
-                Map<String, Schema> properties = allFieldsRecursiv.stream().collect(Collectors.toMap(
-                        FieldInfo::name,
-                        f -> getFieldSchema(f, aTypeVariableMap), (a, b) -> b, TreeMap::new));
-                aSchemaBuilder.properties(properties);
+                //each oneOf declares it's own type&properties, leave the type&properties found in the annotated object
+                if (hasOneOfSchema) {
+                    aSchemaBuilder.type(null);
+                } else {
+                    //TODO consider getter-annotations, too
+                    List<FieldInfo> allFieldsRecursiv = getAllFieldsRecursiv(classInfo, aTypeVariableMap);
+                    Map<String, Schema> properties = allFieldsRecursiv.stream().collect(Collectors.toMap(
+                            FieldInfo::name,
+                            f -> getFieldSchema(f, aTypeVariableMap), (a, b) -> b, TreeMap::new));
+                    aSchemaBuilder.properties(properties);
+                }
             } else {
                 //class is not in jandex...try to get the class by reflection
                 LOGGER.fine("getClassSchema() Loading raw type " + aType);
@@ -360,24 +366,44 @@ public class AsyncApiAnnotationScanner {
     Schema getFieldSchema(FieldInfo aFieldInfo, Map<String, Type> aTypeVariableMap) {
         Schema schema = getSchema(aTypeVariableMap.getOrDefault(aFieldInfo.type().toString(), aFieldInfo.type()),
                 aTypeVariableMap);
-        addSchemaAnnotationData(aFieldInfo, schema);
+        addSchemaAnnotationData(aFieldInfo, schema, aTypeVariableMap);
         return schema;
     }
 
-    void addSchemaAnnotationData(AnnotationTarget aAnnotationTarget, Schema aSchema) {
-        addSchemaAnnotationStringData(aAnnotationTarget, "description", aSchema::setDescription);
+    void addSchemaAnnotationData(AnnotationTarget aAnnotationTarget, Schema aSchema, Map<String, Type> aTypeVariableMap) {
+        Optional.ofNullable(getSchemaAnnotationValue(aAnnotationTarget, "description"))
+                .map(AnnotationValue::asString)
+                .ifPresent(aSchema::setDescription);
+        Optional.ofNullable(getSchemaAnnotationValue(aAnnotationTarget, "oneOf"))
+                .map(AnnotationValue::asClassArray)
+                .map(ta -> Arrays.stream(ta).map(t -> getSchema(t, aTypeVariableMap)).collect(Collectors.toList()))
+                .ifPresent(oneOf -> {
+                    aSchema.setOneOf(oneOf);
+                    //reset if oneOf is found
+                    aSchema.setPatternProperties(Map.of());
+                    aSchema.setType(null);
+                });
     }
 
-    void addSchemaAnnotationData(AnnotationTarget aAnnotationTarget, Schema.SchemaBuilder aSchemaBuilder) {
-        addSchemaAnnotationStringData(aAnnotationTarget, "description", aSchemaBuilder::description);
+    boolean addSchemaAnnotationData(AnnotationTarget aAnnotationTarget, Schema.SchemaBuilder aSchemaBuilder,
+            Map<String, Type> aTypeVariableMap) {
+        Optional.ofNullable(getSchemaAnnotationValue(aAnnotationTarget, "description"))
+                .map(AnnotationValue::asString)
+                .ifPresent(aSchemaBuilder::description);
+        return Optional.ofNullable(getSchemaAnnotationValue(aAnnotationTarget, "oneOf"))
+                .map(AnnotationValue::asClassArray)
+                .map(ta -> Arrays.stream(ta).map(t -> getSchema(t, aTypeVariableMap)).collect(Collectors.toList()))
+                .map(aSchemaBuilder::oneOf)
+                .isPresent();
     }
 
     void addSchemaAnnotationData(AnnotationTarget aAnnotationTarget, Operation aOperation) {
-        addSchemaAnnotationStringData(aAnnotationTarget, "description", aOperation::setDescription);
+        Optional.ofNullable(getSchemaAnnotationValue(aAnnotationTarget, "description"))
+                .map(AnnotationValue::asString)
+                .ifPresent(aOperation::setDescription);
     }
 
-    void addSchemaAnnotationStringData(AnnotationTarget aAnnotationTarget, String aAnnotationFieldName,
-            Consumer<String> aSetter) {
+    AnnotationValue getSchemaAnnotationValue(AnnotationTarget aAnnotationTarget, String aAnnotationFieldName) {
         AnnotationInstance asyncApiSchemaAnnotation = aAnnotationTarget
                 .declaredAnnotation(io.quarkiverse.asyncapi.annotation.Schema.class);
         AnnotationInstance openApiAnnotation = aAnnotationTarget.declaredAnnotation(
@@ -390,9 +416,7 @@ public class AsyncApiAnnotationScanner {
         } else {
             annotationValue = null;
         }
-        if (annotationValue != null && !annotationValue.asString().isEmpty()) {
-            aSetter.accept(annotationValue.asString());
-        }
+        return annotationValue;
     }
 
     void getJavaLangPackageSchema(Type aType, Schema.SchemaBuilder aSchemaBuilder) {
@@ -419,9 +443,9 @@ public class AsyncApiAnnotationScanner {
     }
 
     void getArraySchema(Type aType, Map<String, Type> aTypeVariableMap, Schema.SchemaBuilder aSchemaBuilder) {
-        Type arrayType = aType.asArrayType().component().kind().equals(Type.Kind.TYPE_VARIABLE)
+        Type arrayType = aType.asArrayType().constituent().kind().equals(Type.Kind.TYPE_VARIABLE)
                 ? aTypeVariableMap.get(aType.asArrayType().component().toString())
-                : aType.asArrayType().component();
+                : aType.asArrayType().constituent();
         aSchemaBuilder.type(com.asyncapi.v2.schema.Type.ARRAY).items(getSchema(arrayType, aTypeVariableMap));
     }
 
