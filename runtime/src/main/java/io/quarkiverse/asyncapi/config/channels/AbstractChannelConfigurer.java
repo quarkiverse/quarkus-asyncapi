@@ -29,7 +29,6 @@ public abstract class AbstractChannelConfigurer implements ChannelConfigurer {
         this.connectorId = connectorId;
     }
 
-    @Override
     public String protocol() {
         return protocol;
     }
@@ -50,7 +49,6 @@ public abstract class AbstractChannelConfigurer implements ChannelConfigurer {
 
     }
 
-    @Override
     public void commonConfig(Server server, Map<String, String> result) {
 
     }
