@@ -69,83 +69,8 @@ public class AsyncApiAnnotationScannerFilteredTest {
         assertThat(asyncAPI.at("/channels/transfer-channel1/publish/message/payload/properties/plantId/$ref").asText())
                 .isEqualTo("#/components/schemas/UUID");
         //
-        assertThat(asyncAPI.at("/channels/transfer-channel1/publish/message/payload/properties/value/type").asText())
-                .isEqualTo("object");
-        assertThat(asyncAPI.at("/channels/transfer-channel1/publish/message/payload/properties/value/properties")).hasSize(3);
-        //BookDate Only Ref available
-        assertThat(asyncAPI.at("/channels/transfer-channel1/publish/message/payload/properties/value/properties/bookDate/$ref")
-                .asText())
-                .isEqualTo("#/components/schemas/OffsetDateTime");
-        //Part
-        assertThat(
-                asyncAPI.at("/channels/transfer-channel1/publish/message/payload/properties/value/properties/part/description")
-                        .asText())
-                .isEqualTo("Part definition. Part may be a product, a raw material, an equipment or any other part");
-        assertThat(asyncAPI.at("/channels/transfer-channel1/publish/message/payload/properties/value/properties/part/type")
-                .asText())
-                .isEqualTo("object");
-        assertThat(
-                asyncAPI.at("/channels/transfer-channel1/publish/message/payload/properties/value/properties/part/properties"))
-                .hasSize(3);
-        assertThat(asyncAPI.at(
-                "/channels/transfer-channel1/publish/message/payload/properties/value/properties/part/properties/partTypeId/$ref")
-                .asText())
-                .isEqualTo("#/components/schemas/UUID");
-        assertThat(asyncAPI.at(
-                "/channels/transfer-channel1/publish/message/payload/properties/value/properties/part/properties/partTypeId/description")
-                .asText())
-                .isEqualTo("reference to parttype of the part");
-        assertThat(asyncAPI.at(
-                "/channels/transfer-channel1/publish/message/payload/properties/value/properties/part/properties/partGroupId/$ref")
-                .asText())
-                .isEqualTo("#/components/schemas/UUID");
-        assertThat(asyncAPI.at(
-                "/channels/transfer-channel1/publish/message/payload/properties/value/properties/part/properties/partGroupId/description")
-                .asText())
-                .isEqualTo("reference to partgroup of the part");
-        assertThat(asyncAPI.at(
-                "/channels/transfer-channel1/publish/message/payload/properties/value/properties/part/properties/externalId/type")
-                .asText())
-                .isEqualTo("string");
-        //Company
-        assertThat(asyncAPI
-                .at("/channels/transfer-channel1/publish/message/payload/properties/value/properties/company/description")
-                .asText())
-                .isEqualTo("Company");
-        assertThat(asyncAPI.at("/channels/transfer-channel1/publish/message/payload/properties/value/properties/company/type")
-                .asText())
-                .isEqualTo("object");
-        assertThat(asyncAPI
-                .at("/channels/transfer-channel1/publish/message/payload/properties/value/properties/company/properties"))
-                .hasSize(7);
-        assertThat(asyncAPI.at(
-                "/channels/transfer-channel1/publish/message/payload/properties/value/properties/company/properties/payload/type")
-                .asText())
-                .isEqualTo("string");
-        assertThat(asyncAPI.at(
-                "/channels/transfer-channel1/publish/message/payload/properties/value/properties/company/properties/name/type")
-                .asText())
-                .isEqualTo("string");
-        assertThat(asyncAPI.at(
-                "/channels/transfer-channel1/publish/message/payload/properties/value/properties/company/properties/tenantId/description")
-                .asText())
-                .isEqualTo("Id references the Tenant");
-        assertThat(asyncAPI.at(
-                "/channels/transfer-channel1/publish/message/payload/properties/value/properties/company/properties/description/type")
-                .asText())
-                .isEqualTo("string");
-        assertThat(asyncAPI.at(
-                "/channels/transfer-channel1/publish/message/payload/properties/value/properties/company/properties/info1/type")
-                .asText())
-                .isEqualTo("string");
-        assertThat(asyncAPI.at(
-                "/channels/transfer-channel1/publish/message/payload/properties/value/properties/company/properties/info2/type")
-                .asText())
-                .isEqualTo("string");
-        assertThat(asyncAPI.at(
-                "/channels/transfer-channel1/publish/message/payload/properties/value/properties/company/properties/info3/type")
-                .asText())
-                .isEqualTo("string");
+        assertThat(asyncAPI.at("/channels/transfer-channel1/publish/message/payload/properties/value/$ref").asText())
+                .isEqualTo("#/components/schemas/TransferWorkorderMessage");
         //Servers
         assertThat(asyncAPI.at("/servers/testServer/protocol").asText())
                 .isEqualTo("kafka");
@@ -193,65 +118,11 @@ public class AsyncApiAnnotationScannerFilteredTest {
         assertThat(asyncAPI.at("/channels/incoming-channel-part/subscribe/message/payload/properties/plantId/$ref").asText())
                 .isEqualTo("#/components/schemas/UUID");
         //Part
-        assertThat(asyncAPI.at("/channels/incoming-channel-part/subscribe/message/payload/properties/value/type").asText())
-                .isEqualTo("object");
+        assertThat(asyncAPI.at("/channels/incoming-channel-part/subscribe/message/payload/properties/value/$ref").asText())
+                .isEqualTo("#/components/schemas/Part");
         assertThat(asyncAPI
-                .at("/channels/incoming-channel-part/subscribe/message/payload/properties/value/description")
-                .asText()).isEqualTo("Part definition. Part may be a product, a raw material, an equipment or any other part");
-        assertThat(asyncAPI.at("/channels/incoming-channel-part/subscribe/message/payload/properties/value/properties"))
-                .hasSize(10);
-        //
-        assertThat(asyncAPI.at(
-                "/channels/incoming-channel-part/subscribe/message/payload/properties/value/properties/availabilityState/enum"))
-                .hasSize(4);
-        assertThat(asyncAPI.at(
-                "/channels/incoming-channel-part/subscribe/message/payload/properties/value/properties/dimension/description")
-                .asText()).isEqualTo("Dimension of the part");
-        assertThat(asyncAPI.at(
-                "/channels/incoming-channel-part/subscribe/message/payload/properties/value/properties/dimension/type")
-                .asText()).isEqualTo("object");
-        assertThat(asyncAPI.at(
-                "/channels/incoming-channel-part/subscribe/message/payload/properties/value/properties/externalId/type")
-                .asText()).isEqualTo("string");
-        assertThat(asyncAPI.at(
-                "/channels/incoming-channel-part/subscribe/message/payload/properties/value/properties/materialType/description")
-                .asText()).isEqualTo("Material Type of the part: MATERIAL, PRODUCT");
-        assertThat(asyncAPI.at(
-                "/channels/incoming-channel-part/subscribe/message/payload/properties/value/properties/materialType/enum"))
-                .hasSize(3);
-        assertThat(asyncAPI.at(
-                "/channels/incoming-channel-part/subscribe/message/payload/properties/value/properties/partGroupId/$ref")
-                .asText()).isEqualTo("#/components/schemas/UUID");
-        assertThat(asyncAPI.at(
-                "/channels/incoming-channel-part/subscribe/message/payload/properties/value/properties/partGroupId/description")
-                .asText()).isEqualTo("reference to partgroup of the part");
-        assertThat(asyncAPI.at(
-                "/channels/incoming-channel-part/subscribe/message/payload/properties/value/properties/partTypeId/$ref")
-                .asText()).isEqualTo("#/components/schemas/UUID");
-        assertThat(asyncAPI.at(
-                "/channels/incoming-channel-part/subscribe/message/payload/properties/value/properties/partTypeId/description")
-                .asText()).isEqualTo("reference to parttype of the part");
-        assertThat(asyncAPI.at(
-                "/channels/incoming-channel-part/subscribe/message/payload/properties/value/properties/procurementType/description")
-                .asText()).isEqualTo("PROCUREMENT TYPE of the part: INHOUSE, EXTERNAL");
-        assertThat(asyncAPI.at(
-                "/channels/incoming-channel-part/subscribe/message/payload/properties/value/properties/procurementType/enum"))
-                .hasSize(2);
-        assertThat(asyncAPI.at(
-                "/channels/incoming-channel-part/subscribe/message/payload/properties/value/properties/workorderFinishMode/enum"))
-                .hasSize(3);
-        assertThat(asyncAPI.at(
-                "/channels/incoming-channel-part/subscribe/message/payload/properties/value/properties/workorderQuantityAdjustmentMode/enum"))
-                .hasSize(2);
-        assertThat(asyncAPI.at(
-                "/channels/incoming-channel-part/subscribe/message/payload/properties/value/properties/workorderQuantityOverbookPercentage/description")
-                .asText())
-                .isEqualTo(
-                        "Percentage value that the workorder quantity could be overbooked. In combination with finishMode the workorder quantity could be overbooked up to this value before the workorder state will be set automatically to finished");
-        assertThat(asyncAPI.at(
-                "/channels/incoming-channel-part/subscribe/message/payload/properties/value/properties/workorderQuantityOverbookPercentage/type")
-                .asText())
-                .isEqualTo("integer");
+                .at("/channels/incoming-channel-part/subscribe/message/payload/properties/value/$ref")
+                .asText()).isEqualTo("#/components/schemas/Part");
     }
 
     @Test
@@ -297,12 +168,12 @@ public class AsyncApiAnnotationScannerFilteredTest {
         assertThat(asyncAPI
                 .at("/channels/incoming-channel-string/subscribe/message/payload/properties/value/description")
                 .asText()).isEqualTo("Part definition. Part may be a product, a raw material, an equipment or any other part");
-        assertThat(asyncAPI.at("/channels/incoming-channel-part/subscribe/message/payload/properties/value/properties"))
-                .hasSize(10);
+        assertThat(asyncAPI.at("/channels/incoming-channel-part/subscribe/message/payload/properties/value/$ref").asText())
+                .isEqualTo("#/components/schemas/Part");
         //
         assertThat(asyncAPI.at(
-                "/channels/incoming-channel-string/subscribe/message/payload/properties/value/properties/availabilityState/enum"))
-                .hasSize(4);
+                "/channels/incoming-channel-string/subscribe/message/payload/properties/value/properties/availabilityState/$ref")
+                .asText()).isEqualTo("#/components/schemas/AvailabilityState");
         assertThat(asyncAPI.at(
                 "/channels/incoming-channel-string/subscribe/message/payload/properties/value/properties/dimension/description")
                 .asText()).isEqualTo("Dimension of the part");
@@ -316,8 +187,8 @@ public class AsyncApiAnnotationScannerFilteredTest {
                 "/channels/incoming-channel-string/subscribe/message/payload/properties/value/properties/materialType/description")
                 .asText()).isEqualTo("Material Type of the part: MATERIAL, PRODUCT");
         assertThat(asyncAPI.at(
-                "/channels/incoming-channel-string/subscribe/message/payload/properties/value/properties/materialType/enum"))
-                .hasSize(3);
+                "/channels/incoming-channel-string/subscribe/message/payload/properties/value/properties/materialType/$ref")
+                .asText()).isEqualTo("#/components/schemas/MaterialType");
         assertThat(asyncAPI.at(
                 "/channels/incoming-channel-string/subscribe/message/payload/properties/value/properties/partGroupId/$ref")
                 .asText()).isEqualTo("#/components/schemas/UUID");
@@ -334,14 +205,14 @@ public class AsyncApiAnnotationScannerFilteredTest {
                 "/channels/incoming-channel-string/subscribe/message/payload/properties/value/properties/procurementType/description")
                 .asText()).isEqualTo("PROCUREMENT TYPE of the part: INHOUSE, EXTERNAL");
         assertThat(asyncAPI.at(
-                "/channels/incoming-channel-string/subscribe/message/payload/properties/value/properties/procurementType/enum"))
-                .hasSize(2);
+                "/channels/incoming-channel-string/subscribe/message/payload/properties/value/properties/procurementType/$ref")
+                .asText()).isEqualTo("#/components/schemas/ProcurementType");
         assertThat(asyncAPI.at(
-                "/channels/incoming-channel-string/subscribe/message/payload/properties/value/properties/workorderFinishMode/enum"))
-                .hasSize(3);
+                "/channels/incoming-channel-string/subscribe/message/payload/properties/value/properties/workorderFinishMode/$ref")
+                .asText()).isEqualTo("#/components/schemas/WorkorderFinishMode");
         assertThat(asyncAPI.at(
-                "/channels/incoming-channel-string/subscribe/message/payload/properties/value/properties/workorderQuantityAdjustmentMode/enum"))
-                .hasSize(2);
+                "/channels/incoming-channel-string/subscribe/message/payload/properties/value/properties/workorderQuantityAdjustmentMode/$ref")
+                .asText()).isEqualTo("#/components/schemas/WorkorderQuantityAdjustmentMode");
         assertThat(asyncAPI.at(
                 "/channels/incoming-channel-string/subscribe/message/payload/properties/value/properties/workorderQuantityOverbookPercentage/description")
                 .asText())
@@ -400,8 +271,9 @@ public class AsyncApiAnnotationScannerFilteredTest {
                 .hasSize(10);
         //
         assertThat(asyncAPI.at(
-                "/channels/outgoing-channel-string/publish/message/payload/properties/value/items/properties/availabilityState/enum"))
-                .hasSize(4);
+                "/channels/outgoing-channel-string/publish/message/payload/properties/value/items/properties/availabilityState/$ref")
+                .asText())
+                .isEqualTo("#/components/schemas/AvailabilityState");
         assertThat(asyncAPI.at(
                 "/channels/outgoing-channel-string/publish/message/payload/properties/value/items/properties/dimension/description")
                 .asText()).isEqualTo("Dimension of the part");
@@ -415,8 +287,9 @@ public class AsyncApiAnnotationScannerFilteredTest {
                 "/channels/outgoing-channel-string/publish/message/payload/properties/value/items/properties/materialType/description")
                 .asText()).isEqualTo("Material Type of the part: MATERIAL, PRODUCT");
         assertThat(asyncAPI.at(
-                "/channels/outgoing-channel-string/publish/message/payload/properties/value/items/properties/materialType/enum"))
-                .hasSize(3);
+                "/channels/outgoing-channel-string/publish/message/payload/properties/value/items/properties/materialType/$ref")
+                .asText())
+                .isEqualTo("#/components/schemas/MaterialType");
         assertThat(asyncAPI.at(
                 "/channels/outgoing-channel-string/publish/message/payload/properties/value/items/properties/partGroupId/$ref")
                 .asText()).isEqualTo("#/components/schemas/UUID");
@@ -433,14 +306,17 @@ public class AsyncApiAnnotationScannerFilteredTest {
                 "/channels/outgoing-channel-string/publish/message/payload/properties/value/items/properties/procurementType/description")
                 .asText()).isEqualTo("PROCUREMENT TYPE of the part: INHOUSE, EXTERNAL");
         assertThat(asyncAPI.at(
-                "/channels/outgoing-channel-string/publish/message/payload/properties/value/items/properties/procurementType/enum"))
-                .hasSize(2);
+                "/channels/outgoing-channel-string/publish/message/payload/properties/value/items/properties/procurementType/$ref")
+                .asText())
+                .isEqualTo("#/components/schemas/ProcurementType");
         assertThat(asyncAPI.at(
-                "/channels/outgoing-channel-string/publish/message/payload/properties/value/items/properties/workorderFinishMode/enum"))
-                .hasSize(3);
+                "/channels/outgoing-channel-string/publish/message/payload/properties/value/items/properties/workorderFinishMode/$ref")
+                .asText())
+                .isEqualTo("#/components/schemas/WorkorderFinishMode");
         assertThat(asyncAPI.at(
-                "/channels/outgoing-channel-string/publish/message/payload/properties/value/items/properties/workorderQuantityAdjustmentMode/enum"))
-                .hasSize(2);
+                "/channels/outgoing-channel-string/publish/message/payload/properties/value/items/properties/workorderQuantityAdjustmentMode/$ref")
+                .asText())
+                .isEqualTo("#/components/schemas/WorkorderQuantityAdjustmentMode");
         assertThat(asyncAPI.at(
                 "/channels/outgoing-channel-string/publish/message/payload/properties/value/items/properties/workorderQuantityOverbookPercentage/description")
                 .asText())
@@ -450,5 +326,53 @@ public class AsyncApiAnnotationScannerFilteredTest {
                 "/channels/outgoing-channel-string/publish/message/payload/properties/value/items/properties/workorderQuantityOverbookPercentage/type")
                 .asText())
                 .isEqualTo("integer");
+    }
+
+    @Test
+    void shouldHaveComponentSchemasReferences() throws Exception {
+        //given
+        String yaml = Files.readAllLines(Path.of(System.getProperty("java.io.tmpdir"), "asyncApi.yaml")).stream()
+                .collect(Collectors.joining("\n"));
+        assertThat(yaml).isNotNull();
+        //        System.out.println(yaml);
+        JsonNode asyncAPI = ObjectMapperFactory.yaml().readTree(yaml);
+        //then
+        assertThat(asyncAPI.at("/components/schemas/AvailabilityState/enum")).hasSize(4);
+        assertThat(asyncAPI.at("/components/schemas/Company/type").asText()).isEqualTo("object");
+        assertThat(asyncAPI.at("/components/schemas/Company/properties")).hasSize(7);
+        assertThat(asyncAPI.at("/components/schemas/Company/properties/description/type").asText()).isEqualTo("string");
+        assertThat(asyncAPI.at("/components/schemas/Company/properties/info1/type").asText()).isEqualTo("string");
+        assertThat(asyncAPI.at("/components/schemas/Company/properties/info2/type").asText()).isEqualTo("string");
+        assertThat(asyncAPI.at("/components/schemas/Company/properties/info3/type").asText()).isEqualTo("string");
+        assertThat(asyncAPI.at("/components/schemas/Company/properties/name/type").asText()).isEqualTo("string");
+        assertThat(asyncAPI.at("/components/schemas/Company/properties/payload/type").asText()).isEqualTo("string");
+        assertThat(asyncAPI.at("/components/schemas/Company/properties/tenantId/description").asText())
+                .isEqualTo("Id references the Tenant");
+        assertThat(asyncAPI.at("/components/schemas/MaterialType/enum")).hasSize(3);
+        assertThat(asyncAPI.at("/components/schemas/Part/properties/availabilityState/$ref").asText())
+                .isEqualTo("#/components/schemas/AvailabilityState");
+        assertThat(asyncAPI.at("/components/schemas/Part/description").asText())
+                .isEqualTo("Part definition. Part may be a product, a raw material, an equipment or any other part");
+        assertThat(asyncAPI.at("/components/schemas/Part/properties")).hasSize(10);
+        assertThat(asyncAPI.at("/components/schemas/Part/properties/externalId/type").asText()).isEqualTo("string");
+        assertThat(asyncAPI.at("/components/schemas/Part/properties/partGroupId/$ref").asText())
+                .isEqualTo("#/components/schemas/UUID");
+        assertThat(asyncAPI.at("/components/schemas/Part/properties/partGroupId/description").asText())
+                .isEqualTo("reference to partgroup of the part");
+        assertThat(asyncAPI.at("/components/schemas/Part/properties/partTypeId/$ref").asText())
+                .isEqualTo("#/components/schemas/UUID");
+        assertThat(asyncAPI.at("/components/schemas/Part/properties/partTypeId/description").asText())
+                .isEqualTo("reference to parttype of the part");
+        assertThat(asyncAPI.at("/components/schemas/Part/type").asText()).isEqualTo("object");
+        assertThat(asyncAPI.at("/components/schemas/ProcurementType/enum")).hasSize(2);
+        assertThat(asyncAPI.at("/components/schemas/TransferWorkorderMessage/properties")).hasSize(3);
+        assertThat(asyncAPI.at("/components/schemas/TransferWorkorderMessage/properties/bookDate/$ref").asText())
+                .isEqualTo("#/components/schemas/OffsetDateTime");
+        assertThat(asyncAPI.at("/components/schemas/TransferWorkorderMessage/properties/part/$ref").asText())
+                .isEqualTo("#/components/schemas/Part");
+        assertThat(asyncAPI.at("/components/schemas/TransferWorkorderMessage/properties/company/$ref").asText())
+                .isEqualTo("#/components/schemas/Company");
+        assertThat(asyncAPI.at("/components/schemas/WorkorderFinishMode/enum")).hasSize(3);
+        assertThat(asyncAPI.at("/components/schemas/WorkorderQuantityAdjustmentMode/enum")).hasSize(2);
     }
 }

@@ -22,4 +22,8 @@ public @interface Schema {
     String description() default "";
 
     Class<?>[] oneOf() default {};
+
+    boolean readOnly() default false;
+
+    boolean deprecated() default false;
 }
