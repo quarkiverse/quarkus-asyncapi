@@ -54,5 +54,14 @@ public class AsyncApiAnnotationScannerUnFilteredTest {
                 .isNotEmpty();
         assertThat(asyncAPI.at("/channels/channel-x/publish/message/payload/properties/i18n/additionalProperties/properties"))
                 .hasSizeGreaterThan(10);
+
+        // @Deprecated, @Min, @Max
+        assertThat(asyncAPI.at("/channels/channel-x/publish/message/payload/properties/sum/maximum").asInt()).isEqualTo(10);
+        assertThat(asyncAPI.at("/channels/channel-x/publish/message/payload/properties/sum/minimum").asInt()).isEqualTo(5);
+        assertThat(asyncAPI.at("/channels/channel-x/publish/message/payload/properties/sum/deprecated").asBoolean()).isTrue();
+
+        //@NotNull
+        assertThat(asyncAPI.at("/channels/channel-x/publish/message/payload/required")).hasSize(1);
+        assertThat(asyncAPI.at("/channels/channel-x/publish/message/payload/required/0").asText()).isEqualTo("sum");
     }
 }

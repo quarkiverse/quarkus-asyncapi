@@ -5,6 +5,7 @@ import static org.jboss.jandex.Type.Kind.PARAMETERIZED_TYPE;
 import static org.jboss.jandex.Type.Kind.PRIMITIVE;
 
 import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalTime;
@@ -26,6 +27,10 @@ import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 import org.jboss.jandex.AnnotationInstance;
 import org.jboss.jandex.AnnotationTarget;
@@ -328,11 +333,11 @@ public class AsyncApiAnnotationScanner {
         } else if (aType.name().withoutPackagePrefix().endsWith("Map")
                 && aType.kind().equals(Type.Kind.PARAMETERIZED_TYPE)
                 && aType.asParameterizedType().arguments().size() == 2) {
-            //it's a Map, use type object and add it's value as additionalProperties,
-            //see https://swagger.io/docs/specification/data-models/dictionaries/ 
-            //and https://www.asyncapi.com/docs/reference/specification/v2.6.0#schemaObject -> Model with Map/Dictionary Properties
             Type valueType = aType.asParameterizedType().arguments().get(1);
             VISITED_TYPES.remove(valueType);//dirty: force re-scan
+            //it's a Map, use type object and add it's value as additionalProperties,
+            //see https://swagger.io/docs/specification/data-models/dictionaries/
+            //and https://www.asyncapi.com/docs/reference/specification/v2.6.0#schemaObject -> Model with Map/Dictionary Properties
             aSchemaBuilder
                     .type(com.asyncapi.v2.schema.Type.OBJECT)
                     .additionalProperties(getSchema(valueType, aTypeVariableMap));
@@ -353,20 +358,31 @@ public class AsyncApiAnnotationScanner {
                 if (hasOneOfSchema) {
                     aSchemaBuilder.type(null);
                 } else {
+                    List<String> required = new ArrayList<>();
                     //annotated fields
                     Map<String, Schema> properties = getAllFieldsRecursiv(classInfo).stream()
+                            .map(f -> {
+                                if (f.hasAnnotation(NotNull.class)) {
+                                    required.add(f.name());
+                                }
+                                return f;
+                            })
                             .collect(Collectors.toMap(
                                     FieldInfo::name,
                                     f -> getFieldSchema(f, aTypeVariableMap), (a, b) -> b, TreeMap::new));
                     //annotated getters
-                    getAllGetterWithSchemaAnnotationRecursiv(classInfo)
-                            .forEach(m -> {
-                                properties.put(
-                                        m.name().substring(3, 4).toLowerCase()
-                                                + (m.name().length() > 3 ? m.name().substring(4) : ""),
-                                        getGetterSchema(m, aTypeVariableMap));
-                            });
+                    getAllGetterWithSchemaAnnotationRecursiv(classInfo).stream()
+                            .map(m -> {
+                                if (m.hasAnnotation(NotNull.class)) {
+                                    required.add(getPropertyName(m));
+                                }
+                                return m;
+                            })
+                            .forEach(m -> properties.put(getPropertyName(m), getGetterSchema(m, aTypeVariableMap)));
                     aSchemaBuilder.properties(properties);
+                    if (!required.isEmpty()) {
+                        aSchemaBuilder.required(required);
+                    }
                 }
             } else {
                 //class is not in jandex...try to get the class by reflection
@@ -386,18 +402,47 @@ public class AsyncApiAnnotationScanner {
         }
     }
 
+    String getPropertyName(MethodInfo aMethodInfo) {
+        return aMethodInfo.name().substring(3, 4).toLowerCase()
+                + (aMethodInfo.name().length() > 3 ? aMethodInfo.name().substring(4) : "");
+    }
+
     Schema getFieldSchema(FieldInfo aFieldInfo, Map<String, Type> aTypeVariableMap) {
-        return getDeclarationSchema(aFieldInfo, aFieldInfo.type(), aTypeVariableMap);
+        Schema schema = getDeclarationSchema(aFieldInfo, aFieldInfo.type(), aTypeVariableMap);
+        addBeanValidationAnnotationData(aFieldInfo, schema);
+        addDeprecatedAnnotationData(aFieldInfo, schema);
+        return schema;
     }
 
     Schema getGetterSchema(MethodInfo aMethodInfo, Map<String, Type> aTypeVariableMap) {
-        return getDeclarationSchema(aMethodInfo, aMethodInfo.returnType(), aTypeVariableMap);
+        Schema schema = getDeclarationSchema(aMethodInfo, aMethodInfo.returnType(), aTypeVariableMap);
+        addBeanValidationAnnotationData(aMethodInfo, schema);
+        addDeprecatedAnnotationData(aMethodInfo, schema);
+        return schema;
     }
 
     Schema getDeclarationSchema(Declaration aDeclaration, Type aType, Map<String, Type> aTypeVariableMap) {
         Schema schema = getSchema(aTypeVariableMap.getOrDefault(aType.toString(), aType), aTypeVariableMap);
         addSchemaAnnotationData(aDeclaration, schema, aTypeVariableMap);
         return schema;
+    }
+
+    void addBeanValidationAnnotationData(Declaration aDeclaration, Schema aSchema) {
+        Optional.ofNullable(aDeclaration.annotation(Min.class))
+                .map(AnnotationInstance::value)
+                .map(AnnotationValue::asLong)
+                .map(BigDecimal::valueOf)
+                .ifPresent(aSchema::setMinimum);
+        Optional.ofNullable(aDeclaration.annotation(Max.class))
+                .map(AnnotationInstance::value)
+                .map(AnnotationValue::asLong)
+                .map(BigDecimal::valueOf)
+                .ifPresent(aSchema::setMaximum);
+    }
+
+    void addDeprecatedAnnotationData(Declaration aDeclaration, Schema aSchema) {
+        Optional.ofNullable(aDeclaration.annotation(Deprecated.class))
+                .ifPresent(x -> aSchema.setDeprecated(true));
     }
 
     void addSchemaAnnotationData(AnnotationTarget aAnnotationTarget, Schema aSchema, Map<String, Type> aTypeVariableMap) {

@@ -5,12 +5,18 @@ import java.util.List;
 
 import javax.measure.Quantity;
 
-import io.quarkiverse.asyncapi.annotation.Schema;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 public class TestMessage<T> implements HasTranslations {
 
     private String x;
     private String y;
+    @Min(5)
+    @Max(10)
+    @NotNull
+    @Deprecated
     private Integer sum;
     private T data;
     private T[] dataArray;

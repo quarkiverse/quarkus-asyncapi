@@ -2,6 +2,7 @@ package io.quarkiverse.asyncapi.annotation.scanner;
 
 import static io.quarkus.deployment.annotations.ExecutionTime.RUNTIME_INIT;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -16,6 +17,7 @@ import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.annotations.Record;
 import io.quarkus.deployment.builditem.CombinedIndexBuildItem;
+import io.quarkus.deployment.recording.RecorderContext;
 import io.quarkus.vertx.http.deployment.FilterBuildItem;
 import io.quarkus.vertx.http.deployment.NonApplicationRootPathBuildItem;
 import io.quarkus.vertx.http.deployment.RouteBuildItem;
@@ -29,7 +31,9 @@ public class AsyncAPIResourceGenerator {
     void scanAsyncAPIs(
             CombinedIndexBuildItem aIndex,
             AsyncApiRecorder aRecorder,
-            AsyncApiRuntimeConfig aConfig) {
+            AsyncApiRuntimeConfig aConfig,
+            RecorderContext aRecorderContext) {
+        aRecorderContext.registerSubstitution(BigDecimal.class, Double.class, BigDecimalSubstitution.class);
         AsyncApiBuilder builder = new AsyncApiBuilder();
         AsyncAPI asyncAPI = builder.build(aIndex.getIndex(), aConfig);
         aRecorder.store(asyncAPI, aConfig);
@@ -90,4 +94,5 @@ public class AsyncAPIResourceGenerator {
         }
         return null;
     }
+
 }
