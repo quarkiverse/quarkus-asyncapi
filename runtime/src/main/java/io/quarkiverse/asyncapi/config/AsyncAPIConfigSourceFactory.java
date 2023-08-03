@@ -4,15 +4,14 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.config.spi.ConfigSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jboss.logging.Logger;
 
 import io.smallrye.config.ConfigSourceContext;
 import io.smallrye.config.ConfigSourceFactory;
 
 public class AsyncAPIConfigSourceFactory implements ConfigSourceFactory {
 
-    private static final Logger logger = LoggerFactory.getLogger(AsyncAPIConfigSourceFactory.class);
+    private static final Logger logger = Logger.getLogger(AsyncAPIConfigSourceFactory.class);
 
     @Override
     public Iterable<ConfigSource> getConfigSources(ConfigSourceContext context) {
