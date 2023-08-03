@@ -14,6 +14,7 @@ import org.eclipse.microprofile.config.Config;
 
 import com.asyncapi.v2.model.AsyncAPI;
 
+import io.quarkiverse.asyncapi.config.AsyncAPISupplier;
 import io.quarkiverse.asyncapi.config.AsyncAPIUtils;
 import io.quarkiverse.asyncapi.config.ObjectMapperFactory;
 
@@ -31,6 +32,7 @@ public class AsyncApiCodeGenerator {
     private static final String JAVA_SUFFIX = ".java";
 
     private final Collection<String> configClassNames = new HashSet<>();
+    private final Collection<String> asyncSupplierClassNames = new HashSet<>();
 
     public AsyncApiCodeGenerator(Path outPath, Config config, Optional<String> packageName) {
         this.outPath = outPath;
@@ -52,7 +54,7 @@ public class AsyncApiCodeGenerator {
         Map<String, Object> data = Map.of("id", id, "packageName", basePackage, "asyncAPI",
                 escape(ObjectMapperFactory.json().writeValueAsString(asyncAPI)));
         configClassNames.add(writeTemplate(id, CONFIG_SOURCE, data));
-        writeTemplate(id, PRODUCER_NAME, data);
+        asyncSupplierClassNames.add(writeTemplate(id, PRODUCER_NAME, data));
     }
 
     private String escape(String raw) {
@@ -76,24 +78,27 @@ public class AsyncApiCodeGenerator {
     }
 
     public boolean done(boolean test) throws IOException {
-        if (!configClassNames.isEmpty()) {
-            writeServiceLoader(test);
-            return true;
-        }
-        return false;
+        boolean result = writeServiceLoader(configClassNames, SERVICE_LOADER, test);
+        result |= writeServiceLoader(asyncSupplierClassNames, AsyncAPISupplier.class.getCanonicalName(), test);
+        return result;
     }
 
-    private void writeServiceLoader(boolean test) throws IOException {
+    private boolean writeServiceLoader(Collection<String> implClasses, String implementationClass, boolean test)
+            throws IOException {
+        if (implClasses.isEmpty()) {
+            return false;
+        }
         Path serviceLoader = Files
                 .createDirectories(outPath.getParent().getParent().resolve(test ? "test-classes" : "classes")
                         .resolve("META-INF").resolve("services"))
-                .resolve(SERVICE_LOADER);
+                .resolve(implementationClass);
         try (BufferedWriter w = Files.newBufferedWriter(serviceLoader)) {
-            for (String implName : configClassNames) {
+            for (String implName : implClasses) {
                 w.write(implName);
                 w.write(System.lineSeparator());
             }
         }
+        return true;
     }
 
 }
