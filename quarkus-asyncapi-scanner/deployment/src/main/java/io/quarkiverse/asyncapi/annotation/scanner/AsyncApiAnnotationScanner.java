@@ -328,10 +328,14 @@ public class AsyncApiAnnotationScanner {
         } else if (aType.name().withoutPackagePrefix().endsWith("Map")
                 && aType.kind().equals(Type.Kind.PARAMETERIZED_TYPE)
                 && aType.asParameterizedType().arguments().size() == 2) {
-            //it's a Map, add it's value as additionalProperties
+            //it's a Map, use type object and add it's value as additionalProperties,
+            //see https://swagger.io/docs/specification/data-models/dictionaries/ 
+            //and https://www.asyncapi.com/docs/reference/specification/v2.6.0#schemaObject -> Model with Map/Dictionary Properties
             Type valueType = aType.asParameterizedType().arguments().get(1);
             VISITED_TYPES.remove(valueType);//dirty: force re-scan
-            aSchemaBuilder.additionalProperties(getSchema(valueType, aTypeVariableMap));
+            aSchemaBuilder
+                    .type(com.asyncapi.v2.schema.Type.OBJECT)
+                    .additionalProperties(getSchema(valueType, aTypeVariableMap));
         } else if (VISITED_TYPES.contains(aType)) {
             LOGGER.fine("getClassSchema() Already visited type " + aType + ". Stopping recursion!");
         } else {
