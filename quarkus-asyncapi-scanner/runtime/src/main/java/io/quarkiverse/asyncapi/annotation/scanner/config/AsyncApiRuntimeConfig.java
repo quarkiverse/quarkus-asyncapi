@@ -23,7 +23,7 @@ public class AsyncApiRuntimeConfig {
      *
      * @see https://www.npmjs.com/package/@asyncapi/react-component
      */
-    @ConfigItem(defaultValue = "1.0.0-next.47")
+    @ConfigItem(defaultValue = "1.0.0-next.48")
     public String webcomponentversion;
 
     /**
