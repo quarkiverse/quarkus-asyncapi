@@ -307,6 +307,7 @@ public class AsyncApiAnnotationScanner {
                 break;
             case CLASS:
             case PARAMETERIZED_TYPE:
+                //TODO use global references
                 addClassSchema(aType, schemaBuilder, typeVariableMap);
                 break;
             default: //TODO other types
@@ -392,32 +393,23 @@ public class AsyncApiAnnotationScanner {
     Schema getDeclarationSchema(Declaration aDeclaration, Type aType, Map<String, Type> aTypeVariableMap) {
         Schema schema = getSchema(aTypeVariableMap.getOrDefault(aType.toString(), aType), aTypeVariableMap);
         addSchemaAnnotationData(aDeclaration, schema, aTypeVariableMap);
-        //        if (aType.name().withoutPackagePrefix().endsWith("Map")
-        //                && aType.kind().equals(Type.Kind.PARAMETERIZED_TYPE)
-        //                && aType.asParameterizedType().arguments().size() == 2) {
-        //            //it's a Map, add it's value as additionalProperties
-        //            Type valueType = aType.asParameterizedType().arguments().get(1);
-        //            Schema.SchemaBuilder builder = Schema.builder();
-        //            addClassSchema(valueType, builder, aTypeVariableMap);
-        //            schema.setAdditionalProperties(builder.build());
-        //        }
         return schema;
     }
 
     void addSchemaAnnotationData(AnnotationTarget aAnnotationTarget, Schema aSchema, Map<String, Type> aTypeVariableMap) {
-        //TODO readOnly
         Optional.ofNullable(getSchemaAnnotationValue(aAnnotationTarget, "description"))
                 .map(AnnotationValue::asString)
                 .ifPresent(aSchema::setDescription);
+        Optional.ofNullable(getSchemaAnnotationValue(aAnnotationTarget, "readOnly"))
+                .map(AnnotationValue::asBoolean)
+                .ifPresent(aSchema::setReadOnly);
+        Optional.ofNullable(getSchemaAnnotationValue(aAnnotationTarget, "deprecated"))
+                .map(AnnotationValue::asBoolean)
+                .ifPresent(aSchema::setDeprecated);
         Optional.ofNullable(getSchemaAnnotationValue(aAnnotationTarget, "oneOf"))
                 .map(AnnotationValue::asClassArray)
                 .map(ta -> Arrays.stream(ta).map(t -> getSchema(t, aTypeVariableMap)).collect(Collectors.toList()))
-                .ifPresent(oneOf -> {
-                    aSchema.setOneOf(oneOf);
-                    //reset if oneOf is found
-                    aSchema.setPatternProperties(Map.of());
-                    aSchema.setType(null);
-                });
+                .ifPresent(aSchema::setOneOf);
     }
 
     boolean addSchemaAnnotationData(AnnotationTarget aAnnotationTarget, Schema.SchemaBuilder aSchemaBuilder,
@@ -425,6 +417,12 @@ public class AsyncApiAnnotationScanner {
         Optional.ofNullable(getSchemaAnnotationValue(aAnnotationTarget, "description"))
                 .map(AnnotationValue::asString)
                 .ifPresent(aSchemaBuilder::description);
+        Optional.ofNullable(getSchemaAnnotationValue(aAnnotationTarget, "readOnly"))
+                .map(AnnotationValue::asBoolean)
+                .ifPresent(aSchemaBuilder::readOnly);
+        Optional.ofNullable(getSchemaAnnotationValue(aAnnotationTarget, "deprecated"))
+                .map(AnnotationValue::asBoolean)
+                .ifPresent(aSchemaBuilder::deprecated);
         return Optional.ofNullable(getSchemaAnnotationValue(aAnnotationTarget, "oneOf"))
                 .map(AnnotationValue::asClassArray)
                 .map(ta -> Arrays.stream(ta).map(t -> getSchema(t, aTypeVariableMap)).collect(Collectors.toList()))

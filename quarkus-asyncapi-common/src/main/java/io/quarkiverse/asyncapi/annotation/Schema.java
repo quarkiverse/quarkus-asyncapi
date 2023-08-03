@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.TYPE })
+@Target({ElementType.FIELD, ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Schema {
 
@@ -22,4 +22,8 @@ public @interface Schema {
     String description() default "";
 
     Class<?>[] oneOf() default {};
+
+    boolean readOnly() default false;
+
+    boolean deprecated() default false;
 }
