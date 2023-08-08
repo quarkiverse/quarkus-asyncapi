@@ -1,4 +1,4 @@
-package io.quarkiverse.asyncapi.config;
+package io.quarkiverse.asyncapi.generator.input;
 
 import java.io.IOException;
 import java.io.InputStream;
