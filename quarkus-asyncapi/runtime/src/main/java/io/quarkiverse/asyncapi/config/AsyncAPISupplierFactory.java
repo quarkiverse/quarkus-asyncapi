@@ -24,7 +24,6 @@ public class AsyncAPISupplierFactory {
     private static Collection<AsyncAPISupplier> asyncAPISuppliers = new ArrayList<>();
 
     public static Collection<AsyncAPISupplier> init(ConfigSourceContext context) {
-        asyncAPISuppliers.clear();
         List<String> specDirs = getValues(context, AsyncAPIConfigGroup.SOURCES_PROP,
                 Arrays.asList("src/main/asyncapi", "src/test/asyncapi"));
         final Collection<String> ignoredFiles = excludedFiles(context);
