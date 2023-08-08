@@ -5,12 +5,12 @@ import java.io.UncheckedIOException;
 
 import com.asyncapi.v2._6_0.model.AsyncAPI;
 
-public class JacksonAsyncAPISupplier implements AsyncAPISupplier {
+public abstract class JacksonAsyncAPISupplier implements AsyncAPISupplier {
 
     private final String id;
     private final String content;
 
-    public JacksonAsyncAPISupplier(String id, String content) {
+    protected JacksonAsyncAPISupplier(String id, String content) {
         this.id = id;
         this.content = content;
     }
@@ -23,7 +23,7 @@ public class JacksonAsyncAPISupplier implements AsyncAPISupplier {
     @Override
     public AsyncAPI asyncAPI() {
         try {
-            return ObjectMapperFactory.yaml().readValue(content, AsyncAPI.class);
+            return ObjectMapperFactory.json().readValue(content, AsyncAPI.class);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
