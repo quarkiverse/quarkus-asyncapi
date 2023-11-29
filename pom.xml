@@ -21,6 +21,7 @@
     <connection>scm:git:git@github.com:quarkiverse/quarkus-asyncapi.git</connection>
     <developerConnection>scm:git:git@github.com:quarkiverse/quarkus-asyncapi.git</developerConnection>
     <url>https://github.com/quarkiverse/quarkus-asyncapi</url>
+    <tag>HEAD</tag>
   </scm>
   <properties>
     <maven.compiler.parameters>true</maven.compiler.parameters>
@@ -30,12 +31,12 @@
     <maven.compiler.release>11</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <quarkus.version>3.2.2.Final</quarkus.version>
+    <quarkus.version>3.5.1</quarkus.version>
     <version.org.assertj>3.24.2</version.org.assertj>
-    <version.org.slf4j>2.0.7</version.org.slf4j>
+    <version.org.slf4j>2.0.9</version.org.slf4j>
     <version.asyncapi.core>1.0.0-EAP-2</version.asyncapi.core>
-    <version.org.mockito>5.4.0</version.org.mockito>
-    <version.org.projectlombok>1.18.28</version.org.projectlombok>
+    <version.org.mockito>5.7.0</version.org.mockito>
+    <version.org.projectlombok>1.18.30</version.org.projectlombok>
   </properties>
   <dependencyManagement>
     <dependencies>
