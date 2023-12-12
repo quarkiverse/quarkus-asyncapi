@@ -59,7 +59,13 @@ public class DummyController {
     }
 
     @Outgoing("outgoing-channel-part")
-    public Uni<Message<Part>> sendMessageTyped() {
+    public GecMessage<Part> sendMessageTyped() {
+        //Do nothing
+        return null;
+    }
+
+    @Outgoing("outgoing-channel-reactive-part")
+    public Uni<Message<Part>> sendReactiveMessageTyped() {
         //Do nothing
         return null;
     }

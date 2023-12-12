@@ -46,7 +46,7 @@ public class AsyncApiAnnotationScannerUnFilteredTest {
         assertThat(oneOfOpenApiNodeOneOf.get(1).get("type").asText()).isEqualTo("integer");
 
         //Uni<Message<Part>>
-        assertThat(asyncAPI.at("/channels/outgoing-channel-part/publish/message/payload/$ref").asText())
+        assertThat(asyncAPI.at("/channels/outgoing-channel-reactive-part/publish/message/payload/$ref").asText())
                 .isEqualTo("#/components/schemas/Part");
 
         //JsonGetter
