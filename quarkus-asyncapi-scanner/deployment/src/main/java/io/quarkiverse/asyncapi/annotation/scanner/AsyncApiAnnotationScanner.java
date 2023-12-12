@@ -58,6 +58,8 @@ import com.asyncapi.v2.schema.Schema;
 
 import io.quarkiverse.asyncapi.annotation.scanner.config.Channel;
 import io.quarkiverse.asyncapi.annotation.scanner.kafka.binding.KafkaResolver;
+import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 
 /**
  * @since 09.02.2023
@@ -273,10 +275,19 @@ public class AsyncApiAnnotationScanner {
             }
         }
 
-        final Type resolveType(Type aFirstParameterType) {
-            return aFirstParameterType.kind().equals(PARAMETERIZED_TYPE)
-                    ? aFirstParameterType.asParameterizedType()
-                    : aFirstParameterType;
+        final Type resolveType(Type aType) {
+            Type bType = aType;
+            if (DotName.createSimple(Uni.class).equals(aType.name())
+                    || DotName.createSimple(Multi.class).equals(aType.name())) {
+                bType = aType.asParameterizedType().arguments().get(0);
+            }
+            if (DotName.createSimple("org.eclipse.microprofile.reactive.messaging.Message").equals(bType.name())) {
+                bType = bType.asParameterizedType().arguments().get(0);
+            }
+            Type type = bType.kind().equals(PARAMETERIZED_TYPE)
+                    ? bType.asParameterizedType()
+                    : bType;
+            return type;
         }
     }
 
