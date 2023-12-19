@@ -31,7 +31,7 @@
     <maven.compiler.release>11</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <quarkus.version>3.6.1</quarkus.version>
+    <quarkus.version>3.6.3</quarkus.version>
     <version.org.assertj>3.24.2</version.org.assertj>
     <version.org.slf4j>2.0.9</version.org.slf4j>
     <version.asyncapi.core>1.0.0-EAP-2</version.asyncapi.core>
