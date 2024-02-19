@@ -8,7 +8,7 @@
   </parent>
   <groupId>io.quarkiverse.asyncapi</groupId>
   <artifactId>quarkus-asyncapi-root</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>0.3.0</version>
   <packaging>pom</packaging>
   <name>Quarkus - AsyncAPI Root</name>
   <modules>
@@ -21,7 +21,7 @@
     <connection>scm:git:git@github.com:quarkiverse/quarkus-asyncapi.git</connection>
     <developerConnection>scm:git:git@github.com:quarkiverse/quarkus-asyncapi.git</developerConnection>
     <url>https://github.com/quarkiverse/quarkus-asyncapi</url>
-    <tag>HEAD</tag>
+    <tag>0.3.0</tag>
   </scm>
   <properties>
     <maven.compiler.parameters>true</maven.compiler.parameters>
