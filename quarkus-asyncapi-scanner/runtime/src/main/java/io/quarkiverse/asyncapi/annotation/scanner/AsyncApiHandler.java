@@ -93,12 +93,16 @@ public class AsyncApiHandler implements Handler<RoutingContext> {
     }
 
     String getHtml(RoutingContext aRoutingContext) {
-        String version = ConfigProvider.getConfig()
+        String webComponentVersion = ConfigProvider.getConfig()
                 .getValue("quarkus.asyncapi.annotation.scanner.webcomponentversion", String.class);
+        String webComponentJsVersion = ConfigProvider.getConfig()
+                .getValue("quarkus.asyncapi.annotation.scanner.webcomponentjsversion", String.class);
+        String reactComponentVersion = ConfigProvider.getConfig()
+                .getValue("quarkus.asyncapi.annotation.scanner.reactcomponentversion", String.class);
         String rootPath = ConfigProvider.getConfig()
                 .getValue("quarkus.http.root-path", String.class);
         //TODO logo
-        return String.format(HTML_PATTERN, version, version, version, rootPath, rootPath);
+        return String.format(HTML_PATTERN, webComponentJsVersion, webComponentVersion, reactComponentVersion, rootPath);
     }
 
     Format getFormat(RoutingContext aRoutingContext) {
