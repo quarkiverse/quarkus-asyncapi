@@ -33,7 +33,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.version>3.9.3</quarkus.version>
     <version.org.assertj>3.25.3</version.org.assertj>
-    <version.org.slf4j>2.0.12</version.org.slf4j>
+    <version.org.slf4j>2.0.13</version.org.slf4j>
     <version.asyncapi.core>1.0.0-EAP-2</version.asyncapi.core>
     <version.org.mockito>5.11.0</version.org.mockito>
     <version.org.projectlombok>1.18.32</version.org.projectlombok>
