@@ -4,13 +4,14 @@ import static io.quarkus.deployment.annotations.ExecutionTime.RUNTIME_INIT;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 import org.eclipse.microprofile.config.ConfigProvider;
 
-import com.asyncapi.v2._0_0.model.AsyncAPI;
+import com.asyncapi.v3._0_0.model.AsyncAPI;
 
 import io.quarkiverse.asyncapi.annotation.scanner.config.AsyncApiRuntimeConfig;
 import io.quarkus.deployment.annotations.BuildProducer;
@@ -34,9 +35,19 @@ public class AsyncAPIResourceGenerator {
             AsyncApiRuntimeConfig aConfig,
             RecorderContext aRecorderContext) {
         aRecorderContext.registerSubstitution(BigDecimal.class, Double.class, BigDecimalSubstitution.class);
-        AsyncApiBuilder builder = new AsyncApiBuilder();
-        AsyncAPI asyncAPI = builder.build(aIndex.getIndex(), aConfig);
-        aRecorder.store(asyncAPI, aConfig);
+        AsyncApiConfigResolver configResolver = new AsyncApiConfigResolver(aConfig);
+        AsyncApiAnnotationScanner scanner = new AsyncApiAnnotationScanner(aIndex.getIndex(), configResolver);
+        AsyncAPI.AsyncAPIBuilder builder = AsyncAPI.builder()
+                .asyncapi(aConfig.version)
+                .id(configResolver.getConfiguredKafkaBootstrapServer())
+                .info(configResolver.getInfo())
+                .defaultContentType(aConfig.defaultContentType);
+        builder = scanner.setData(builder);
+        Map<String, Object> servers = configResolver.getServers();
+        if (servers != null) {
+            builder.servers(servers);
+        }
+        aRecorder.store(builder.build(), aConfig);
     }
 
     static class IsEnabled implements BooleanSupplier {

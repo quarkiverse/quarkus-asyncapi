@@ -23,14 +23,14 @@ public class AsyncApiRuntimeConfig {
      *
      * @see https://www.npmjs.com/package/@asyncapi/react-component
      */
-    @ConfigItem(defaultValue = "1.2.25")
+    @ConfigItem(defaultValue = "2.0.0")
     public String webcomponentversion;
     /**
      * Version of the ReasComponent to be used in html-view to be found at [HOST]/asyncapi.html
      *
      * @see https://www.npmjs.com/package/@asyncapi/react-component
      */
-    @ConfigItem(defaultValue = "1.2.25")
+    @ConfigItem(defaultValue = "2.0.0")
     public String reactcomponentversion;
     /**
      * Version of the WebComponentJS to be used in html-view to be found at [HOST]/asyncapi.html
@@ -51,7 +51,7 @@ public class AsyncApiRuntimeConfig {
     /**
      * AsyncApi specification version
      */
-    @ConfigItem(defaultValue = "2.6.0")
+    @ConfigItem(defaultValue = "3.0.0")
     public String version;
 
     /**
@@ -61,14 +61,14 @@ public class AsyncApiRuntimeConfig {
     public String defaultContentType;
 
     /**
-     * see https://www.asyncapi.com/docs/reference/specification/v2.6.0#serversObject
+     * see https://www.asyncapi.com/docs/reference/specification/v3.6.0#serversObject
      */
     @ConfigDocMapKey("server")
     @ConfigItem(name = "server")
     public Map<String, Server> servers;
 
     /**
-     * see https://www.asyncapi.com/docs/reference/specification/v2.6.0#channelItemObject
+     * see https://www.asyncapi.com/docs/reference/specification/v3.6.0#channelItemObject
      */
     @ConfigDocMapKey("channel")
     @ConfigItem(name = "channel")

@@ -22,8 +22,9 @@ import org.apache.kafka.common.TopicPartitionInfo;
 import org.apache.kafka.common.config.ConfigResource;
 import org.eclipse.microprofile.config.ConfigProvider;
 
-import com.asyncapi.v2.binding.channel.kafka.KafkaChannelBinding;
-import com.asyncapi.v2.binding.channel.kafka.KafkaChannelBinding.TopicConfiguration;
+import com.asyncapi.v3.binding.channel.kafka.KafkaChannelBinding;
+import com.asyncapi.v3.binding.channel.kafka.KafkaChannelTopicCleanupPolicy;
+import com.asyncapi.v3.binding.channel.kafka.KafkaChannelTopicConfiguration;
 
 /**
  * @since 02.03.2023
@@ -68,7 +69,7 @@ public class KafkaResolver {
         return builder.build();
     }
 
-    TopicConfiguration getTopicConfiguration(AdminClient aClient, String aTopic) {
+    KafkaChannelTopicConfiguration getTopicConfiguration(AdminClient aClient, String aTopic) {
         Map<String, ConfigEntry> configMap = aClient
                 .describeConfigs(List.of(new ConfigResource(ConfigResource.Type.TOPIC, aTopic)))
                 .values().values().stream()
@@ -83,8 +84,10 @@ public class KafkaResolver {
                 .map(Config::entries)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toMap(ConfigEntry::name, Function.identity()));
-        return TopicConfiguration.builder()
-                .cleanupPolicy(List.of(configMap.get(CLEANUP_POLICY).value()))
+        KafkaChannelTopicCleanupPolicy cleanUpPolicy = KafkaChannelTopicCleanupPolicy
+                .valueOf(configMap.get(CLEANUP_POLICY).value());
+        return KafkaChannelTopicConfiguration.builder()
+                .cleanupPolicy(List.of(cleanUpPolicy))
                 .retentionMs(Integer.valueOf(configMap.get(RETENTION_MS).value()))
                 .retentionBytes(Integer.valueOf(configMap.get(RETENTION_BYTES).value()))
                 .deleteRetentionMs(Integer.valueOf(configMap.get(DELETE_RETENTION_MS).value()))

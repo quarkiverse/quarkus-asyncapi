@@ -12,7 +12,6 @@ import static org.jboss.jandex.Type.Kind.PRIMITIVE;
 
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,7 +28,6 @@ import java.util.TreeSet;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -48,15 +46,17 @@ import org.jboss.jandex.MethodInfo;
 import org.jboss.jandex.ParameterizedType;
 import org.jboss.jandex.Type;
 
-import com.asyncapi.v2._0_0.model.ExternalDocumentation;
-import com.asyncapi.v2._0_0.model.channel.ChannelItem;
-import com.asyncapi.v2._0_0.model.channel.message.Message;
-import com.asyncapi.v2._0_0.model.channel.operation.Operation;
-import com.asyncapi.v2._0_0.model.component.Components;
-import com.asyncapi.v2.binding.channel.kafka.KafkaChannelBinding;
-import com.asyncapi.v2.schema.Schema;
+import com.asyncapi.v3.Reference;
+import com.asyncapi.v3._0_0.model.AsyncAPI;
+import com.asyncapi.v3._0_0.model.ExternalDocumentation;
+import com.asyncapi.v3._0_0.model.channel.Channel;
+import com.asyncapi.v3._0_0.model.channel.message.Message;
+import com.asyncapi.v3._0_0.model.component.Components;
+import com.asyncapi.v3._0_0.model.operation.Operation;
+import com.asyncapi.v3._0_0.model.operation.OperationAction;
+import com.asyncapi.v3.binding.channel.kafka.KafkaChannelBinding;
+import com.asyncapi.v3.schema.AsyncAPISchema;
 
-import io.quarkiverse.asyncapi.annotation.scanner.config.Channel;
 import io.quarkiverse.asyncapi.annotation.scanner.kafka.binding.KafkaResolver;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -70,63 +70,63 @@ public class AsyncApiAnnotationScanner {
     public static final String CONFIG_PREFIX = "io.quarkiverse.asyncapi";
     static final Logger LOGGER = Logger.getLogger(AsyncApiAnnotationScanner.class.getName());
     static final DotName OPEN_API_SCHEMA_ANNOTATION = DotName
-            .createSimple("org.eclipse.microprofile.openapi.annotations.media.Schema");
+            .createSimple("org.eclipse.microprofile.openapi.annotations.media.AsyncAPISchema");
     static final String GLOBAL_COMPONENTS_SCHEMAS_PREFIX = "#/components/schemas/";
     static final TreeMap<String, Object> GLOBAL_COMPONENTS = new TreeMap<>(Map.of(
-            "OffsetDateTime", Schema.builder()
+            "OffsetDateTime", AsyncAPISchema.builder()
                     .format("date-time")
                     .externalDocs(ExternalDocumentation.builder()
                             .description(
                                     "A date-time with an offset from UTC/Greenwich in the ISO-8601 calendar system")
                             .url("https://docs.oracle.com/javase/8/docs/api/java/time/OffsetDateTime.html")
                             .build())
-                    .type(com.asyncapi.v2.schema.Type.STRING)
+                    .type(com.asyncapi.v3.schema.Type.STRING)
                     .examples(List.of("2022-03-10T12:15:50-04:00"))
                     .build(),
-            "UUID", Schema.builder()
+            "UUID", AsyncAPISchema.builder()
                     .format("uuid")
                     .pattern("[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}")
-                    .type(com.asyncapi.v2.schema.Type.STRING)
+                    .type(com.asyncapi.v3.schema.Type.STRING)
                     .build(),
-            "LocalTime", Schema.builder()
+            "LocalTime", AsyncAPISchema.builder()
                     .format("local-time")
-                    .type(com.asyncapi.v2.schema.Type.STRING)
+                    .type(com.asyncapi.v3.schema.Type.STRING)
                     .externalDocs(ExternalDocumentation.builder()
                             .description("ISO-8601 representation of a extended local time")
                             .url("https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#ISO_LOCAL_TIME")
                             .build())
                     .examples(List.of("13:45.30.123456789"))
                     .build(),
-            "Duration", Schema.builder()
+            "Duration", AsyncAPISchema.builder()
                     .format("duration")
-                    .type(com.asyncapi.v2.schema.Type.STRING)
+                    .type(com.asyncapi.v3.schema.Type.STRING)
                     .externalDocs(ExternalDocumentation.builder()
                             .description("ISO-8601 representation of a duration")
                             .url("https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html#toString--")
                             .build())
                     .examples(List.of("P1D"))
                     .build(),
-            "DayOfWeek", Schema.builder()
-                    .type(com.asyncapi.v2.schema.Type.STRING)
+            "DayOfWeek", AsyncAPISchema.builder()
+                    .type(com.asyncapi.v3.schema.Type.STRING)
                     .enumValue(List.of(
                             "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"))
                     .build(),
-            "Scale", Schema.builder()
-                    .type(com.asyncapi.v2.schema.Type.STRING)
+            "Scale", AsyncAPISchema.builder()
+                    .type(com.asyncapi.v3.schema.Type.STRING)
                     .enumValue(List.of("ABSOLUTE", "RELATIVE"))
                     .build(),
-            "Quantity", Schema.builder()
+            "Quantity", AsyncAPISchema.builder()
                     .required(List.of("value", "unit"))
-                    .type(com.asyncapi.v2.schema.Type.OBJECT)
+                    .type(com.asyncapi.v3.schema.Type.OBJECT)
                     .properties(new TreeMap<>(Map.of(
-                            "scale", Schema.builder()
+                            "scale", AsyncAPISchema.builder()
                                     .ref(GLOBAL_COMPONENTS_SCHEMAS_PREFIX + "Scale")
                                     .defaultValue("ABSOLUTE").build(),
-                            "unit", Schema.builder()
+                            "unit", AsyncAPISchema.builder()
                                     .description("Symbol of unit.")
-                                    .type(com.asyncapi.v2.schema.Type.STRING).build(),
-                            "value", Schema.builder()
-                                    .type(com.asyncapi.v2.schema.Type.NUMBER).build())))
+                                    .type(com.asyncapi.v3.schema.Type.STRING).build(),
+                            "value", AsyncAPISchema.builder()
+                                    .type(com.asyncapi.v3.schema.Type.NUMBER).build())))
                     .build()));
 
     final IndexView index;
@@ -134,40 +134,44 @@ public class AsyncApiAnnotationScanner {
     final static Set<Type> VISITED = Collections.synchronizedSet(new HashSet<>());
 
     KafkaResolver kafkaResolver;
+    final Map<String, Object> channels = new TreeMap<>();
+    final Map<String, Object> operations = new TreeMap<>();
 
     public AsyncApiAnnotationScanner(IndexView aIndex, AsyncApiConfigResolver aConfigResolver) {
         index = aIndex;
         configResolver = aConfigResolver;
+        resolveChannelsAndOperations();
     }
 
-    public Map<String, ChannelItem> getChannels() {
-        TreeMap<String, ChannelItem> result;
+    AsyncAPI.AsyncAPIBuilder setData(AsyncAPI.AsyncAPIBuilder aBuilder) {
+        Components components = Components.builder()
+                .schemas(GLOBAL_COMPONENTS)
+                .build();
+        return aBuilder
+                .components(components)
+                .channels(channels)
+                .operations(operations);
+    }
+
+    final void resolveChannelsAndOperations() {
         try {
-            Stream<AbstractMap.SimpleEntry<String, ChannelItem>> annotatedChannels = index
+            index
                     .getAnnotations("org.eclipse.microprofile.reactive.messaging.Channel")
-                    .stream()
-                    .map(annotation -> getChannel(annotation, ResolveType.CHANNEL));
-            Stream<AbstractMap.SimpleEntry<String, ChannelItem>> annotatedIncomings = index
+                    .forEach(annotation -> resolveChannelAndOperation(annotation, ResolveType.CHANNEL));
+            index
                     .getAnnotations("org.eclipse.microprofile.reactive.messaging.Incoming")
-                    .stream()
-                    .map(annotation -> getChannel(annotation, ResolveType.INCOMING));
-            Stream<AbstractMap.SimpleEntry<String, ChannelItem>> annotatedOutgoings = index
+                    .forEach(annotation -> resolveChannelAndOperation(annotation, ResolveType.INCOMING));
+            index
                     .getAnnotations("org.eclipse.microprofile.reactive.messaging.Outgoing")
-                    .stream()
-                    .map(annotation -> getChannel(annotation, ResolveType.OUTGOING));
-            result = Stream
-                    .concat(Stream.concat(annotatedChannels, annotatedIncomings), annotatedOutgoings)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> b, TreeMap::new));
+                    .forEach(annotation -> resolveChannelAndOperation(annotation, ResolveType.OUTGOING));
         } finally {
             if (kafkaResolver != null) {
                 kafkaResolver.close();
             }
         }
-        return result;
     }
 
-    AbstractMap.SimpleEntry<String, ChannelItem> getChannel(AnnotationInstance aAnnotationInstance, ResolveType aResolveType) {
+    void resolveChannelAndOperation(AnnotationInstance aAnnotationInstance, ResolveType aResolveType) {
         ChannelData channelData = new ChannelData(aAnnotationInstance, aResolveType);
         String channelName = aAnnotationInstance.value().asString();
         if (channelData.operationId != null && configResolver.isSmallRyeKafkaTopic(channelData.isEmitter, channelName)) {
@@ -176,24 +180,23 @@ public class AsyncApiAnnotationScanner {
                 kafkaResolver = new KafkaResolver();
             }
             KafkaChannelBinding channelBinding = kafkaResolver.getKafkaChannelBindings(topic);
-            ChannelItem.ChannelItemBuilder channelBuilder = ChannelItem.builder()
-                    .bindings(Map.of("kafka", channelBinding));
+            Message message = getMessage(channelData.messageType);
+            Channel.ChannelBuilder channelBuilder = Channel.builder()
+                    .bindings(Map.of("kafka", channelBinding))
+                    .messages(Map.of(channelData.operationId, message));
             Operation operation = Operation.builder()
-                    .message(getMessage(channelData.messageType))
-                    .operationId(channelData.operationId)
+                    .action(channelData.isEmitter ? OperationAction.SEND : OperationAction.RECEIVE)
+                    .channel(new Reference("#/channels/" + channelName))
                     .build();
+            operations.put(channelData.operationId, operation);
             addSchemaAnnotationData(aAnnotationInstance.target(), operation);
-            ChannelItem channelItem = channelData.isEmitter
-                    ? channelBuilder.publish(operation).build()
-                    : channelBuilder.subscribe(operation).build();
-            Channel channel = configResolver.getChannel(channelName);
+            io.quarkiverse.asyncapi.annotation.scanner.config.Channel channel = configResolver.getChannel(channelName);
             if (channel != null) {
-                channel.description.ifPresent(channelItem::setDescription);
+                channel.description.ifPresent(channelBuilder::description);
             }
-            return new AbstractMap.SimpleEntry<>(channelName, channelItem);
+            channels.put(channelName, channelBuilder.build());
         }
         //TODO other than kafka...
-        return null;
     }
 
     enum ResolveType {
@@ -291,12 +294,6 @@ public class AsyncApiAnnotationScanner {
         }
     }
 
-    public Components getGlobalComponents() {
-        return Components.builder()
-                .schemas(GLOBAL_COMPONENTS)
-                .build();
-    }
-
     Message getMessage(Type aMessageType) {
         return Message.builder()
                 .name(aMessageType.name().toString()) //TODO expect to be overriden by annotation
@@ -335,7 +332,7 @@ public class AsyncApiAnnotationScanner {
         return NO_REF_TYPES.contains(aType.name());
     }
 
-    Schema getSchema(Type aType, Map<String, Type> typeVariableMap) {
+    AsyncAPISchema getSchema(Type aType, Map<String, Type> typeVariableMap) {
         switch (aType.kind()) {
             case PRIMITIVE:
                 return getPrimitiveSchema(aType);
@@ -348,7 +345,7 @@ public class AsyncApiAnnotationScanner {
                     return getClassSchema(aType, typeVariableMap);
                 }
                 String typeKey = aType.name().local();
-                Schema ref = Schema.builder().ref(GLOBAL_COMPONENTS_SCHEMAS_PREFIX + typeKey).build();
+                AsyncAPISchema ref = AsyncAPISchema.builder().ref(GLOBAL_COMPONENTS_SCHEMAS_PREFIX + typeKey).build();
                 if (VISITED.contains(aType) || GLOBAL_COMPONENTS.containsKey(typeKey)) {
                     return ref;
                 }
@@ -356,17 +353,18 @@ public class AsyncApiAnnotationScanner {
                 GLOBAL_COMPONENTS.put(typeKey, getClassSchema(aType, typeVariableMap));
                 return ref;
             default: //TODO other types
-                return Schema.builder().type(com.asyncapi.v2.schema.Type.OBJECT).build();
+                return AsyncAPISchema.builder().type(com.asyncapi.v3.schema.Type.OBJECT).build();
         }
     }
 
-    Schema getClassSchema(Type aType, Map<String, Type> aTypeVariableMap) {
+    AsyncAPISchema getClassSchema(Type aType, Map<String, Type> aTypeVariableMap) {
         ClassInfo classInfo = index.getClassByName(aType.name());
         if (aType.name().packagePrefix().startsWith("java.lang")) {
             return getJavaLangPackageSchema(aType);
         }
         if (classInfo != null && classInfo.isEnum()) {
-            return Schema.builder()
+            return AsyncAPISchema.builder()
+                    .id(classInfo.toString())
                     .enumValue(classInfo.enumConstants().stream()
                             .map(FieldInfo::name)
                             .map(Object.class::cast)
@@ -380,13 +378,13 @@ public class AsyncApiAnnotationScanner {
             //            VISITED_TYPES.remove(valueType);//dirty: force re-scan
             //it's a Map, use type object and add it's value as additionalProperties,
             //see https://swagger.io/docs/specification/data-models/dictionaries/
-            //and https://www.asyncapi.com/docs/reference/specification/v2.6.0#schemaObject -> Model with Map/Dictionary Properties
-            return Schema.builder()
-                    .type(com.asyncapi.v2.schema.Type.OBJECT)
+            //and https://www.asyncapi.com/docs/reference/specification/v3.6.0#schemaObject -> Model with Map/Dictionary Properties
+            return AsyncAPISchema.builder()
+                    .type(com.asyncapi.v3.schema.Type.OBJECT)
                     .additionalProperties(getSchema(valueType, aTypeVariableMap))
                     .build();
         }
-        Schema schema = Schema.builder().type(com.asyncapi.v2.schema.Type.OBJECT).build();
+        AsyncAPISchema schema = AsyncAPISchema.builder().type(com.asyncapi.v3.schema.Type.OBJECT).build();
         if (classInfo != null) {
             boolean hasOneOfSchema = addSchemaAnnotationData(classInfo, schema, aTypeVariableMap);
             if (aType.kind().equals(Type.Kind.PARAMETERIZED_TYPE)) {
@@ -401,7 +399,7 @@ public class AsyncApiAnnotationScanner {
             } else {
                 Set<String> required = new TreeSet<>();
                 //annotated fields
-                Map<String, Schema> properties = getAllFieldsRecursiv(classInfo).stream()
+                Map<String, Object> properties = getAllFieldsRecursiv(classInfo).stream()
                         .map(f -> {
                             if (f.hasAnnotation(NotNull.class)) {
                                 required.add(f.name());
@@ -435,7 +433,7 @@ public class AsyncApiAnnotationScanner {
                                 aType.asParameterizedType().arguments().get(0))
                         : aType;
 
-                schema.setType(com.asyncapi.v2.schema.Type.ARRAY);
+                schema.setType(com.asyncapi.v3.schema.Type.ARRAY);
                 schema.setItems(getSchema(collectionType, aTypeVariableMap));
             }
             //TODO other non-indexed tyes from jre, e.g. maps...
@@ -448,27 +446,27 @@ public class AsyncApiAnnotationScanner {
                 + (aMethodInfo.name().length() > 3 ? aMethodInfo.name().substring(4) : "");
     }
 
-    Schema getFieldSchema(FieldInfo aFieldInfo, Map<String, Type> aTypeVariableMap) {
-        Schema schema = getDeclarationSchema(aFieldInfo, aFieldInfo.type(), aTypeVariableMap);
+    AsyncAPISchema getFieldSchema(FieldInfo aFieldInfo, Map<String, Type> aTypeVariableMap) {
+        AsyncAPISchema schema = getDeclarationSchema(aFieldInfo, aFieldInfo.type(), aTypeVariableMap);
         addBeanValidationAnnotationData(aFieldInfo, schema);
         addDeprecatedAnnotationData(aFieldInfo, schema);
         return schema;
     }
 
-    Schema getGetterSchema(MethodInfo aMethodInfo, Map<String, Type> aTypeVariableMap) {
-        Schema schema = getDeclarationSchema(aMethodInfo, aMethodInfo.returnType(), aTypeVariableMap);
+    AsyncAPISchema getGetterSchema(MethodInfo aMethodInfo, Map<String, Type> aTypeVariableMap) {
+        AsyncAPISchema schema = getDeclarationSchema(aMethodInfo, aMethodInfo.returnType(), aTypeVariableMap);
         addBeanValidationAnnotationData(aMethodInfo, schema);
         addDeprecatedAnnotationData(aMethodInfo, schema);
         return schema;
     }
 
-    Schema getDeclarationSchema(Declaration aDeclaration, Type aType, Map<String, Type> aTypeVariableMap) {
-        Schema schema = getSchema(aTypeVariableMap.getOrDefault(aType.toString(), aType), aTypeVariableMap);
+    AsyncAPISchema getDeclarationSchema(Declaration aDeclaration, Type aType, Map<String, Type> aTypeVariableMap) {
+        AsyncAPISchema schema = getSchema(aTypeVariableMap.getOrDefault(aType.toString(), aType), aTypeVariableMap);
         addSchemaAnnotationData(aDeclaration, schema, aTypeVariableMap);
         return schema;
     }
 
-    void addBeanValidationAnnotationData(Declaration aDeclaration, Schema aSchema) {
+    void addBeanValidationAnnotationData(Declaration aDeclaration, AsyncAPISchema aSchema) {
         Optional.ofNullable(aDeclaration.annotation(Min.class))
                 .map(AnnotationInstance::value)
                 .map(AnnotationValue::asLong)
@@ -481,12 +479,13 @@ public class AsyncApiAnnotationScanner {
                 .ifPresent(aSchema::setMaximum);
     }
 
-    void addDeprecatedAnnotationData(Declaration aDeclaration, Schema aSchema) {
+    void addDeprecatedAnnotationData(Declaration aDeclaration, AsyncAPISchema aSchema) {
         Optional.ofNullable(aDeclaration.annotation(Deprecated.class))
                 .ifPresent(x -> aSchema.setDeprecated(true));
     }
 
-    boolean addSchemaAnnotationData(AnnotationTarget aAnnotationTarget, Schema aSchema, Map<String, Type> aTypeVariableMap) {
+    boolean addSchemaAnnotationData(AnnotationTarget aAnnotationTarget, AsyncAPISchema aSchema,
+            Map<String, Type> aTypeVariableMap) {
         Optional.ofNullable(getSchemaAnnotationValue(aAnnotationTarget, "description"))
                 .map(AnnotationValue::asString)
                 .ifPresent(aSchema::setDescription);
@@ -527,54 +526,54 @@ public class AsyncApiAnnotationScanner {
         return annotationValue;
     }
 
-    Schema getJavaLangPackageSchema(Type aType) {
+    AsyncAPISchema getJavaLangPackageSchema(Type aType) {
         switch (aType.name().withoutPackagePrefix()) {
             case "Boolean":
-                return Schema.builder().type(com.asyncapi.v2.schema.Type.BOOLEAN).build();
+                return AsyncAPISchema.builder().type(com.asyncapi.v3.schema.Type.BOOLEAN).build();
             case "Character":
             case "String":
-                return Schema.builder().type(com.asyncapi.v2.schema.Type.STRING).build();
+                return AsyncAPISchema.builder().type(com.asyncapi.v3.schema.Type.STRING).build();
             case "Integer":
             case "Long":
             case "Short":
-                return Schema.builder().type(com.asyncapi.v2.schema.Type.INTEGER).build();
+                return AsyncAPISchema.builder().type(com.asyncapi.v3.schema.Type.INTEGER).build();
             case "Double":
             case "Float":
-                return Schema.builder().type(com.asyncapi.v2.schema.Type.NUMBER).build();
+                return AsyncAPISchema.builder().type(com.asyncapi.v3.schema.Type.NUMBER).build();
             default:
-                return Schema.builder().type(com.asyncapi.v2.schema.Type.OBJECT).build();
+                return AsyncAPISchema.builder().type(com.asyncapi.v3.schema.Type.OBJECT).build();
         }
     }
 
-    Schema getArraySchema(Type aType, Map<String, Type> aTypeVariableMap) {
+    AsyncAPISchema getArraySchema(Type aType, Map<String, Type> aTypeVariableMap) {
         Type arrayType = aType.asArrayType().constituent().kind().equals(Type.Kind.TYPE_VARIABLE)
                 ? aTypeVariableMap.get(aType.asArrayType().constituent().toString())
                 : aType.asArrayType().constituent();
-        return Schema.builder()
-                .type(com.asyncapi.v2.schema.Type.ARRAY)
+        return AsyncAPISchema.builder()
+                .type(com.asyncapi.v3.schema.Type.ARRAY)
                 .items(getSchema(arrayType, aTypeVariableMap))
                 .build();
     }
 
-    Schema getPrimitiveSchema(Type aType) {
-        Schema.SchemaBuilder builder = Schema.builder();
+    AsyncAPISchema getPrimitiveSchema(Type aType) {
+        AsyncAPISchema.AsyncAPISchemaBuilder builder = AsyncAPISchema.builder();
         switch (aType.asPrimitiveType().primitive()) {
             case BOOLEAN:
-                builder.type(com.asyncapi.v2.schema.Type.BOOLEAN);
+                builder.type(com.asyncapi.v3.schema.Type.BOOLEAN);
                 break;
             case CHAR:
-                builder.type(com.asyncapi.v2.schema.Type.STRING);
+                builder.type(com.asyncapi.v3.schema.Type.STRING);
                 break;
             case INT:
             case LONG:
             case SHORT:
-                builder.type(com.asyncapi.v2.schema.Type.INTEGER);
+                builder.type(com.asyncapi.v3.schema.Type.INTEGER);
                 break;
             case DOUBLE:
             case FLOAT:
-                builder.type(com.asyncapi.v2.schema.Type.NUMBER);
+                builder.type(com.asyncapi.v3.schema.Type.NUMBER);
             default:
-                builder.type(com.asyncapi.v2.schema.Type.OBJECT);
+                builder.type(com.asyncapi.v3.schema.Type.OBJECT);
         }
         return builder.build();
     }

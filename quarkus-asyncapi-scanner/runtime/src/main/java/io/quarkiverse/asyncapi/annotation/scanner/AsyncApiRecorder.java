@@ -12,9 +12,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import com.asyncapi.v2._0_0.model.AsyncAPI;
-import com.asyncapi.v2._0_0.model.channel.ChannelItem;
-import com.asyncapi.v2.binding.channel.kafka.KafkaChannelBinding;
+import com.asyncapi.v3._0_0.model.AsyncAPI;
+import com.asyncapi.v3._0_0.model.channel.Channel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.quarkiverse.asyncapi.annotation.scanner.config.AsyncApiRuntimeConfig;
@@ -59,8 +58,9 @@ public class AsyncApiRecorder {
         AsyncApiFilter filter = getFilter(aConfig);
         if (filter != null) {
             result = filter.filterAsyncAPI(aAsyncAPI);
-            Map<String, ChannelItem> filteredChannels = result.getChannels().entrySet().stream()
-                    .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(), filter.filterChannelItem(e.getKey(), e.getValue())))
+            Map<String, Object> filteredChannels = result.getChannels().entrySet().stream()
+                    .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(),
+                            filter.filterChannel(e.getKey(), (Channel) e.getValue())))
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
             result.setChannels(filteredChannels);
         }
@@ -93,11 +93,12 @@ public class AsyncApiRecorder {
                 .collect(Collectors.joining("\n", start, "\n@enduml"));
     }
 
-    String toPlantUmlArrow(String aServer, ChannelItem aChannelItem) {
-        String arrow = aChannelItem.getPublish() != null
-                ? " -[#red,bold]-> "
-                : " <-[#green,bold]- ";
-        KafkaChannelBinding kafkaChannelBinding = (KafkaChannelBinding) aChannelItem.getBindings().get("kafka");
-        return aServer + arrow + "(" + kafkaChannelBinding.getTopic() + ")";
+    String toPlantUmlArrow(String aServer, Object aChannelItem) {
+        //        String arrow = aChannelItem.getPublish() != null
+        //                ? " -[#red,bold]-> "
+        //                : " <-[#green,bold]- ";
+        //        KafkaChannelBinding kafkaChannelBinding = (KafkaChannelBinding) aChannelItem.getBindings().get("kafka");
+        //        return aServer + arrow + "(" + kafkaChannelBinding.getTopic() + ")";
+        return ""; //TODO
     }
 }
