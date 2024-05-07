@@ -23,8 +23,22 @@ public class AsyncApiRuntimeConfig {
      *
      * @see https://www.npmjs.com/package/@asyncapi/react-component
      */
-    @ConfigItem(defaultValue = "1.0.0-next.48")
+    @ConfigItem(defaultValue = "1.2.25")
     public String webcomponentversion;
+    /**
+     * Version of the ReasComponent to be used in html-view to be found at [HOST]/asyncapi.html
+     *
+     * @see https://www.npmjs.com/package/@asyncapi/react-component
+     */
+    @ConfigItem(defaultValue = "1.2.25")
+    public String reactcomponentversion;
+    /**
+     * Version of the WebComponentJS to be used in html-view to be found at [HOST]/asyncapi.html
+     *
+     * @see https://www.npmjs.com/package/@webcomponents/webcomponentsjs
+     */
+    @ConfigItem(defaultValue = "2.8.0")
+    public String webcomponentjsversion;
 
     /**
      * Full qualified name of the implementing AsyncApiFilter

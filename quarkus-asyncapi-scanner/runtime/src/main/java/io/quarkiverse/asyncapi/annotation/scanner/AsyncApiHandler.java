@@ -33,7 +33,7 @@ public class AsyncApiHandler implements Handler<RoutingContext> {
             + "  <body>\n"
             + "    <asyncapi-component\n"
             + "      cssImportPath=\"https://unpkg.com/@asyncapi/react-component@%s/styles/default.css\"\n"
-            + "      schemaUrl=\"%s/asyncapi.yaml\"\n"
+            + "      schemaUrl=\"%s\"\n"
             + "    >\n"
             + "    </asyncapi-component>\n"
             + "  </body>\n"
@@ -93,12 +93,19 @@ public class AsyncApiHandler implements Handler<RoutingContext> {
     }
 
     String getHtml(RoutingContext aRoutingContext) {
-        String version = ConfigProvider.getConfig()
+        String webComponentVersion = ConfigProvider.getConfig()
                 .getValue("quarkus.asyncapi.annotation.scanner.webcomponentversion", String.class);
+        String webComponentJsVersion = ConfigProvider.getConfig()
+                .getValue("quarkus.asyncapi.annotation.scanner.webcomponentjsversion", String.class);
+        String reactComponentVersion = ConfigProvider.getConfig()
+                .getValue("quarkus.asyncapi.annotation.scanner.reactcomponentversion", String.class);
         String rootPath = ConfigProvider.getConfig()
                 .getValue("quarkus.http.root-path", String.class);
+        String schemaUrl = new PathBuilder(rootPath)
+                .appendPath("asyncapi.yaml");
+
         //TODO logo
-        return String.format(HTML_PATTERN, version, version, version, rootPath, rootPath);
+        return String.format(HTML_PATTERN, webComponentJsVersion, webComponentVersion, reactComponentVersion, schemaUrl);
     }
 
     Format getFormat(RoutingContext aRoutingContext) {
