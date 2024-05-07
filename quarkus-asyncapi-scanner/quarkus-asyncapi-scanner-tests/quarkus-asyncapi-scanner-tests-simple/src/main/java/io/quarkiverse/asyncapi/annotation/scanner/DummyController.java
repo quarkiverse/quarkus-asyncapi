@@ -5,14 +5,12 @@ import java.util.List;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
-import org.eclipse.microprofile.reactive.messaging.Channel;
-import org.eclipse.microprofile.reactive.messaging.Emitter;
-import org.eclipse.microprofile.reactive.messaging.Incoming;
-import org.eclipse.microprofile.reactive.messaging.Outgoing;
+import org.eclipse.microprofile.reactive.messaging.*;
 import org.reactivestreams.Publisher;
 
 import io.quarkiverse.asyncapi.annotation.Schema;
 import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import io.smallrye.reactive.messaging.annotations.Broadcast;
 
 /**
@@ -62,6 +60,12 @@ public class DummyController {
 
     @Outgoing("outgoing-channel-part")
     public GecMessage<Part> sendMessageTyped() {
+        //Do nothing
+        return null;
+    }
+
+    @Outgoing("outgoing-channel-reactive-part")
+    public Uni<Message<Part>> sendReactiveMessageTyped() {
         //Do nothing
         return null;
     }
