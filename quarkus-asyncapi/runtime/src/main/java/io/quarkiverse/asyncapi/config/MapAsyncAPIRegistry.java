@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import com.asyncapi.v2._6_0.model.AsyncAPI;
+import com.asyncapi.v3._0_0.model.AsyncAPI;
 
 public class MapAsyncAPIRegistry implements AsyncAPIRegistry {
     private final Map<String, AsyncAPI> map;
