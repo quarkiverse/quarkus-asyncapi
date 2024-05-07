@@ -23,7 +23,7 @@ public class AsyncApiRuntimeConfig {
      *
      * @see https://www.npmjs.com/package/@asyncapi/react-component
      */
-    @ConfigItem(defaultValue = "2.0.0")
+    @ConfigItem(defaultValue = "1.4.10")
     public String webcomponentversion;
     /**
      * Version of the ReasComponent to be used in html-view to be found at [HOST]/asyncapi.html

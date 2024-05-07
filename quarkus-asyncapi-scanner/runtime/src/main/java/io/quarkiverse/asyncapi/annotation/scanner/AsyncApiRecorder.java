@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
 
 import com.asyncapi.v3._0_0.model.AsyncAPI;
 import com.asyncapi.v3._0_0.model.channel.Channel;
+import com.asyncapi.v3._0_0.model.operation.Operation;
+import com.asyncapi.v3._0_0.model.operation.OperationAction;
+import com.asyncapi.v3.binding.channel.kafka.KafkaChannelBinding;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.quarkiverse.asyncapi.annotation.scanner.config.AsyncApiRuntimeConfig;
@@ -31,9 +34,9 @@ public class AsyncApiRecorder {
     public static final String ASYNC_API_YAML = "asyncApi.yaml";
     public static final String ASYNC_API_PUML = "asyncApi.puml";
 
-    public void store(AsyncAPI aAsyncAPI, AsyncApiRuntimeConfig aConfig) {
+    public void store(MyAsyncAPI aAsyncAPI, AsyncApiRuntimeConfig aConfig) {
         try {
-            AsyncAPI filteredAPI = filter(aAsyncAPI, aConfig);
+            AsyncAPI filteredAPI = filter(aAsyncAPI.toAsyncAPI(), aConfig);
             store(ObjectMapperFactory.yaml().writeValueAsString(filteredAPI), ASYNC_API_YAML);
             store(ObjectMapperFactory.json().writeValueAsString(filteredAPI), ASYNC_API_JSON);
             String plantUml = toPlantUml(filteredAPI);
@@ -87,18 +90,21 @@ public class AsyncApiRecorder {
         String start = "@startuml\n"
                 + "left to right direction\n"
                 + "skinparam pathHoverColor Blue\n";
-        return aAsyncAPI.getChannels().values().stream()
-                .map(channelItem -> toPlantUmlArrow(server, channelItem))
+        return aAsyncAPI.getOperations().values().stream()
+                .map(o -> (Operation) o)
+                .map(operation -> toPlantUmlArrow(server, aAsyncAPI, operation))
                 .distinct()//ignore multiple publishers/subscribers
                 .collect(Collectors.joining("\n", start, "\n@enduml"));
     }
 
-    String toPlantUmlArrow(String aServer, Object aChannelItem) {
-        //        String arrow = aChannelItem.getPublish() != null
-        //                ? " -[#red,bold]-> "
-        //                : " <-[#green,bold]- ";
-        //        KafkaChannelBinding kafkaChannelBinding = (KafkaChannelBinding) aChannelItem.getBindings().get("kafka");
-        //        return aServer + arrow + "(" + kafkaChannelBinding.getTopic() + ")";
-        return ""; //TODO
+    String toPlantUmlArrow(String aServer, AsyncAPI aAsyncAPI, Operation aOperation) {
+        String ref = aOperation.getChannel().getRef();
+        String channelName = ref.substring(ref.lastIndexOf('/') + 1);
+        Channel channel = (Channel) aAsyncAPI.getChannels().get(channelName);
+        String arrow = OperationAction.SEND.equals(aOperation.getAction())
+                ? " -[#red,bold]-> "
+                : " <-[#green,bold]- ";
+        KafkaChannelBinding kafkaChannelBinding = (KafkaChannelBinding) channel.getBindings().get("kafka");
+        return aServer + arrow + "(" + kafkaChannelBinding.getTopic() + ")";
     }
 }

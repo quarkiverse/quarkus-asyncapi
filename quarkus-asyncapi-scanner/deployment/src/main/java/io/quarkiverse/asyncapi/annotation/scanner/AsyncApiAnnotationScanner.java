@@ -54,7 +54,7 @@ import com.asyncapi.v3._0_0.model.channel.message.Message;
 import com.asyncapi.v3._0_0.model.component.Components;
 import com.asyncapi.v3._0_0.model.operation.Operation;
 import com.asyncapi.v3._0_0.model.operation.OperationAction;
-import com.asyncapi.v3.binding.channel.kafka.KafkaChannelBinding;
+import com.asyncapi.v3.binding.operation.kafka.KafkaOperationBinding;
 import com.asyncapi.v3.schema.AsyncAPISchema;
 
 import io.quarkiverse.asyncapi.annotation.scanner.kafka.binding.KafkaResolver;
@@ -70,7 +70,7 @@ public class AsyncApiAnnotationScanner {
     public static final String CONFIG_PREFIX = "io.quarkiverse.asyncapi";
     static final Logger LOGGER = Logger.getLogger(AsyncApiAnnotationScanner.class.getName());
     static final DotName OPEN_API_SCHEMA_ANNOTATION = DotName
-            .createSimple("org.eclipse.microprofile.openapi.annotations.media.AsyncAPISchema");
+            .createSimple("org.eclipse.microprofile.openapi.annotations.media.Schema");
     static final String GLOBAL_COMPONENTS_SCHEMAS_PREFIX = "#/components/schemas/";
     static final TreeMap<String, Object> GLOBAL_COMPONENTS = new TreeMap<>(Map.of(
             "OffsetDateTime", AsyncAPISchema.builder()
@@ -179,22 +179,25 @@ public class AsyncApiAnnotationScanner {
             if (kafkaResolver == null) {
                 kafkaResolver = new KafkaResolver();
             }
-            KafkaChannelBinding channelBinding = kafkaResolver.getKafkaChannelBindings(topic);
-            Message message = getMessage(channelData.messageType);
             Channel.ChannelBuilder channelBuilder = Channel.builder()
-                    .bindings(Map.of("kafka", channelBinding))
-                    .messages(Map.of(channelData.operationId, message));
-            Operation operation = Operation.builder()
-                    .action(channelData.isEmitter ? OperationAction.SEND : OperationAction.RECEIVE)
-                    .channel(new Reference("#/channels/" + channelName))
-                    .build();
-            operations.put(channelData.operationId, operation);
-            addSchemaAnnotationData(aAnnotationInstance.target(), operation);
+                    .address(channelName)
+                    .bindings(Map.of("kafka", kafkaResolver.getKafkaChannelBindings(topic)))
+                    .messages(Map.of(channelData.operationId, getMessage(channelData.messageType)));
             io.quarkiverse.asyncapi.annotation.scanner.config.Channel channel = configResolver.getChannel(channelName);
             if (channel != null) {
                 channel.description.ifPresent(channelBuilder::description);
             }
             channels.put(channelName, channelBuilder.build());
+            Operation.OperationBuilder operationBuilder = Operation.builder()
+                    .action(channelData.isEmitter ? OperationAction.SEND : OperationAction.RECEIVE)
+                    .channel(new Reference("#/channels/" + channelName));
+            addSchemaAnnotationData(aAnnotationInstance.target(), operationBuilder);
+            configResolver.getGroupId(channelData.isEmitter, channelName)
+                    .map(groupId -> AsyncAPISchema.builder().type(com.asyncapi.v3.schema.Type.STRING)
+                            .enumValue(List.of(groupId)).build())
+                    .map(schema -> KafkaOperationBinding.builder().groupId(schema).build())
+                    .ifPresent(kafkaOperationBinding -> operationBuilder.bindings(Map.of("kafka", kafkaOperationBinding)));
+            operations.put(channelData.operationId, operationBuilder.build());
         }
         //TODO other than kafka...
     }
@@ -505,10 +508,10 @@ public class AsyncApiAnnotationScanner {
                 .isPresent();
     }
 
-    void addSchemaAnnotationData(AnnotationTarget aAnnotationTarget, Operation aOperation) {
+    void addSchemaAnnotationData(AnnotationTarget aAnnotationTarget, Operation.OperationBuilder aOperationBuilder) {
         Optional.ofNullable(getSchemaAnnotationValue(aAnnotationTarget, "description"))
                 .map(AnnotationValue::asString)
-                .ifPresent(aOperation::setDescription);
+                .ifPresent(aOperationBuilder::description);
     }
 
     AnnotationValue getSchemaAnnotationValue(AnnotationTarget aAnnotationTarget, String aAnnotationFieldName) {

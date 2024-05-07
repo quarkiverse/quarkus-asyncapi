@@ -63,6 +63,11 @@ public class AsyncApiConfigResolver {
         return ConfigProvider.getConfig().getOptionalValue(configKey, String.class).orElse(aChannel);
     }
 
+    public Optional<String> getGroupId(boolean aIsEmitter, String aChannel) {
+        String configKey = "mp.messaging." + (aIsEmitter ? "outgoing" : "incoming") + "." + aChannel + ".group.id";
+        return ConfigProvider.getConfig().getOptionalValue(configKey, String.class);
+    }
+
     public Channel getChannel(String aChannel) {
         return config.channels.get(aChannel);
     }
