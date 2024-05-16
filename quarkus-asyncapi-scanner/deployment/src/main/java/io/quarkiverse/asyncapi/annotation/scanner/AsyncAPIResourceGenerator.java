@@ -47,7 +47,7 @@ public class AsyncAPIResourceGenerator {
         if (servers != null) {
             builder.servers(servers);
         }
-        aRecorder.store(new MyAsyncAPI(builder.build()), aConfig);
+        aRecorder.store(builder.build(), aConfig);
     }
 
     static class IsEnabled implements BooleanSupplier {

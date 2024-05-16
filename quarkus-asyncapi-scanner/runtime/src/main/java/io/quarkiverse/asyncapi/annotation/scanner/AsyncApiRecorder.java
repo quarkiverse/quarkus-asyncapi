@@ -34,9 +34,9 @@ public class AsyncApiRecorder {
     public static final String ASYNC_API_YAML = "asyncApi.yaml";
     public static final String ASYNC_API_PUML = "asyncApi.puml";
 
-    public void store(MyAsyncAPI aAsyncAPI, AsyncApiRuntimeConfig aConfig) {
+    public void store(AsyncAPI aAsyncAPI, AsyncApiRuntimeConfig aConfig) {
         try {
-            AsyncAPI filteredAPI = filter(aAsyncAPI.toAsyncAPI(), aConfig);
+            AsyncAPI filteredAPI = filter(aAsyncAPI, aConfig);
             store(ObjectMapperFactory.yaml().writeValueAsString(filteredAPI), ASYNC_API_YAML);
             store(ObjectMapperFactory.json().writeValueAsString(filteredAPI), ASYNC_API_JSON);
             String plantUml = toPlantUml(filteredAPI);
