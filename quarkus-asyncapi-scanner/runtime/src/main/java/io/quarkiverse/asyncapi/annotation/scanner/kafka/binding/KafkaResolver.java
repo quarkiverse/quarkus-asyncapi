@@ -22,9 +22,9 @@ import org.apache.kafka.common.TopicPartitionInfo;
 import org.apache.kafka.common.config.ConfigResource;
 import org.eclipse.microprofile.config.ConfigProvider;
 
-import com.asyncapi.v3.binding.channel.kafka.KafkaChannelBinding;
-import com.asyncapi.v3.binding.channel.kafka.KafkaChannelTopicCleanupPolicy;
-import com.asyncapi.v3.binding.channel.kafka.KafkaChannelTopicConfiguration;
+import com.asyncapi.bindings.kafka.v0._5_0.channel.KafkaChannelBinding;
+import com.asyncapi.bindings.kafka.v0._5_0.channel.KafkaChannelTopicCleanupPolicy;
+import com.asyncapi.bindings.kafka.v0._5_0.channel.KafkaChannelTopicConfiguration;
 
 /**
  * @since 02.03.2023

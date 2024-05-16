@@ -46,7 +46,9 @@ import org.jboss.jandex.MethodInfo;
 import org.jboss.jandex.ParameterizedType;
 import org.jboss.jandex.Type;
 
-import com.asyncapi.v3.Reference;
+import com.asyncapi.bindings.kafka.v0._5_0.operation.KafkaOperationBinding;
+import com.asyncapi.schemas.asyncapi.AsyncAPISchema;
+import com.asyncapi.schemas.asyncapi.Reference;
 import com.asyncapi.v3._0_0.model.AsyncAPI;
 import com.asyncapi.v3._0_0.model.ExternalDocumentation;
 import com.asyncapi.v3._0_0.model.channel.Channel;
@@ -54,8 +56,6 @@ import com.asyncapi.v3._0_0.model.channel.message.Message;
 import com.asyncapi.v3._0_0.model.component.Components;
 import com.asyncapi.v3._0_0.model.operation.Operation;
 import com.asyncapi.v3._0_0.model.operation.OperationAction;
-import com.asyncapi.v3.binding.operation.kafka.KafkaOperationBinding;
-import com.asyncapi.v3.schema.AsyncAPISchema;
 
 import io.quarkiverse.asyncapi.annotation.scanner.kafka.binding.KafkaResolver;
 import io.smallrye.mutiny.Multi;
@@ -80,17 +80,17 @@ public class AsyncApiAnnotationScanner {
                                     "A date-time with an offset from UTC/Greenwich in the ISO-8601 calendar system")
                             .url("https://docs.oracle.com/javase/8/docs/api/java/time/OffsetDateTime.html")
                             .build())
-                    .type(com.asyncapi.v3.schema.Type.STRING)
+                    .type(com.asyncapi.schemas.Type.STRING)
                     .examples(List.of("2022-03-10T12:15:50-04:00"))
                     .build(),
             "UUID", AsyncAPISchema.builder()
                     .format("uuid")
                     .pattern("[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}")
-                    .type(com.asyncapi.v3.schema.Type.STRING)
+                    .type(com.asyncapi.schemas.Type.STRING)
                     .build(),
             "LocalTime", AsyncAPISchema.builder()
                     .format("local-time")
-                    .type(com.asyncapi.v3.schema.Type.STRING)
+                    .type(com.asyncapi.schemas.Type.STRING)
                     .externalDocs(ExternalDocumentation.builder()
                             .description("ISO-8601 representation of a extended local time")
                             .url("https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#ISO_LOCAL_TIME")
@@ -99,7 +99,7 @@ public class AsyncApiAnnotationScanner {
                     .build(),
             "Duration", AsyncAPISchema.builder()
                     .format("duration")
-                    .type(com.asyncapi.v3.schema.Type.STRING)
+                    .type(com.asyncapi.schemas.Type.STRING)
                     .externalDocs(ExternalDocumentation.builder()
                             .description("ISO-8601 representation of a duration")
                             .url("https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html#toString--")
@@ -107,26 +107,26 @@ public class AsyncApiAnnotationScanner {
                     .examples(List.of("P1D"))
                     .build(),
             "DayOfWeek", AsyncAPISchema.builder()
-                    .type(com.asyncapi.v3.schema.Type.STRING)
+                    .type(com.asyncapi.schemas.Type.STRING)
                     .enumValue(List.of(
                             "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"))
                     .build(),
             "Scale", AsyncAPISchema.builder()
-                    .type(com.asyncapi.v3.schema.Type.STRING)
+                    .type(com.asyncapi.schemas.Type.STRING)
                     .enumValue(List.of("ABSOLUTE", "RELATIVE"))
                     .build(),
             "Quantity", AsyncAPISchema.builder()
                     .required(List.of("value", "unit"))
-                    .type(com.asyncapi.v3.schema.Type.OBJECT)
+                    .type(com.asyncapi.schemas.Type.OBJECT)
                     .properties(new TreeMap<>(Map.of(
                             "scale", AsyncAPISchema.builder()
                                     .ref(GLOBAL_COMPONENTS_SCHEMAS_PREFIX + "Scale")
                                     .defaultValue("ABSOLUTE").build(),
                             "unit", AsyncAPISchema.builder()
                                     .description("Symbol of unit.")
-                                    .type(com.asyncapi.v3.schema.Type.STRING).build(),
+                                    .type(com.asyncapi.schemas.Type.STRING).build(),
                             "value", AsyncAPISchema.builder()
-                                    .type(com.asyncapi.v3.schema.Type.NUMBER).build())))
+                                    .type(com.asyncapi.schemas.Type.NUMBER).build())))
                     .build()));
 
     final IndexView index;
@@ -193,7 +193,7 @@ public class AsyncApiAnnotationScanner {
                     .channel(new Reference("#/channels/" + channelName));
             addSchemaAnnotationData(aAnnotationInstance.target(), operationBuilder);
             configResolver.getGroupId(channelData.isEmitter, channelName)
-                    .map(groupId -> AsyncAPISchema.builder().type(com.asyncapi.v3.schema.Type.STRING)
+                    .map(groupId -> AsyncAPISchema.builder().type(com.asyncapi.schemas.Type.STRING)
                             .enumValue(List.of(groupId)).build())
                     .map(schema -> KafkaOperationBinding.builder().groupId(schema).build())
                     .ifPresent(kafkaOperationBinding -> operationBuilder.bindings(Map.of("kafka", kafkaOperationBinding)));
@@ -356,7 +356,7 @@ public class AsyncApiAnnotationScanner {
                 GLOBAL_COMPONENTS.put(typeKey, getClassSchema(aType, typeVariableMap));
                 return ref;
             default: //TODO other types
-                return AsyncAPISchema.builder().type(com.asyncapi.v3.schema.Type.OBJECT).build();
+                return AsyncAPISchema.builder().type(com.asyncapi.schemas.Type.OBJECT).build();
         }
     }
 
@@ -383,11 +383,11 @@ public class AsyncApiAnnotationScanner {
             //see https://swagger.io/docs/specification/data-models/dictionaries/
             //and https://www.asyncapi.com/docs/reference/specification/v3.6.0#schemaObject -> Model with Map/Dictionary Properties
             return AsyncAPISchema.builder()
-                    .type(com.asyncapi.v3.schema.Type.OBJECT)
+                    .type(com.asyncapi.schemas.Type.OBJECT)
                     .additionalProperties(getSchema(valueType, aTypeVariableMap))
                     .build();
         }
-        AsyncAPISchema schema = AsyncAPISchema.builder().type(com.asyncapi.v3.schema.Type.OBJECT).build();
+        AsyncAPISchema schema = AsyncAPISchema.builder().type(com.asyncapi.schemas.Type.OBJECT).build();
         if (classInfo != null) {
             boolean hasOneOfSchema = addSchemaAnnotationData(classInfo, schema, aTypeVariableMap);
             if (aType.kind().equals(Type.Kind.PARAMETERIZED_TYPE)) {
@@ -436,7 +436,7 @@ public class AsyncApiAnnotationScanner {
                                 aType.asParameterizedType().arguments().get(0))
                         : aType;
 
-                schema.setType(com.asyncapi.v3.schema.Type.ARRAY);
+                schema.setType(com.asyncapi.schemas.Type.ARRAY);
                 schema.setItems(getSchema(collectionType, aTypeVariableMap));
             }
             //TODO other non-indexed tyes from jre, e.g. maps...
@@ -532,19 +532,19 @@ public class AsyncApiAnnotationScanner {
     AsyncAPISchema getJavaLangPackageSchema(Type aType) {
         switch (aType.name().withoutPackagePrefix()) {
             case "Boolean":
-                return AsyncAPISchema.builder().type(com.asyncapi.v3.schema.Type.BOOLEAN).build();
+                return AsyncAPISchema.builder().type(com.asyncapi.schemas.Type.BOOLEAN).build();
             case "Character":
             case "String":
-                return AsyncAPISchema.builder().type(com.asyncapi.v3.schema.Type.STRING).build();
+                return AsyncAPISchema.builder().type(com.asyncapi.schemas.Type.STRING).build();
             case "Integer":
             case "Long":
             case "Short":
-                return AsyncAPISchema.builder().type(com.asyncapi.v3.schema.Type.INTEGER).build();
+                return AsyncAPISchema.builder().type(com.asyncapi.schemas.Type.INTEGER).build();
             case "Double":
             case "Float":
-                return AsyncAPISchema.builder().type(com.asyncapi.v3.schema.Type.NUMBER).build();
+                return AsyncAPISchema.builder().type(com.asyncapi.schemas.Type.NUMBER).build();
             default:
-                return AsyncAPISchema.builder().type(com.asyncapi.v3.schema.Type.OBJECT).build();
+                return AsyncAPISchema.builder().type(com.asyncapi.schemas.Type.OBJECT).build();
         }
     }
 
@@ -553,7 +553,7 @@ public class AsyncApiAnnotationScanner {
                 ? aTypeVariableMap.get(aType.asArrayType().constituent().toString())
                 : aType.asArrayType().constituent();
         return AsyncAPISchema.builder()
-                .type(com.asyncapi.v3.schema.Type.ARRAY)
+                .type(com.asyncapi.schemas.Type.ARRAY)
                 .items(getSchema(arrayType, aTypeVariableMap))
                 .build();
     }
@@ -562,21 +562,21 @@ public class AsyncApiAnnotationScanner {
         AsyncAPISchema.AsyncAPISchemaBuilder builder = AsyncAPISchema.builder();
         switch (aType.asPrimitiveType().primitive()) {
             case BOOLEAN:
-                builder.type(com.asyncapi.v3.schema.Type.BOOLEAN);
+                builder.type(com.asyncapi.schemas.Type.BOOLEAN);
                 break;
             case CHAR:
-                builder.type(com.asyncapi.v3.schema.Type.STRING);
+                builder.type(com.asyncapi.schemas.Type.STRING);
                 break;
             case INT:
             case LONG:
             case SHORT:
-                builder.type(com.asyncapi.v3.schema.Type.INTEGER);
+                builder.type(com.asyncapi.schemas.Type.INTEGER);
                 break;
             case DOUBLE:
             case FLOAT:
-                builder.type(com.asyncapi.v3.schema.Type.NUMBER);
+                builder.type(com.asyncapi.schemas.Type.NUMBER);
             default:
-                builder.type(com.asyncapi.v3.schema.Type.OBJECT);
+                builder.type(com.asyncapi.schemas.Type.OBJECT);
         }
         return builder.build();
     }

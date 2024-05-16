@@ -12,11 +12,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import com.asyncapi.bindings.kafka.v0._5_0.channel.KafkaChannelBinding;
 import com.asyncapi.v3._0_0.model.AsyncAPI;
 import com.asyncapi.v3._0_0.model.channel.Channel;
 import com.asyncapi.v3._0_0.model.operation.Operation;
 import com.asyncapi.v3._0_0.model.operation.OperationAction;
-import com.asyncapi.v3.binding.channel.kafka.KafkaChannelBinding;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.quarkiverse.asyncapi.annotation.scanner.config.AsyncApiRuntimeConfig;

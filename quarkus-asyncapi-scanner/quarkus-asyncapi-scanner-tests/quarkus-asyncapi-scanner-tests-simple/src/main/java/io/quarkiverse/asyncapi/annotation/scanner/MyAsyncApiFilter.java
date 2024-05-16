@@ -7,10 +7,10 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.asyncapi.schemas.Type;
+import com.asyncapi.schemas.asyncapi.AsyncAPISchema;
 import com.asyncapi.v3._0_0.model.channel.Channel;
 import com.asyncapi.v3._0_0.model.channel.message.Message;
-import com.asyncapi.v3.schema.AsyncAPISchema;
-import com.asyncapi.v3.schema.Type;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
