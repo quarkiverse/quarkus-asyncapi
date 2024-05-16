@@ -2,9 +2,10 @@ package io.quarkiverse.asyncapi.config.channels;
 
 import java.util.Map;
 
-import com.asyncapi.v2._6_0.model.channel.ChannelItem;
-import com.asyncapi.v2._6_0.model.channel.operation.Operation;
-import com.asyncapi.v2._6_0.model.server.Server;
+import com.asyncapi.v3._0_0.model.channel.Channel;
+import com.asyncapi.v3._0_0.model.operation.Operation;
+import com.asyncapi.v3._0_0.model.operation.OperationAction;
+import com.asyncapi.v3._0_0.model.server.Server;
 
 public abstract class AbstractChannelConfigurer implements ChannelConfigurer {
 
@@ -34,19 +35,16 @@ public abstract class AbstractChannelConfigurer implements ChannelConfigurer {
     }
 
     @Override
-    public void channelConfig(String channelName, ChannelItem item, Server server, Map<String, String> result) {
-
-        if (item.getSubscribe() != null) {
-            String incomingChannel = channelName;
+    public void channelConfig(Server server, Channel channel, Operation operation, Map<String, String> result) {
+        if (operation.getAction() == OperationAction.RECEIVE) {
+            String incomingChannel = channel.getAddress();
             result.put(incomingProperty(incomingChannel, CONNECTOR), connectorId);
-            addIncomingChannel(incomingChannel, channelName, item.getPublish(), server, result);
-        }
-        if (item.getPublish() != null) {
-            String outgoingChannel = channelName + "_out";
+            addIncomingChannel(incomingChannel, channel.getAddress(), operation, server, result);
+        } else if (operation.getAction() == OperationAction.SEND) {
+            String outgoingChannel = channel.getAddress() + "_out";
             result.put(outgoingProperty(outgoingChannel, CONNECTOR), connectorId);
-            addOutgoingChannel(outgoingChannel, channelName, item.getPublish(), server, result);
+            addOutgoingChannel(outgoingChannel, channel.getAddress(), operation, server, result);
         }
-
     }
 
     public void commonConfig(Server server, Map<String, String> result) {

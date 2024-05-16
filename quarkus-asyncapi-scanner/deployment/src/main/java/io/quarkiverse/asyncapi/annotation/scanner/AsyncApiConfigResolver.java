@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.config.ConfigProvider;
 
-import com.asyncapi.v2._0_0.model.info.Contact;
-import com.asyncapi.v2._0_0.model.info.Info;
-import com.asyncapi.v2._0_0.model.info.License;
-import com.asyncapi.v2._0_0.model.server.Server;
+import com.asyncapi.v3._0_0.model.info.Contact;
+import com.asyncapi.v3._0_0.model.info.Info;
+import com.asyncapi.v3._0_0.model.info.License;
+import com.asyncapi.v3._0_0.model.server.Server;
 
 import io.quarkiverse.asyncapi.annotation.scanner.config.AsyncApiRuntimeConfig;
 import io.quarkiverse.asyncapi.annotation.scanner.config.Channel;
@@ -63,11 +63,16 @@ public class AsyncApiConfigResolver {
         return ConfigProvider.getConfig().getOptionalValue(configKey, String.class).orElse(aChannel);
     }
 
+    public Optional<String> getGroupId(boolean aIsEmitter, String aChannel) {
+        String configKey = "mp.messaging." + (aIsEmitter ? "outgoing" : "incoming") + "." + aChannel + ".group.id";
+        return ConfigProvider.getConfig().getOptionalValue(configKey, String.class);
+    }
+
     public Channel getChannel(String aChannel) {
         return config.channels.get(aChannel);
     }
 
-    public Map<String, Server> getServers() {
+    public Map<String, Object> getServers() {
         if (config.servers.isEmpty()) {
             return null;
         }
@@ -76,10 +81,10 @@ public class AsyncApiConfigResolver {
     }
 
     Server toAsyncApiServer(io.quarkiverse.asyncapi.annotation.scanner.config.Server aConfigServer) {
-        return Server.builder()
-                //TODO
+        Server.ServerBuilder builder = Server.builder()
                 .protocol(aConfigServer.protocol)
-                .url(aConfigServer.url)
-                .build();
+                .host(aConfigServer.host);
+        aConfigServer.pathname.ifPresent(builder::pathname);
+        return builder.build();
     }
 }

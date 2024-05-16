@@ -34,3 +34,9 @@ For instance, with Maven, add the following dependency to your POM file:
 For more information about the extension configuration please refer to the <<configuration-reference, Configuration Reference>>.
 
 include::includes/quarkus-asyncapi-annotation-scanner.adoc[leveloffset=+1, opts=optional]
+
+== Migration to V1 (switch from AsyncApi v2.6.0 to v3.0.0)
+The structure of asyncApi has multiple breaking changes. See https://www.asyncapi.com/docs/migration/migrating-to-v3[migration to V3] for details.
+To apply to these changes following changed in the extension-configuration:
+
+* `server.url` is divided into `server.host` and `server.pathname` (see https://www.asyncapi.com/docs/migration/migrating-to-v3#server-url-splitting-up[server-url splitting up])
