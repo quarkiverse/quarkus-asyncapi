@@ -70,29 +70,38 @@ public class KafkaResolver {
     }
 
     KafkaChannelTopicConfiguration getTopicConfiguration(AdminClient aClient, String aTopic) {
-        Map<String, ConfigEntry> configMap = aClient
-                .describeConfigs(List.of(new ConfigResource(ConfigResource.Type.TOPIC, aTopic)))
-                .values().values().stream()
-                .map(f -> {
-                    try {
-                        return f.get();
-                    } catch (InterruptedException | ExecutionException interruptedException) {
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .map(Config::entries)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toMap(ConfigEntry::name, Function.identity()));
-        KafkaChannelTopicCleanupPolicy cleanUpPolicy = KafkaChannelTopicCleanupPolicy
-                .valueOf(configMap.get(CLEANUP_POLICY).value());
-        return KafkaChannelTopicConfiguration.builder()
-                .cleanupPolicy(List.of(cleanUpPolicy))
-                .retentionMs(Integer.valueOf(configMap.get(RETENTION_MS).value()))
-                .retentionBytes(Integer.valueOf(configMap.get(RETENTION_BYTES).value()))
-                .deleteRetentionMs(Integer.valueOf(configMap.get(DELETE_RETENTION_MS).value()))
-                .maxMessageBytes(Integer.valueOf(configMap.get(MAX_MESSAGE_BYTES).value()))
-                .build();
+        KafkaChannelTopicConfiguration.KafkaChannelTopicConfigurationBuilder builder = KafkaChannelTopicConfiguration.builder();
+        try {
+            Map<String, ConfigEntry> configMap = aClient
+                    .describeConfigs(List.of(new ConfigResource(ConfigResource.Type.TOPIC, aTopic)))
+                    .values().values().stream()
+                    .map(f -> {
+                        try {
+                            return f.get();
+                        } catch (InterruptedException | ExecutionException interruptedException) {
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .map(Config::entries)
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toMap(ConfigEntry::name, Function.identity()));
+            String cleanUpPolicyString = configMap.get(CLEANUP_POLICY).value();
+            List<KafkaChannelTopicCleanupPolicy> cleanUpPolicies = cleanUpPolicyString == null
+                    ? null
+                    : List.of(KafkaChannelTopicCleanupPolicy.valueOf(cleanUpPolicyString.toUpperCase()));
+            return builder
+                    .cleanupPolicy(cleanUpPolicies)
+                    .retentionMs(Integer.valueOf(configMap.get(RETENTION_MS).value()))
+                    .retentionBytes(Integer.valueOf(configMap.get(RETENTION_BYTES).value()))
+                    .deleteRetentionMs(Integer.valueOf(configMap.get(DELETE_RETENTION_MS).value()))
+                    .maxMessageBytes(Integer.valueOf(configMap.get(MAX_MESSAGE_BYTES).value()))
+                    .build();
+        } catch (Exception e) {
+            LOGGER.warning("Unable to read kafka-config for topic " + aTopic);
+            LOGGER.throwing("KafkaResolver", "getTopicConfiguration", e);
+            return builder.build();
+        }
     }
 
     private boolean isTopicExists(AdminClient admin, String topicName) throws InterruptedException, ExecutionException {
