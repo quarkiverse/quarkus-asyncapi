@@ -1,51 +1,66 @@
-asyncapi: '2.0.0'
+asyncapi: 3.0.0
 id: 'urn:com:kafka:server'
 info:
   title: Kafka Application
-  version: '1.0.0'
+  version: 1.0.0
   description: Kafka Application
   license:
     name: Apache 2.0
-    url: https://www.apache.org/licenses/LICENSE-2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0'
 servers:
   production:
-    url: localhost:9092
-    description: Development server
+    host: 'localhost:9092'
     protocol: kafka
-    protocolVersion: '1.0.0'
+    protocolVersion: 1.0.0
+    description: Development server
     x-trigger-version: v0.9.1-0.20190603184501-d845e1d612f8
     x-activity-version: v0.9.1-0.20190603184501-d845e1d612f8
 channels:
-  /message:
+  message:
+    address: message
+    messages:
+      publish.message:
+        $ref: '#/components/messages/message'
+      subscribe.message:
+        $ref: '#/components/messages/message'
     description: A message channel
-    subscribe:
-      summary: Get messages
-      message:
+  dup:
+    address: /dup
+    messages:
+      publish.message:
         $ref: '#/components/messages/message'
-      traits:
-        - bindings:
-            flogo-kafka:
-              partitions: "0"
-              offset: 0
-    publish:
-      summary: Send messages
-      message:
+      subscribe.message:
         $ref: '#/components/messages/message'
-      traits:
-        - bindings:
-            flogo-kafka:
-              partitions: "0"
-              offset: 0
-  /dup:
     description: A duplicate message channel
-    subscribe:
-      summary: Get messages
-      message:
-        $ref: '#/components/messages/message'
-    publish:
-      summary: Send messages
-      message:
-        $ref: '#/components/messages/message'
+operations:
+  /message.publish:
+    action: send
+    channel:
+      $ref: '#/channels/message'
+    summary: Send messages
+    messages:
+      - $ref: '#/channels/message/messages/publish.message'
+  /message.subscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/message'
+    summary: Get messages
+    messages:
+      - $ref: '#/channels/~1message/messages/subscribe.message'
+  /dup.publish:
+    action: send
+    channel:
+      $ref: '#/channels/dup'
+    summary: Send messages
+    messages:
+      - $ref: '#/channels/dup/messages/publish.message'
+  /dup.subscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/dup'
+    summary: Get messages
+    messages:
+      - $ref: '#/channels/dup/messages/subscribe.message'
 components:
   messages:
     message:
@@ -54,7 +69,7 @@ components:
       summary: A message
       contentType: application/json
       payload:
-        $ref: "#/components/schemas/message"
+        $ref: '#/components/schemas/message'
   schemas:
     message:
       type: object

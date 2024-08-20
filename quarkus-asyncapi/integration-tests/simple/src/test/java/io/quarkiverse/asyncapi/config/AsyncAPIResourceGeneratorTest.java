@@ -9,7 +9,7 @@ import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Test;
 
-import com.asyncapi.v2._6_0.model.AsyncAPI;
+import com.asyncapi.v3._0_0.model.AsyncAPI;
 
 import io.quarkus.test.junit.QuarkusTest;
 
@@ -19,10 +19,10 @@ public class AsyncAPIResourceGeneratorTest {
     @Inject
     AsyncAPIRegistry registry;
 
-    @ConfigProperty(name = "mp.messaging.incoming./message.connector")
+    @ConfigProperty(name = "mp.messaging.incoming.message.connector")
     Optional<String> kafkaIncomingConnector;
 
-    @ConfigProperty(name = "mp.messaging.outgoing./message_out.connector")
+    @ConfigProperty(name = "mp.messaging.outgoing.message_out.connector")
     Optional<String> kafkaOutgoingConnector;
 
     @ConfigProperty(name = "mp.messaging.incoming.first.connector")
@@ -31,10 +31,10 @@ public class AsyncAPIResourceGeneratorTest {
     @ConfigProperty(name = "mp.messaging.outgoing.first_out.connector")
     Optional<String> httpOutgoingConnector;
 
-    @ConfigProperty(name = "mp.messaging.incoming./message.topic")
+    @ConfigProperty(name = "mp.messaging.incoming.message.topic")
     Optional<String> incomingTopic;
 
-    @ConfigProperty(name = "mp.messaging.outgoing./message_out.topic")
+    @ConfigProperty(name = "mp.messaging.outgoing.message_out.topic")
     Optional<String> outgoingTopic;
 
     @ConfigProperty(name = "mp.messaging.incoming.first.path")
@@ -50,8 +50,8 @@ public class AsyncAPIResourceGeneratorTest {
         assertThat(asyncAPI.get().getId()).isEqualTo("urn:com:kafka:server");
         assertThat(kafkaIncomingConnector.get()).isEqualTo("smallrye-kafka");
         assertThat(kafkaOutgoingConnector.get()).isEqualTo("smallrye-kafka");
-        assertThat(incomingTopic.get()).isEqualTo("/message");
-        assertThat(outgoingTopic.get()).isEqualTo("/message");
+        assertThat(incomingTopic.get()).isEqualTo("message");
+        assertThat(outgoingTopic.get()).isEqualTo("message");
     }
 
     @Test

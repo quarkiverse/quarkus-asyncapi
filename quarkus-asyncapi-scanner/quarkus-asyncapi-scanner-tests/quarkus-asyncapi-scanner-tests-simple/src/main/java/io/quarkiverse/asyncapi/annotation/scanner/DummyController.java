@@ -20,6 +20,12 @@ import io.smallrye.reactive.messaging.annotations.Broadcast;
 public class DummyController {
 
     @Inject
+    @Channel("MyOut")
+    @Broadcast
+    @org.eclipse.microprofile.openapi.annotations.media.Schema(description = "my inOut emitter description")
+    Emitter<TestMessage<TestMessageData>> inOutEmitter;
+
+    @Inject
     @Channel("channel-x")
     @Broadcast
     @org.eclipse.microprofile.openapi.annotations.media.Schema(description = "testMessage Emmiter description")
@@ -39,6 +45,12 @@ public class DummyController {
     @Channel("transfer-channel2")
     @Schema(description = "transferEmitter description2")
     Emitter<TransferMessage<String>> transferEmitter2;
+
+    @Incoming("MyIn")
+    @Schema(implementation = { GecMessage.class, Part.class })
+    public void receiveMyIn(String aData) {
+        //Do nothing
+    }
 
     @Incoming("incoming-channel-string")
     @Schema(implementation = { GecMessage.class, Part.class })

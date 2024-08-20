@@ -3,7 +3,7 @@
 ## Quarkus Async API
 Generates `AsyncAPIRegistry` and configuration classes
 
-## Quarkus Async API Scanner
+## [Quarkus Async API Scanner](https://docs.quarkiverse.io/quarkus-asyncapi/dev/scanner.html)
 Scans for Microprofile Annotations and provides the findings as AsyncApi-file (yaml, json or html)
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->

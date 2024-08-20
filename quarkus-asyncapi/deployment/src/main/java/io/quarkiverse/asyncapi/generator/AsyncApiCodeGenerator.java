@@ -12,7 +12,7 @@ import java.util.Optional;
 
 import org.eclipse.microprofile.config.Config;
 
-import com.asyncapi.v2._6_0.model.AsyncAPI;
+import com.asyncapi.v3._0_0.model.AsyncAPI;
 
 import io.quarkiverse.asyncapi.config.AsyncAPISupplier;
 import io.quarkiverse.asyncapi.config.AsyncAPIUtils;

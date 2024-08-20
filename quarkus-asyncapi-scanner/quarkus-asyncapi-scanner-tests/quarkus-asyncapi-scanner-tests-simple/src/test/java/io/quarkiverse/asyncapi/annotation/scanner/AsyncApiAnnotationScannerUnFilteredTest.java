@@ -28,42 +28,66 @@ public class AsyncApiAnnotationScannerUnFilteredTest {
         //when
         assertThat(asyncAPI.at("/channels")).isInstanceOf(ObjectNode.class);
         assertThat(asyncAPI.at("/channels")).hasSizeGreaterThanOrEqualTo(6);
-        assertThat(asyncAPI.at("/channels/transfer-channel1/publish/message/payload")).hasSize(3);
-        assertThat(asyncAPI.at("/channels/transfer-channel1/publish/message/payload/properties/value/$ref").asText())
+        assertThat(asyncAPI.at(
+                "/channels/transfer-channel1/messages/io.quarkiverse.asyncapi.annotation.scanner.DummyController.transferEmitter1/payload"))
+                .hasSize(3);
+        assertThat(asyncAPI.at(
+                "/channels/transfer-channel1/messages/io.quarkiverse.asyncapi.annotation.scanner.DummyController.transferEmitter1/payload/properties/value/$ref")
+                .asText())
                 .isEqualTo("#/components/schemas/TransferWorkorderMessage");
         assertThat(asyncAPI.at("/components/schemas/TransferWorkorderMessage/properties/part/$ref").asText())
                 .isEqualTo("#/components/schemas/Part");
-        assertThat(asyncAPI.at("/channels/transfer-channel1/publish/message/payload/properties/value/$ref").asText())
+        assertThat(asyncAPI.at(
+                "/channels/transfer-channel1/messages/io.quarkiverse.asyncapi.annotation.scanner.DummyController.transferEmitter1/payload/properties/value/$ref")
+                .asText())
                 .isEqualTo("#/components/schemas/TransferWorkorderMessage");
         assertThat(asyncAPI.at("/components/schemas/TransferWorkorderMessage/properties/company/$ref").asText())
                 .isEqualTo("#/components/schemas/Company");
         //oneOf
-        assertThat(asyncAPI.at("/channels/channel-x/publish/message/payload/properties/translation/$ref").asText())
+        assertThat(asyncAPI.at(
+                "/channels/channel-x/messages/io.quarkiverse.asyncapi.annotation.scanner.DummyController.emitter/payload/properties/translation/$ref")
+                .asText())
                 .isEqualTo("#/components/schemas/Translation");
         JsonNode oneOfOpenApiNodeOneOf = asyncAPI
-                .at("/channels/channel-x/publish/message/payload/properties/openApiOneOfObject/oneOf");
+                .at("/channels/channel-x/messages/io.quarkiverse.asyncapi.annotation.scanner.DummyController.emitter/payload/properties/openApiOneOfObject/oneOf");
         assertThat(oneOfOpenApiNodeOneOf.get(0).get("type").asText()).isEqualTo("string");
         assertThat(oneOfOpenApiNodeOneOf.get(1).get("type").asText()).isEqualTo("integer");
 
         //Uni<Message<Part>>
-        assertThat(asyncAPI.at("/channels/outgoing-channel-reactive-part/publish/message/payload/$ref").asText())
+        assertThat(asyncAPI.at(
+                "/channels/outgoing-channel-reactive-part/messages/io.quarkiverse.asyncapi.annotation.scanner.DummyController.sendReactiveMessageTyped/payload/$ref")
+                .asText())
                 .isEqualTo("#/components/schemas/Part");
 
         //JsonGetter
-        assertThat(asyncAPI.at("/channels/channel-x/publish/message/payload/properties/i18n/description").asText())
+        assertThat(asyncAPI.at(
+                "/channels/channel-x/messages/io.quarkiverse.asyncapi.annotation.scanner.DummyController.emitter/payload/properties/i18n/description")
+                .asText())
                 .isNotEmpty();
         assertThat(
-                asyncAPI.at("/channels/channel-x/publish/message/payload/properties/i18n/additionalProperties/$ref").asText())
+                asyncAPI.at(
+                        "/channels/channel-x/messages/io.quarkiverse.asyncapi.annotation.scanner.DummyController.emitter/payload/properties/i18n/additionalProperties/$ref")
+                        .asText())
                 .isEqualTo("#/components/schemas/I18n");
 
         // @Deprecated, @Min, @Max
-        assertThat(asyncAPI.at("/channels/channel-x/publish/message/payload/properties/sum/maximum").asInt()).isEqualTo(10);
-        assertThat(asyncAPI.at("/channels/channel-x/publish/message/payload/properties/sum/minimum").asInt()).isEqualTo(5);
-        assertThat(asyncAPI.at("/channels/channel-x/publish/message/payload/properties/sum/deprecated").asBoolean()).isTrue();
+        assertThat(asyncAPI.at(
+                "/channels/channel-x/messages/io.quarkiverse.asyncapi.annotation.scanner.DummyController.emitter/payload/properties/sum/maximum")
+                .asInt()).isEqualTo(10);
+        assertThat(asyncAPI.at(
+                "/channels/channel-x/messages/io.quarkiverse.asyncapi.annotation.scanner.DummyController.emitter/payload/properties/sum/minimum")
+                .asInt()).isEqualTo(5);
+        assertThat(asyncAPI.at(
+                "/channels/channel-x/messages/io.quarkiverse.asyncapi.annotation.scanner.DummyController.emitter/payload/properties/sum/deprecated")
+                .asBoolean()).isTrue();
 
         //@NotNull
-        assertThat(asyncAPI.at("/channels/channel-x/publish/message/payload/required")).hasSize(1);
-        assertThat(asyncAPI.at("/channels/channel-x/publish/message/payload/required/0").asText()).isEqualTo("sum");
+        assertThat(asyncAPI.at(
+                "/channels/channel-x/messages/io.quarkiverse.asyncapi.annotation.scanner.DummyController.emitter/payload/required"))
+                .hasSize(1);
+        assertThat(asyncAPI.at(
+                "/channels/channel-x/messages/io.quarkiverse.asyncapi.annotation.scanner.DummyController.emitter/payload/required/0")
+                .asText()).isEqualTo("sum");
 
         //component/schemas
         JsonNode translationNodeOneOf = asyncAPI.at("/components/schemas/Translation/oneOf");

@@ -102,7 +102,7 @@ public class AsyncApiHandler implements Handler<RoutingContext> {
         String rootPath = ConfigProvider.getConfig()
                 .getValue("quarkus.http.root-path", String.class);
         String schemaUrl = new PathBuilder(rootPath)
-                .appendPath("asyncapi.yaml");
+                .appendPath("/asyncapi.yaml");
 
         //TODO logo
         return String.format(HTML_PATTERN, webComponentJsVersion, webComponentVersion, reactComponentVersion, schemaUrl);

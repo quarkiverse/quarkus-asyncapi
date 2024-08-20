@@ -7,11 +7,10 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.asyncapi.v2._0_0.model.channel.ChannelItem;
-import com.asyncapi.v2._0_0.model.channel.message.Message;
-import com.asyncapi.v2._0_0.model.channel.operation.Operation;
-import com.asyncapi.v2.schema.Schema;
-import com.asyncapi.v2.schema.Type;
+import com.asyncapi.schemas.Type;
+import com.asyncapi.schemas.asyncapi.AsyncAPISchema;
+import com.asyncapi.v3._0_0.model.channel.Channel;
+import com.asyncapi.v3._0_0.model.channel.message.Message;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
@@ -23,32 +22,32 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 public class MyAsyncApiFilter implements AsyncApiFilter {
 
     @Override
-    public ChannelItem filterChannelItem(String aChannel, ChannelItem aChannelItem) {
-        if (aChannel.contains("transfer")) {
-            Operation operation = aChannelItem.getPublish();
-
-            Message message = (Message) operation.getMessage();
-            Class<?> messageClass = getMessageClass(operation);
+    public Channel filterChannel(String aName, Channel aChannel) {
+        if (aName.contains("transfer")) {
+            Map<String, Object> messages = aChannel.getMessages();
+            Map.Entry<String, Object> firstMessage = messages.entrySet().iterator().next();
+            Message message = (Message) firstMessage.getValue();
+            Class<?> messageClass = getMessageClass(firstMessage.getKey());
             if (messageClass != null) {
-                Schema transferMessagePayload = (Schema) message.getPayload();
-                recurse(messageClass, (Schema) transferMessagePayload.getProperties().get("value"));
+                AsyncAPISchema transferMessagePayload = (AsyncAPISchema) message.getPayload();
+                recurse(messageClass, (AsyncAPISchema) transferMessagePayload.getProperties().get("value"));
             }
         }
-        return aChannelItem;
+        return aChannel;
     }
 
-    void recurse(Class aClass, Schema aSchema) {
+    void recurse(Class aClass, AsyncAPISchema aSchema) {
         if (aSchema.getProperties() == null) {
             return;
         }
         //get over all fields
-        Map<String, Schema> filteredPayload = aSchema.getProperties().entrySet().stream()
+        Map<String, Object> filteredPayload = aSchema.getProperties().entrySet().stream()
                 .filter(e -> isClassTransferRelevant(aClass) || isFieldTransferRelevant(aClass, e.getKey()))
                 .peek(e -> {
-                    if (Type.OBJECT.equals(e.getValue().getType())) {
+                    if (Type.OBJECT.equals(((AsyncAPISchema) e.getValue()).getType())) {
                         Field field = getFieldRecursiv(aClass, e.getKey());
                         if (field != null) {
-                            recurse(field.getType(), e.getValue());
+                            recurse(field.getType(), (AsyncAPISchema) e.getValue());
                         }
                     }
                 })
@@ -66,11 +65,10 @@ public class MyAsyncApiFilter implements AsyncApiFilter {
         }
     }
 
-    Class<?> getMessageClass(Operation aOperation) {
+    Class<?> getMessageClass(String aOperationId) {
         try {
-            String operationId = aOperation.getOperationId();
-            Class<?> clazz = Class.forName(operationId.substring(0, operationId.lastIndexOf('.')));
-            Field field = clazz.getDeclaredField(operationId.substring(operationId.lastIndexOf(".") + 1));
+            Class<?> clazz = Class.forName(aOperationId.substring(0, aOperationId.lastIndexOf('.')));
+            Field field = clazz.getDeclaredField(aOperationId.substring(aOperationId.lastIndexOf(".") + 1));
             ParameterizedType outerGenericType = (ParameterizedType) field.getGenericType();
             ParameterizedType innerGenericType = (ParameterizedType) outerGenericType.getActualTypeArguments()[0];
             return (Class<?>) innerGenericType.getActualTypeArguments()[0];

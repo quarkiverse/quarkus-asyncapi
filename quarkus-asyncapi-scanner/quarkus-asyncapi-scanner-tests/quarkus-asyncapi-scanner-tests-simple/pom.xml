@@ -57,7 +57,7 @@
         </dependency>
          <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-smallrye-reactive-messaging-kafka</artifactId>
+            <artifactId>quarkus-messaging-kafka</artifactId>
         </dependency>
          <dependency>
             <groupId>io.quarkus</groupId>
@@ -69,7 +69,7 @@
             <plugin>
                 <groupId>io.smallrye</groupId>
                 <artifactId>jandex-maven-plugin</artifactId>
-                <version>3.1.7</version>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <id>make-index</id>
