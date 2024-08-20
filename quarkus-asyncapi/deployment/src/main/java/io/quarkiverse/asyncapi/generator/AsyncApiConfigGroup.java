@@ -4,10 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import io.quarkus.runtime.annotations.ConfigItem;
-import io.quarkus.runtime.annotations.ConfigPhase;
-import io.quarkus.runtime.annotations.ConfigRoot;
+import io.smallrye.config.ConfigMapping;
 
-@ConfigRoot(name = AsyncApiConfigGroup.CONFIG_PREFIX, phase = ConfigPhase.BUILD_TIME)
+@ConfigMapping(prefix = AsyncApiConfigGroup.CONFIG_PREFIX)
 public class AsyncApiConfigGroup {
 
     static final String CONFIG_PREFIX = "asyncapi-generator.codegen";
