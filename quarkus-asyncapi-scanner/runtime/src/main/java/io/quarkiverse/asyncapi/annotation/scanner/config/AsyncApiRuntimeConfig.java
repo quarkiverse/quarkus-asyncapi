@@ -6,9 +6,10 @@ import java.util.Optional;
 import io.quarkiverse.asyncapi.annotation.scanner.AsyncApiFilter;
 import io.quarkus.runtime.annotations.ConfigDocMapKey;
 import io.quarkus.runtime.annotations.ConfigItem;
-import io.smallrye.config.ConfigMapping;
+import io.quarkus.runtime.annotations.ConfigPhase;
+import io.quarkus.runtime.annotations.ConfigRoot;
 
-@ConfigMapping(prefix = "asyncapi.annotation.scanner")
+@ConfigRoot(name = "asyncapi.annotation.scanner", phase = ConfigPhase.BUILD_AND_RUN_TIME_FIXED)
 public class AsyncApiRuntimeConfig {
 
     /**
