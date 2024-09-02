@@ -2,32 +2,30 @@ package io.quarkiverse.asyncapi.annotation.scanner.config;
 
 import java.util.Optional;
 
-import io.quarkus.runtime.annotations.ConfigGroup;
-import io.quarkus.runtime.annotations.ConfigItem;
-import io.quarkus.runtime.annotations.ConvertWith;
 import io.quarkus.runtime.configuration.TrimmedStringConverter;
+import io.smallrye.config.ConfigMapping;
+import io.smallrye.config.WithConverter;
+import io.smallrye.config.WithDefault;
 
-@ConfigGroup
-public class Server {
+@ConfigMapping
+public interface Server {
 
     /**
      * Host
      */
-    @ConfigItem
-    @ConvertWith(TrimmedStringConverter.class)
-    public String host;
+    @WithConverter(TrimmedStringConverter.class)
+    public String host();
 
     /**
      * Pathname
      */
-    @ConfigItem
-    @ConvertWith(TrimmedStringConverter.class)
-    public Optional<String> pathname;
+    @WithConverter(TrimmedStringConverter.class)
+    public Optional<String> pathname();
 
     /**
      * Protocol
      */
-    @ConfigItem(defaultValue = "kafka")
-    @ConvertWith(TrimmedStringConverter.class)
-    public String protocol;
+    @WithDefault("kafka")
+    @WithConverter(TrimmedStringConverter.class)
+    public String protocol();
 }

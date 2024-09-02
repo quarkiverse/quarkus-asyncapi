@@ -71,7 +71,7 @@ public class AsyncApiRecorder {
     }
 
     AsyncApiFilter getFilter(AsyncApiRuntimeConfig aConfig) {
-        Optional<String> filterClassName = aConfig.filter;
+        Optional<String> filterClassName = aConfig.filter();
         if (filterClassName.isPresent()) {
             try {
                 ClassLoader loader = Thread.currentThread().getContextClassLoader();
