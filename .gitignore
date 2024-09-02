@@ -62,3 +62,7 @@ pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
 release.properties
+docs/modules/ROOT/pages/includes/quarkus-asyncapi-scanner.adoc
+docs/modules/ROOT/pages/includes/quarkus-asyncapi-scanner_quarkus.asyncapi.adoc
+docs/modules/ROOT/pages/includes/quarkus-asyncapi.adoc
+docs/modules/ROOT/pages/includes/quarkus-asyncapi_quarkus.asyncapi-generator.adoc

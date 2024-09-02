@@ -185,7 +185,7 @@ public class AsyncApiAnnotationScanner {
                     .messages(Map.of(channelData.operationId, getMessage(channelData.messageType)));
             io.quarkiverse.asyncapi.annotation.scanner.config.Channel channel = configResolver.getChannel(channelName);
             if (channel != null) {
-                channel.description.ifPresent(channelBuilder::description);
+                channel.description().ifPresent(channelBuilder::description);
             }
             channels.put(channelName, channelBuilder.build());
             Operation.OperationBuilder operationBuilder = Operation.builder()

@@ -38,10 +38,10 @@ public class AsyncAPIResourceGenerator {
         AsyncApiConfigResolver configResolver = new AsyncApiConfigResolver(aConfig);
         AsyncApiAnnotationScanner scanner = new AsyncApiAnnotationScanner(aIndex.getIndex(), configResolver);
         AsyncAPI.AsyncAPIBuilder builder = AsyncAPI.builder()
-                .asyncapi(aConfig.version)
+                .asyncapi(aConfig.version())
                 .id(configResolver.getConfiguredKafkaBootstrapServer())
                 .info(configResolver.getInfo())
-                .defaultContentType(aConfig.defaultContentType);
+                .defaultContentType(aConfig.defaultContentType());
         builder = scanner.setData(builder);
         Map<String, Object> servers = configResolver.getServers();
         if (servers != null) {
@@ -55,11 +55,11 @@ public class AsyncAPIResourceGenerator {
         AsyncApiRuntimeConfig config;
 
         public boolean getAsBoolean() {
-            if (!config.enabled) {
+            if (!config.enabled()) {
                 Logger.getLogger(AsyncAPIResourceGenerator.class.getName())
                         .warning("Async API disabled (see config asyncapi.annotation.scanner.enabled)");
             }
-            return config.enabled;
+            return config.enabled();
         }
     }
 

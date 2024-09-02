@@ -27,20 +27,21 @@ public class AsyncApiConfigResolver {
 
     public Info getInfo() {
         Info.InfoBuilder infoBuilder = Info.builder() //TODO implement Annotation to define it (use OpenApi???)
-                .version(config.infoVersion);
-        config.infoTitle.ifPresent(infoBuilder::title);
-        config.infoDescription.ifPresent(infoBuilder::description);
+                .version(config.infoVersion());
+        config.infoTitle().ifPresent(infoBuilder::title);
+        config.infoDescription().ifPresent(infoBuilder::description);
         License.LicenseBuilder licenseBuilder = License.builder();
-        if (config.infoLicensName.isPresent() || config.infoLicenseUrl.isPresent()) {
-            config.infoLicensName.ifPresent(licenseBuilder::name);
-            config.infoLicenseUrl.ifPresent(licenseBuilder::url);
+        if (config.infoLicensName().isPresent() || config.infoLicenseUrl().isPresent()) {
+            config.infoLicensName().ifPresent(licenseBuilder::name);
+            config.infoLicenseUrl().ifPresent(licenseBuilder::url);
             infoBuilder.license(licenseBuilder.build());
         }
-        if (config.infoContactEmail.isPresent() || config.infoContactEmail.isPresent() || config.infoContactUrl.isPresent()) {
+        if (config.infoContactEmail().isPresent() || config.infoContactEmail().isPresent()
+                || config.infoContactUrl().isPresent()) {
             Contact.ContactBuilder contactBuilder = Contact.builder();
-            config.infoContactName.ifPresent(contactBuilder::name);
-            config.infoContactEmail.ifPresent(contactBuilder::email);
-            config.infoContactUrl.ifPresent(contactBuilder::url);
+            config.infoContactName().ifPresent(contactBuilder::name);
+            config.infoContactEmail().ifPresent(contactBuilder::email);
+            config.infoContactUrl().ifPresent(contactBuilder::url);
             infoBuilder.contact(contactBuilder.build());
         }
         return infoBuilder.build();
@@ -69,22 +70,22 @@ public class AsyncApiConfigResolver {
     }
 
     public Channel getChannel(String aChannel) {
-        return config.channels.get(aChannel);
+        return config.channels().get(aChannel);
     }
 
     public Map<String, Object> getServers() {
-        if (config.servers.isEmpty()) {
+        if (config.servers().isEmpty()) {
             return null;
         }
-        return config.servers.entrySet().stream()
+        return config.servers().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> toAsyncApiServer(e.getValue())));
     }
 
     Server toAsyncApiServer(io.quarkiverse.asyncapi.annotation.scanner.config.Server aConfigServer) {
         Server.ServerBuilder builder = Server.builder()
-                .protocol(aConfigServer.protocol)
-                .host(aConfigServer.host);
-        aConfigServer.pathname.ifPresent(builder::pathname);
+                .protocol(aConfigServer.protocol())
+                .host(aConfigServer.host());
+        aConfigServer.pathname().ifPresent(builder::pathname);
         return builder.build();
     }
 }
