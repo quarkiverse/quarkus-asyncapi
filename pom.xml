@@ -15,7 +15,6 @@
     <module>quarkus-asyncapi</module>
     <module>quarkus-asyncapi-scanner</module>
     <module>quarkus-asyncapi-common</module>
-    <module>docs</module>
   </modules>
   <scm>
     <connection>scm:git:git@github.com:quarkiverse/quarkus-asyncapi.git</connection>
@@ -101,4 +100,18 @@
       </plugins>
     </pluginManagement>
   </build>
+  <profiles>
+    <profile>
+      <id>docs</id>
+      <activation>
+        <property>
+          <name>performRelease</name>
+          <value>!true</value>
+        </property>
+      </activation>
+      <modules>
+        <module>docs</module>
+      </modules>
+    </profile>
+  </profiles>
 </project>
