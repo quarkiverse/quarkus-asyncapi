@@ -34,7 +34,7 @@
     <version.org.assertj>3.26.3</version.org.assertj>
     <version.org.slf4j>2.0.16</version.org.slf4j>
     <version.asyncapi.core>1.0.0-RC2</version.asyncapi.core>
-    <version.org.mockito>5.14.1</version.org.mockito>
+    <version.org.mockito>5.14.2</version.org.mockito>
     <version.org.projectlombok>1.18.34</version.org.projectlombok>
   </properties>
   <dependencyManagement>
