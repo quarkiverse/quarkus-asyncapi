@@ -14,7 +14,7 @@ import org.eclipse.microprofile.config.Config;
 
 import io.quarkiverse.asyncapi.config.AsyncAPIExtension;
 import io.quarkiverse.asyncapi.generator.AsyncApiCodeGenerator;
-import io.quarkiverse.asyncapi.generator.AsyncApiConfigGroup;
+import io.quarkiverse.asyncapi.generator.AsyncApiConfig;
 import io.quarkus.deployment.CodeGenContext;
 
 public class AsyncApiPathGeneratorCodeGen extends AsyncApiGeneratorCodeGenBase {
@@ -24,7 +24,7 @@ public class AsyncApiPathGeneratorCodeGen extends AsyncApiGeneratorCodeGenBase {
     }
 
     protected Collection<String> excludedFiles(final Config config) {
-        return config.getOptionalValues(AsyncApiConfigGroup.EXCLUDED_FILES_PROP, String.class)
+        return config.getOptionalValues(AsyncApiConfig.EXCLUDED_FILES_PROP, String.class)
                 .orElse(Collections.emptyList());
     }
 

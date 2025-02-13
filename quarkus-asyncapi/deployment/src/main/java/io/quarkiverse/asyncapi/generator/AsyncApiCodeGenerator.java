@@ -38,7 +38,7 @@ public class AsyncApiCodeGenerator {
         this.outPath = outPath;
         this.config = config;
         this.basePackage = packageName
-                .orElse(config.getOptionalValue(AsyncApiConfigGroup.PACKAGE_PROP, String.class).orElse(DEFAULT_PACKAGE));
+                .orElse(config.getOptionalValue(AsyncApiConfig.PACKAGE_PROP, String.class).orElse(DEFAULT_PACKAGE));
     }
 
     public void generate(Path path) throws IOException {
