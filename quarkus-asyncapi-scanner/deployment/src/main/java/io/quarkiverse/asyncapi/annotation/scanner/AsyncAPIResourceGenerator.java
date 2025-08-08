@@ -23,6 +23,7 @@ import io.quarkus.vertx.http.deployment.FilterBuildItem;
 import io.quarkus.vertx.http.deployment.NonApplicationRootPathBuildItem;
 import io.quarkus.vertx.http.deployment.RouteBuildItem;
 import io.quarkus.vertx.http.runtime.filters.Filter;
+import io.quarkus.vertx.http.runtime.security.SecurityHandlerPriorities;
 import io.vertx.ext.web.Route;
 
 public class AsyncAPIResourceGenerator {
@@ -76,7 +77,7 @@ public class AsyncAPIResourceGenerator {
         // as 'http-vertx' only adds CORS filter to http route path
         if (!aNonApplicationRootPathBuildItem.isAttachedToMainRouter()) {
             for (FilterBuildItem filterBuildItem : aFilterBuildItems) {
-                if (filterBuildItem.getPriority() == FilterBuildItem.CORS) {
+                if (filterBuildItem.getPriority() == SecurityHandlerPriorities.CORS) {
                     corsFilter = corsFilter(filterBuildItem.toFilter());
                     break;
                 }
