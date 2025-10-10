@@ -1,10 +1,10 @@
-name: AsyncAPI Scanner
+name: "AsyncAPI Scanner"
+description: "This extension creates an AsyncApi-document, describing data your server publishes/subscribes to/from Kafka-topics."
+guide: https://quarkiverse.github.io/quarkiverse-docs/quarkus-asyncapi/dev/scanner.html
 metadata:
   keywords:
-    - asyncapi
-  guide: https://quarkiverse.github.io/quarkiverse-docs/quarkus-asyncapi/dev/scanner.html
+    - "asyncapi"
   categories:
     - "miscellaneous"
-  status: "preview"
   config:
-  - "quarkus.asyncapi.annotation.scanner."
+   - "quarkus.asyncapi.annotation.scanner."
