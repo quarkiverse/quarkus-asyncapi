@@ -22,30 +22,30 @@ public class AsyncApiDevUIProcessor {
 
     @BuildStep(onlyIf = IsDevelopment.class)
     public CardPageBuildItem pages(NonApplicationRootPathBuildItem nonApplicationRootPathBuildItem,
-        ManagementInterfaceBuildTimeConfig managementBuildTimeConfig,
-        LaunchModeBuildItem launchModeBuildItem,
-        Optional<DevContextBuildItem> devContextBuildItem) {
+            ManagementInterfaceBuildTimeConfig managementBuildTimeConfig,
+            LaunchModeBuildItem launchModeBuildItem,
+            Optional<DevContextBuildItem> devContextBuildItem) {
         String path = ConfigProvider.getConfig()
-            .getValue("quarkus.http.root-path", String.class).concat("/asyncapi");
+                .getValue("quarkus.http.root-path", String.class).concat("/asyncapi");
 
         CardPageBuildItem cardPageBuildItem = new CardPageBuildItem();
 
         cardPageBuildItem.addLibraryVersion("com.asyncapi", "asyncapi-core", "AsyncApi", "https://www.asyncapi.com/");
         cardPageBuildItem.setLogo("asyncApiLogo.png", "asyncApiLogo.png");
         cardPageBuildItem.addPage(Page.externalPageBuilder("AsyncApi UI")
-            .url(path + ".html")
-            .isHtmlContent()
-            .icon("font-awesome-solid:map"));
+                .url(path + ".html")
+                .isHtmlContent()
+                .icon("font-awesome-solid:map"));
 
         cardPageBuildItem.addPage(Page.externalPageBuilder("AsyncApi yaml")
-            .url(path + ".yaml")
-            .isYamlContent()
-            .icon("font-awesome-solid:code"));
+                .url(path + ".yaml")
+                .isYamlContent()
+                .icon("font-awesome-solid:code"));
 
         cardPageBuildItem.addPage(Page.externalPageBuilder("AsyncApi diagram")
-            .url(path + ".svg")
-            .isHtmlContent()
-            .icon("font-awesome-solid:diagram-project"));
+                .url(path + ".svg")
+                .isHtmlContent()
+                .icon("font-awesome-solid:diagram-project"));
 
         return cardPageBuildItem;
     }
