@@ -18,6 +18,7 @@ import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.annotations.Record;
 import io.quarkus.deployment.builditem.CombinedIndexBuildItem;
+import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.deployment.recording.RecorderContext;
 import io.quarkus.vertx.http.deployment.FilterBuildItem;
 import io.quarkus.vertx.http.deployment.NonApplicationRootPathBuildItem;
@@ -105,6 +106,11 @@ public class AsyncAPIResourceGenerator {
             return (Route route) -> route.order(-1 * filter.getPriority()).handler(filter.getHandler());
         }
         return null;
+    }
+
+    @BuildStep
+    FeatureBuildItem feature() {
+        return new FeatureBuildItem("quarkus-asyncapi-scanner");
     }
 
 }
