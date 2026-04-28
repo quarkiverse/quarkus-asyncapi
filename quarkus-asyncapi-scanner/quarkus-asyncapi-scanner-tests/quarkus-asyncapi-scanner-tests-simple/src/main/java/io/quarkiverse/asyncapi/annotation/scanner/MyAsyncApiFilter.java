@@ -7,10 +7,10 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.asyncapi.schemas.Type;
-import com.asyncapi.schemas.asyncapi.AsyncAPISchema;
 import com.asyncapi.v3._0_0.model.channel.Channel;
 import com.asyncapi.v3._0_0.model.channel.message.Message;
+import com.asyncapi.v3.schema.Schema;
+import com.asyncapi.v3.schema.Type;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
@@ -29,25 +29,25 @@ public class MyAsyncApiFilter implements AsyncApiFilter {
             Message message = (Message) firstMessage.getValue();
             Class<?> messageClass = getMessageClass(firstMessage.getKey());
             if (messageClass != null) {
-                AsyncAPISchema transferMessagePayload = (AsyncAPISchema) message.getPayload();
-                recurse(messageClass, (AsyncAPISchema) transferMessagePayload.getProperties().get("value"));
+                Schema transferMessagePayload = (Schema) message.getPayload();
+                recurse(messageClass, (Schema) transferMessagePayload.getProperties().get("value"));
             }
         }
         return aChannel;
     }
 
-    void recurse(Class aClass, AsyncAPISchema aSchema) {
+    void recurse(Class aClass, Schema aSchema) {
         if (aSchema.getProperties() == null) {
             return;
         }
         //get over all fields
-        Map<String, Object> filteredPayload = aSchema.getProperties().entrySet().stream()
+        Map<String, Schema> filteredPayload = aSchema.getProperties().entrySet().stream()
                 .filter(e -> isClassTransferRelevant(aClass) || isFieldTransferRelevant(aClass, e.getKey()))
                 .peek(e -> {
-                    if (Type.OBJECT.equals(((AsyncAPISchema) e.getValue()).getType())) {
+                    if (Type.OBJECT.equals(((Schema) e.getValue()).getType())) {
                         Field field = getFieldRecursiv(aClass, e.getKey());
                         if (field != null) {
-                            recurse(field.getType(), (AsyncAPISchema) e.getValue());
+                            recurse(field.getType(), (Schema) e.getValue());
                         }
                     }
                 })

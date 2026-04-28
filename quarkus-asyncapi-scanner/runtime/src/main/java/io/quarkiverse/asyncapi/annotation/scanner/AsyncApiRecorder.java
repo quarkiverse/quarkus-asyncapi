@@ -12,11 +12,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import com.asyncapi.bindings.kafka.v0._5_0.channel.KafkaChannelBinding;
 import com.asyncapi.v3._0_0.model.AsyncAPI;
 import com.asyncapi.v3._0_0.model.channel.Channel;
 import com.asyncapi.v3._0_0.model.operation.Operation;
 import com.asyncapi.v3._0_0.model.operation.OperationAction;
+import com.asyncapi.v3.binding.channel.kafka.KafkaChannelBinding;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.quarkiverse.asyncapi.annotation.scanner.config.AsyncApiRuntimeConfig;
@@ -34,9 +34,10 @@ public class AsyncApiRecorder {
     public static final String ASYNC_API_YAML = "asyncApi.yaml";
     public static final String ASYNC_API_PUML = "asyncApi.puml";
 
-    public void store(AsyncAPI aAsyncAPI, AsyncApiRuntimeConfig aConfig) {
+    public void store(String aAsyncAPIYaml, AsyncApiRuntimeConfig aConfig) {
         try {
-            AsyncAPI filteredAPI = filter(aAsyncAPI, aConfig);
+            AsyncAPI asyncAPI = ObjectMapperFactory.yaml().readValue(aAsyncAPIYaml, AsyncAPI.class);
+            AsyncAPI filteredAPI = filter(asyncAPI, aConfig);
             store(ObjectMapperFactory.yaml().writeValueAsString(filteredAPI), ASYNC_API_YAML);
             store(ObjectMapperFactory.json().writeValueAsString(filteredAPI), ASYNC_API_JSON);
             String plantUml = toPlantUml(filteredAPI);

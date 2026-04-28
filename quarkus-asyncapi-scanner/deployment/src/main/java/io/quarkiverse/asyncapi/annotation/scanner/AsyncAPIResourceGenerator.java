@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import org.eclipse.microprofile.config.ConfigProvider;
 
 import com.asyncapi.v3._0_0.model.AsyncAPI;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.quarkiverse.asyncapi.annotation.scanner.config.AsyncApiRuntimeConfig;
 import io.quarkus.deployment.annotations.BuildProducer;
@@ -28,6 +29,8 @@ import io.quarkus.vertx.http.runtime.security.SecurityHandlerPriorities;
 import io.vertx.ext.web.Route;
 
 public class AsyncAPIResourceGenerator {
+
+    private static final Logger LOGGER = Logger.getLogger(AsyncAPIResourceGenerator.class.getName());
 
     @Record(RUNTIME_INIT)
     @BuildStep(onlyIf = IsEnabled.class)
@@ -49,7 +52,11 @@ public class AsyncAPIResourceGenerator {
         if (servers != null) {
             builder.servers(servers);
         }
-        aRecorder.store(builder.build(), aConfig);
+        try {
+            aRecorder.store(ObjectMapperFactory.yaml().writeValueAsString(builder.build()), aConfig);
+        } catch (JsonProcessingException e) {
+            LOGGER.throwing("io.quarkiverse.asyncapi.annotation.scanner.AsyncAPIResourceGenerator", "scanAsyncAPIs", e);
+        }
     }
 
     static class IsEnabled implements BooleanSupplier {
