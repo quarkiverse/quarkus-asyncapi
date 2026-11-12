@@ -10,11 +10,10 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.ServiceLoader;
 
-import org.eclipse.microprofile.config.Config;
-
 import io.quarkiverse.asyncapi.config.AsyncAPIExtension;
 import io.quarkiverse.asyncapi.generator.AsyncApiCodeGenerator;
 import io.quarkus.deployment.CodeGenContext;
+import io.smallrye.config.Config;
 
 public class AsyncApiGeneratorStreamCodeGen extends AsyncApiGeneratorCodeGenBase {
 

@@ -30,7 +30,11 @@ public abstract class AsyncApiGeneratorCodeGenBase implements CodeGenProvider {
     }
 
     @Override
-    public String inputExtension() {
+    public String[] inputExtensions() {
+        return new String[] { inputExtension() };
+    }
+
+    protected String inputExtension() {
         return extension.toString();
     }
 
