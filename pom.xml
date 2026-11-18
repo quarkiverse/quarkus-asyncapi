@@ -24,13 +24,13 @@
   </scm>
   <properties>
     <maven.compiler.parameters>true</maven.compiler.parameters>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
-    <maven.compiler.release>11</maven.compiler.release>
+    <maven.compiler.release>21</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <quarkus.version>3.40.1.2</quarkus.version>
+    <quarkus.version>4.0.0</quarkus.version>
     <version.org.assertj>3.27.7</version.org.assertj>
     <version.org.slf4j>2.0.20</version.org.slf4j>
     <version.asyncapi.core>1.0.0-EAP-3</version.asyncapi.core>
